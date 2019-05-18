@@ -1,0 +1,38 @@
+{
+  "name": "CBHTTP",
+  "version": "0.1.0",
+  "summary": "A simple networking library",
+  "description": "A simple networking library. Developed by Coinbase Wallet team.",
+  "homepage": "https://github.com/CoinbaseWallet/CBHTTP",
+  "license": {
+    "type": "AGPL-3.0-only",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Coinbase": "developer@toshi.org"
+  },
+  "source": {
+    "git": "https://github.com/CoinbaseWallet/CBHTTP.git",
+    "tag": "0.1.0"
+  },
+  "social_media_url": "https://twitter.com/coinbase",
+  "platforms": {
+    "ios": "10.0"
+  },
+  "swift_version": "4.2",
+  "source_files": "CBHTTP/**/*.swift",
+  "dependencies": {
+    "RxSwift": [
+      "~> 4.4.0"
+    ],
+    "RxCocoa": [
+      "~> 4.4.0"
+    ],
+    "Starscream": [
+      "~> 3.1"
+    ],
+    "Socket.IO-Client-Swift": [
+      "~> 15.0.0"
+    ]
+  }
+}

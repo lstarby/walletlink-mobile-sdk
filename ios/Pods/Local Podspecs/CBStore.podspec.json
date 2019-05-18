@@ -1,0 +1,29 @@
+{
+  "name": "CBStore",
+  "version": "0.1.0",
+  "summary": "A simple wrapper around Keychain and UserDefaults",
+  "description": "A simple wrapper around Keychain and UserDefaults. Developed by Coinbase Wallet team.",
+  "homepage": "https://github.com/CoinbaseWallet/Stores",
+  "license": {
+    "type": "AGPL-3.0-only",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Coinbase": "developer@toshi.org"
+  },
+  "source": {
+    "git": "https://github.com/CoinbaseWallet/Stores.git",
+    "tag": "0.1.0"
+  },
+  "social_media_url": "https://twitter.com/coinbase",
+  "platforms": {
+    "ios": "11.0"
+  },
+  "swift_version": "4.2",
+  "source_files": "CBStore/**/*",
+  "dependencies": {
+    "RxSwift": [
+      "~> 4.4.0"
+    ]
+  }
+}

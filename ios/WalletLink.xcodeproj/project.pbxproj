@@ -1,0 +1,590 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		510861062290036C0060C12F /* WalletLinkConnectionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510861052290036C0060C12F /* WalletLinkConnectionError.swift */; };
+		510861082290039C0060C12F /* String+WalletLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510861072290039C0060C12F /* String+WalletLink.swift */; };
+		5108610A229008E30060C12F /* SetSessionConfigMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51086109229008E30060C12F /* SetSessionConfigMessage.swift */; };
+		5108610C229009B60060C12F /* SetMetadataMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5108610B229009B60060C12F /* SetMetadataMessage.swift */; };
+		5108610E22900EAF0060C12F /* ClientMetadataKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5108610D22900EAF0060C12F /* ClientMetadataKey.swift */; };
+		5159CC8B228FDE2800A257C0 /* WalletLink.h in Headers */ = {isa = PBXBuildFile; fileRef = 5159CC7D228FDE2800A257C0 /* WalletLink.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5159CC96228FE2A200A257C0 /* WalletLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5159CC95228FE2A200A257C0 /* WalletLink.swift */; };
+		5159CC99228FE40C00A257C0 /* MessageEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5159CC98228FE40C00A257C0 /* MessageEvent.swift */; };
+		5159CC9C228FE45E00A257C0 /* JSONDeserializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5159CC9B228FE45E00A257C0 /* JSONDeserializable.swift */; };
+		5159CC9E228FE47500A257C0 /* JSONSerializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5159CC9D228FE47500A257C0 /* JSONSerializable.swift */; };
+		5159CCA1228FE4DF00A257C0 /* Data+WalletLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5159CCA0228FE4DF00A257C0 /* Data+WalletLink.swift */; };
+		5159CCA3228FE65D00A257C0 /* SignatureRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5159CCA2228FE65D00A257C0 /* SignatureRequest.swift */; };
+		5159CCA6228FF1E600A257C0 /* LinkStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5159CCA5228FF1E600A257C0 /* LinkStore.swift */; };
+		5159CCA8228FF21400A257C0 /* StoreKeys+WalletLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5159CCA7228FF21400A257C0 /* StoreKeys+WalletLink.swift */; };
+		51695C8A22901555003B974E /* WalletLinkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51695C8922901555003B974E /* WalletLinkError.swift */; };
+		51695C8C2292389E003B974E /* WalletLinkProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51695C8B2292389E003B974E /* WalletLinkProtocol.swift */; };
+		51D42E04228FF7BD00048066 /* OperationQueue+WalletLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E03228FF7BD00048066 /* OperationQueue+WalletLink.swift */; };
+		51D42E07228FF82500048066 /* RxConcurrentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E06228FF82500048066 /* RxConcurrentOperation.swift */; };
+		51D42E09228FF83E00048066 /* ConcurrentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E08228FF83E00048066 /* ConcurrentOperation.swift */; };
+		51D42E0C228FF89600048066 /* ConcurrencyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E0B228FF89600048066 /* ConcurrencyError.swift */; };
+		51D42E0E228FF96200048066 /* Observable+WalletLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E0D228FF96200048066 /* Observable+WalletLink.swift */; };
+		51D42E11228FFB4200048066 /* WalletLinkConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E10228FFB4200048066 /* WalletLinkConnection.swift */; };
+		51D42E13228FFB6B00048066 /* AtomicInt32.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E12228FFB6B00048066 /* AtomicInt32.swift */; };
+		51D42E15228FFBCD00048066 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E14228FFBCD00048066 /* Session.swift */; };
+		51D42E17228FFE9A00048066 /* PrimitiveSequence+WalletLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E16228FFE9A00048066 /* PrimitiveSequence+WalletLink.swift */; };
+		51D42E19229001BA00048066 /* MessageResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E18229001BA00048066 /* MessageResponse.swift */; };
+		51D42E1C2290020300048066 /* BoundedCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E1B2290020300048066 /* BoundedCache.swift */; };
+		51D42E1E2290027A00048066 /* JoinSessionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E1D2290027A00048066 /* JoinSessionMessage.swift */; };
+		51D42E202290029500048066 /* ClientMessageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E1F2290029500048066 /* ClientMessageType.swift */; };
+		51D42E22229002D500048066 /* ServerMessageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E21229002D500048066 /* ServerMessageType.swift */; };
+		51D42E242290033300048066 /* PublishEventMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E232290033300048066 /* PublishEventMessage.swift */; };
+		D2F8587596E5F85365F724E1 /* libPods-WalletLink.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A312883E9B5BA9BF15F24C /* libPods-WalletLink.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		05019EE615231CD6AC769385 /* Pods-WalletLink.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WalletLink.release.xcconfig"; path = "Target Support Files/Pods-WalletLink/Pods-WalletLink.release.xcconfig"; sourceTree = "<group>"; };
+		28B4455D48B6DE81335F5B31 /* Pods-WalletLink.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WalletLink.debug.xcconfig"; path = "Target Support Files/Pods-WalletLink/Pods-WalletLink.debug.xcconfig"; sourceTree = "<group>"; };
+		4B9E9CA49BE7C399433F3585 /* Pods-WalletLinkTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WalletLinkTests.debug.xcconfig"; path = "Target Support Files/Pods-WalletLinkTests/Pods-WalletLinkTests.debug.xcconfig"; sourceTree = "<group>"; };
+		510861052290036C0060C12F /* WalletLinkConnectionError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletLinkConnectionError.swift; sourceTree = "<group>"; };
+		510861072290039C0060C12F /* String+WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+WalletLink.swift"; sourceTree = "<group>"; };
+		51086109229008E30060C12F /* SetSessionConfigMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetSessionConfigMessage.swift; sourceTree = "<group>"; };
+		5108610B229009B60060C12F /* SetMetadataMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetMetadataMessage.swift; sourceTree = "<group>"; };
+		5108610D22900EAF0060C12F /* ClientMetadataKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientMetadataKey.swift; sourceTree = "<group>"; };
+		5159CC7A228FDE2800A257C0 /* WalletLink.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = WalletLink.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5159CC7D228FDE2800A257C0 /* WalletLink.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WalletLink.h; sourceTree = "<group>"; };
+		5159CC7E228FDE2800A257C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5159CC95228FE2A200A257C0 /* WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletLink.swift; sourceTree = "<group>"; };
+		5159CC98228FE40C00A257C0 /* MessageEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageEvent.swift; sourceTree = "<group>"; };
+		5159CC9B228FE45E00A257C0 /* JSONDeserializable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONDeserializable.swift; sourceTree = "<group>"; };
+		5159CC9D228FE47500A257C0 /* JSONSerializable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSerializable.swift; sourceTree = "<group>"; };
+		5159CCA0228FE4DF00A257C0 /* Data+WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+WalletLink.swift"; sourceTree = "<group>"; };
+		5159CCA2228FE65D00A257C0 /* SignatureRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignatureRequest.swift; sourceTree = "<group>"; };
+		5159CCA5228FF1E600A257C0 /* LinkStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkStore.swift; sourceTree = "<group>"; };
+		5159CCA7228FF21400A257C0 /* StoreKeys+WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StoreKeys+WalletLink.swift"; sourceTree = "<group>"; };
+		51695C8922901555003B974E /* WalletLinkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletLinkError.swift; sourceTree = "<group>"; };
+		51695C8B2292389E003B974E /* WalletLinkProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletLinkProtocol.swift; sourceTree = "<group>"; };
+		51D42E03228FF7BD00048066 /* OperationQueue+WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperationQueue+WalletLink.swift"; sourceTree = "<group>"; };
+		51D42E06228FF82500048066 /* RxConcurrentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxConcurrentOperation.swift; sourceTree = "<group>"; };
+		51D42E08228FF83E00048066 /* ConcurrentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcurrentOperation.swift; sourceTree = "<group>"; };
+		51D42E0B228FF89600048066 /* ConcurrencyError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcurrencyError.swift; sourceTree = "<group>"; };
+		51D42E0D228FF96200048066 /* Observable+WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Observable+WalletLink.swift"; sourceTree = "<group>"; };
+		51D42E10228FFB4200048066 /* WalletLinkConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletLinkConnection.swift; sourceTree = "<group>"; };
+		51D42E12228FFB6B00048066 /* AtomicInt32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicInt32.swift; sourceTree = "<group>"; };
+		51D42E14228FFBCD00048066 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		51D42E16228FFE9A00048066 /* PrimitiveSequence+WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PrimitiveSequence+WalletLink.swift"; sourceTree = "<group>"; };
+		51D42E18229001BA00048066 /* MessageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageResponse.swift; sourceTree = "<group>"; };
+		51D42E1B2290020300048066 /* BoundedCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundedCache.swift; sourceTree = "<group>"; };
+		51D42E1D2290027A00048066 /* JoinSessionMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinSessionMessage.swift; sourceTree = "<group>"; };
+		51D42E1F2290029500048066 /* ClientMessageType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientMessageType.swift; sourceTree = "<group>"; };
+		51D42E21229002D500048066 /* ServerMessageType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerMessageType.swift; sourceTree = "<group>"; };
+		51D42E232290033300048066 /* PublishEventMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishEventMessage.swift; sourceTree = "<group>"; };
+		67A312883E9B5BA9BF15F24C /* libPods-WalletLink.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WalletLink.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CCDD4A9DB87B3F4D4FC9E9A4 /* Pods-WalletLinkTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WalletLinkTests.release.xcconfig"; path = "Target Support Files/Pods-WalletLinkTests/Pods-WalletLinkTests.release.xcconfig"; sourceTree = "<group>"; };
+		EE45CAE36C51E9570D753F6A /* Pods_WalletLinkTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WalletLinkTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5159CC77228FDE2800A257C0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2F8587596E5F85365F724E1 /* libPods-WalletLink.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		515663758C5992CAA12B3FAE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EE45CAE36C51E9570D753F6A /* Pods_WalletLinkTests.framework */,
+				67A312883E9B5BA9BF15F24C /* libPods-WalletLink.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5159CC70228FDE2800A257C0 = {
+			isa = PBXGroup;
+			children = (
+				5159CC7C228FDE2800A257C0 /* Source */,
+				515663758C5992CAA12B3FAE /* Frameworks */,
+				D3D20C12EB57C0AE031483E8 /* Pods */,
+				5159CC7B228FDE2800A257C0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5159CC7B228FDE2800A257C0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5159CC7A228FDE2800A257C0 /* WalletLink.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5159CC7C228FDE2800A257C0 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				51D42E0F228FFB3700048066 /* APIs */,
+				51D42E05228FF81700048066 /* Concurrency */,
+				51D42E0A228FF86900048066 /* Errors */,
+				5159CC9F228FE4D200A257C0 /* Extensions */,
+				5159CC97228FE40200A257C0 /* Models */,
+				5159CC94228FE24400A257C0 /* Module */,
+				5159CC9A228FE45500A257C0 /* Protocols */,
+				5159CCA4228FF1BC00A257C0 /* Storage */,
+				51D42E1A229001F200048066 /* Structures */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		5159CC94228FE24400A257C0 /* Module */ = {
+			isa = PBXGroup;
+			children = (
+				5159CC7E228FDE2800A257C0 /* Info.plist */,
+				5159CC7D228FDE2800A257C0 /* WalletLink.h */,
+				5159CC95228FE2A200A257C0 /* WalletLink.swift */,
+				51695C8B2292389E003B974E /* WalletLinkProtocol.swift */,
+			);
+			path = Module;
+			sourceTree = "<group>";
+		};
+		5159CC97228FE40200A257C0 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				51D42E1F2290029500048066 /* ClientMessageType.swift */,
+				51D42E1D2290027A00048066 /* JoinSessionMessage.swift */,
+				5159CC98228FE40C00A257C0 /* MessageEvent.swift */,
+				51D42E18229001BA00048066 /* MessageResponse.swift */,
+				51D42E232290033300048066 /* PublishEventMessage.swift */,
+				51D42E21229002D500048066 /* ServerMessageType.swift */,
+				51D42E14228FFBCD00048066 /* Session.swift */,
+				5108610B229009B60060C12F /* SetMetadataMessage.swift */,
+				51086109229008E30060C12F /* SetSessionConfigMessage.swift */,
+				5159CCA2228FE65D00A257C0 /* SignatureRequest.swift */,
+				5108610D22900EAF0060C12F /* ClientMetadataKey.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		5159CC9A228FE45500A257C0 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				5159CC9B228FE45E00A257C0 /* JSONDeserializable.swift */,
+				5159CC9D228FE47500A257C0 /* JSONSerializable.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		5159CC9F228FE4D200A257C0 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				5159CCA0228FE4DF00A257C0 /* Data+WalletLink.swift */,
+				51D42E0D228FF96200048066 /* Observable+WalletLink.swift */,
+				51D42E03228FF7BD00048066 /* OperationQueue+WalletLink.swift */,
+				51D42E16228FFE9A00048066 /* PrimitiveSequence+WalletLink.swift */,
+				5159CCA7228FF21400A257C0 /* StoreKeys+WalletLink.swift */,
+				510861072290039C0060C12F /* String+WalletLink.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		5159CCA4228FF1BC00A257C0 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				5159CCA5228FF1E600A257C0 /* LinkStore.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		51D42E05228FF81700048066 /* Concurrency */ = {
+			isa = PBXGroup;
+			children = (
+				51D42E12228FFB6B00048066 /* AtomicInt32.swift */,
+				51D42E08228FF83E00048066 /* ConcurrentOperation.swift */,
+				51D42E06228FF82500048066 /* RxConcurrentOperation.swift */,
+			);
+			path = Concurrency;
+			sourceTree = "<group>";
+		};
+		51D42E0A228FF86900048066 /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				51D42E0B228FF89600048066 /* ConcurrencyError.swift */,
+				510861052290036C0060C12F /* WalletLinkConnectionError.swift */,
+				51695C8922901555003B974E /* WalletLinkError.swift */,
+			);
+			path = Errors;
+			sourceTree = "<group>";
+		};
+		51D42E0F228FFB3700048066 /* APIs */ = {
+			isa = PBXGroup;
+			children = (
+				51D42E10228FFB4200048066 /* WalletLinkConnection.swift */,
+			);
+			path = APIs;
+			sourceTree = "<group>";
+		};
+		51D42E1A229001F200048066 /* Structures */ = {
+			isa = PBXGroup;
+			children = (
+				51D42E1B2290020300048066 /* BoundedCache.swift */,
+			);
+			path = Structures;
+			sourceTree = "<group>";
+		};
+		D3D20C12EB57C0AE031483E8 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				28B4455D48B6DE81335F5B31 /* Pods-WalletLink.debug.xcconfig */,
+				05019EE615231CD6AC769385 /* Pods-WalletLink.release.xcconfig */,
+				4B9E9CA49BE7C399433F3585 /* Pods-WalletLinkTests.debug.xcconfig */,
+				CCDD4A9DB87B3F4D4FC9E9A4 /* Pods-WalletLinkTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5159CC75228FDE2800A257C0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5159CC8B228FDE2800A257C0 /* WalletLink.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5159CC79228FDE2800A257C0 /* WalletLink */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5159CC8E228FDE2800A257C0 /* Build configuration list for PBXNativeTarget "WalletLink" */;
+			buildPhases = (
+				AFF19B802C0A3749C7DDE7FB /* [CP] Check Pods Manifest.lock */,
+				5159CC75228FDE2800A257C0 /* Headers */,
+				5159CC76228FDE2800A257C0 /* Sources */,
+				5159CC77228FDE2800A257C0 /* Frameworks */,
+				5159CC78228FDE2800A257C0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WalletLink;
+			productName = WalletLink;
+			productReference = 5159CC7A228FDE2800A257C0 /* WalletLink.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5159CC71228FDE2800A257C0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1020;
+				LastUpgradeCheck = 1020;
+				ORGANIZATIONNAME = "Coinbase Inc";
+				TargetAttributes = {
+					5159CC79228FDE2800A257C0 = {
+						CreatedOnToolsVersion = 10.2.1;
+						LastSwiftMigration = 1020;
+					};
+				};
+			};
+			buildConfigurationList = 5159CC74228FDE2800A257C0 /* Build configuration list for PBXProject "WalletLink" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 5159CC70228FDE2800A257C0;
+			productRefGroup = 5159CC7B228FDE2800A257C0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5159CC79228FDE2800A257C0 /* WalletLink */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5159CC78228FDE2800A257C0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		AFF19B802C0A3749C7DDE7FB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-WalletLink-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5159CC76228FDE2800A257C0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				51D42E09228FF83E00048066 /* ConcurrentOperation.swift in Sources */,
+				51D42E1C2290020300048066 /* BoundedCache.swift in Sources */,
+				51D42E22229002D500048066 /* ServerMessageType.swift in Sources */,
+				510861062290036C0060C12F /* WalletLinkConnectionError.swift in Sources */,
+				5159CCA8228FF21400A257C0 /* StoreKeys+WalletLink.swift in Sources */,
+				51D42E11228FFB4200048066 /* WalletLinkConnection.swift in Sources */,
+				51D42E1E2290027A00048066 /* JoinSessionMessage.swift in Sources */,
+				5159CC99228FE40C00A257C0 /* MessageEvent.swift in Sources */,
+				51D42E19229001BA00048066 /* MessageResponse.swift in Sources */,
+				51D42E13228FFB6B00048066 /* AtomicInt32.swift in Sources */,
+				51D42E07228FF82500048066 /* RxConcurrentOperation.swift in Sources */,
+				5108610C229009B60060C12F /* SetMetadataMessage.swift in Sources */,
+				5159CC96228FE2A200A257C0 /* WalletLink.swift in Sources */,
+				5159CCA1228FE4DF00A257C0 /* Data+WalletLink.swift in Sources */,
+				51D42E0C228FF89600048066 /* ConcurrencyError.swift in Sources */,
+				51D42E04228FF7BD00048066 /* OperationQueue+WalletLink.swift in Sources */,
+				51695C8A22901555003B974E /* WalletLinkError.swift in Sources */,
+				5159CC9E228FE47500A257C0 /* JSONSerializable.swift in Sources */,
+				51D42E0E228FF96200048066 /* Observable+WalletLink.swift in Sources */,
+				51D42E15228FFBCD00048066 /* Session.swift in Sources */,
+				51695C8C2292389E003B974E /* WalletLinkProtocol.swift in Sources */,
+				5159CCA3228FE65D00A257C0 /* SignatureRequest.swift in Sources */,
+				5108610A229008E30060C12F /* SetSessionConfigMessage.swift in Sources */,
+				5159CCA6228FF1E600A257C0 /* LinkStore.swift in Sources */,
+				5159CC9C228FE45E00A257C0 /* JSONDeserializable.swift in Sources */,
+				51D42E242290033300048066 /* PublishEventMessage.swift in Sources */,
+				51D42E202290029500048066 /* ClientMessageType.swift in Sources */,
+				510861082290039C0060C12F /* String+WalletLink.swift in Sources */,
+				51D42E17228FFE9A00048066 /* PrimitiveSequence+WalletLink.swift in Sources */,
+				5108610E22900EAF0060C12F /* ClientMetadataKey.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5159CC8C228FDE2800A257C0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		5159CC8D228FDE2800A257C0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		5159CC8F228FDE2800A257C0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 28B4455D48B6DE81335F5B31 /* Pods-WalletLink.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "$(SRCROOT)/Source/Module/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.coinbase.wallet.WalletLink;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5159CC90228FDE2800A257C0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 05019EE615231CD6AC769385 /* Pods-WalletLink.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "$(SRCROOT)/Source/Module/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.coinbase.wallet.WalletLink;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5159CC74228FDE2800A257C0 /* Build configuration list for PBXProject "WalletLink" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5159CC8C228FDE2800A257C0 /* Debug */,
+				5159CC8D228FDE2800A257C0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5159CC8E228FDE2800A257C0 /* Build configuration list for PBXNativeTarget "WalletLink" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5159CC8F228FDE2800A257C0 /* Debug */,
+				5159CC90228FDE2800A257C0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5159CC71228FDE2800A257C0 /* Project object */;
+}

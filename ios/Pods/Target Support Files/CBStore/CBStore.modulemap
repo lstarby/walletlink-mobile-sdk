@@ -1,0 +1,6 @@
+module CBStore {
+  umbrella header "CBStore-umbrella.h"
+
+  export *
+  module * { export * }
+}

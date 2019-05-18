@@ -1,0 +1,6 @@
+module CBCrypto {
+  umbrella header "CBCrypto-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,12 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '11.0'
+
+target 'WalletLink' do
+  # use_frameworks!
+
+  # Pods for WalletLink
+  pod 'CBHTTP', path: "../../CBHTTP" #git: 'git@github.com:CoinbaseWallet/CBHTTP.git', commit: "4195f48d91b99a2c8c6b03004bd9da30206ae485"
+  pod 'CBStore', git: 'git@github.com:CoinbaseWallet/Stores.git', commit: "f6780247a1c25797c944c2f43f259d1150147ef7"
+  pod 'CBCrypto', git: 'git@github.com:CoinbaseWallet/CBCrypto.git', commit: "367b8b024adecf495ce17bb98b7f39ce346637d7"
+
+end

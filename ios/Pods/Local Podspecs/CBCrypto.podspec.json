@@ -1,0 +1,29 @@
+{
+  "name": "CBCrypto",
+  "version": "0.1.0",
+  "summary": "A simple crypto library",
+  "description": "A simple crypto library. Developed by Coinbase Wallet team.",
+  "homepage": "https://github.com/CoinbaseWallet/CBCrypto",
+  "license": {
+    "type": "AGPL-3.0-only",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Coinbase": "developer@toshi.org"
+  },
+  "source": {
+    "git": "https://github.com/CoinbaseWallet/CBCrypto.git",
+    "tag": "0.1.0"
+  },
+  "social_media_url": "https://twitter.com/coinbase",
+  "platforms": {
+    "ios": "10.0"
+  },
+  "swift_version": "4.2",
+  "source_files": "Source/**/*.swift",
+  "dependencies": {
+    "CryptoSwift": [
+      "~> 1.0.0"
+    ]
+  }
+}

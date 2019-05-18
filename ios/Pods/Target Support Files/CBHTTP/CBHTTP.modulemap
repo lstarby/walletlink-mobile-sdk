@@ -1,0 +1,6 @@
+module CBHTTP {
+  umbrella header "CBHTTP-umbrella.h"
+
+  export *
+  module * { export * }
+}
