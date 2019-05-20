@@ -7,7 +7,7 @@ public enum SignatureRequest {
     case message(requestId: String, address: String, message: String, isPrefixed: Bool)
 
     /// A transaction signature request
-    case transaction(requestId: String, transaction: UnsignedTransaction)
+    case transaction(requestId: String, transaction: EthSendTransaction)
 
     /// WalletLink request Id
     var requestId: String {
@@ -20,5 +20,3 @@ public enum SignatureRequest {
     }
 }
 
-// FIXME: hish
-public struct UnsignedTransaction {}

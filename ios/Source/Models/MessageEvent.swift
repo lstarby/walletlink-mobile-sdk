@@ -2,22 +2,22 @@
 
 import Foundation
 
-struct MessageEvent: Codable, JSONDeserializable, JSONSerializable {
+public struct MessageEvent: Codable, JSONDeserializable, JSONSerializable {
     /// Server generated session ID
-    let sessionId: String
+    public let sessionId: String
 
     /// Server event
-    let event: Kind
+    public let event: Kind
 
     /// Server random generated eventID. Used to find a pending event from WalletLink server
-    let eventId: String
+    public let eventId: String
 
     /// Encrypted event data
-    let data: [String: String]
+    public let data: [String: String]
 }
 
 extension MessageEvent {
-    enum Kind: String, Codable, Hashable {
+    public enum Kind: String, Codable, Hashable {
         /// Sign a message using ethereum key
         case signMessage = "EthSign"
 

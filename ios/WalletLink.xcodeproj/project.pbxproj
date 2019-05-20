@@ -39,6 +39,8 @@
 		51D42E22229002D500048066 /* ServerMessageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E21229002D500048066 /* ServerMessageType.swift */; };
 		51D42E242290033300048066 /* PublishEventMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E232290033300048066 /* PublishEventMessage.swift */; };
 		D2F8587596E5F85365F724E1 /* libPods-WalletLink.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A312883E9B5BA9BF15F24C /* libPods-WalletLink.a */; };
+		E7B355352293596700DDBE84 /* EthSendTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B355342293596700DDBE84 /* EthSendTransaction.swift */; };
+		E7B355372293597700DDBE84 /* EthSign.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B355362293597700DDBE84 /* EthSign.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -80,6 +82,8 @@
 		51D42E232290033300048066 /* PublishEventMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishEventMessage.swift; sourceTree = "<group>"; };
 		67A312883E9B5BA9BF15F24C /* libPods-WalletLink.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WalletLink.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCDD4A9DB87B3F4D4FC9E9A4 /* Pods-WalletLinkTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WalletLinkTests.release.xcconfig"; path = "Target Support Files/Pods-WalletLinkTests/Pods-WalletLinkTests.release.xcconfig"; sourceTree = "<group>"; };
+		E7B355342293596700DDBE84 /* EthSendTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthSendTransaction.swift; sourceTree = "<group>"; };
+		E7B355362293597700DDBE84 /* EthSign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthSign.swift; sourceTree = "<group>"; };
 		EE45CAE36C51E9570D753F6A /* Pods_WalletLinkTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WalletLinkTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -163,6 +167,8 @@
 				51086109229008E30060C12F /* SetSessionConfigMessage.swift */,
 				5159CCA2228FE65D00A257C0 /* SignatureRequest.swift */,
 				5108610D22900EAF0060C12F /* ClientMetadataKey.swift */,
+				E7B355342293596700DDBE84 /* EthSendTransaction.swift */,
+				E7B355362293597700DDBE84 /* EthSign.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -351,6 +357,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				51D42E09228FF83E00048066 /* ConcurrentOperation.swift in Sources */,
+				E7B355352293596700DDBE84 /* EthSendTransaction.swift in Sources */,
 				51D42E1C2290020300048066 /* BoundedCache.swift in Sources */,
 				51D42E22229002D500048066 /* ServerMessageType.swift in Sources */,
 				510861062290036C0060C12F /* WalletLinkConnectionError.swift in Sources */,
@@ -375,6 +382,7 @@
 				5108610A229008E30060C12F /* SetSessionConfigMessage.swift in Sources */,
 				5159CCA6228FF1E600A257C0 /* LinkStore.swift in Sources */,
 				5159CC9C228FE45E00A257C0 /* JSONDeserializable.swift in Sources */,
+				E7B355372293597700DDBE84 /* EthSign.swift in Sources */,
 				51D42E242290033300048066 /* PublishEventMessage.swift in Sources */,
 				51D42E202290029500048066 /* ClientMessageType.swift in Sources */,
 				510861082290039C0060C12F /* String+WalletLink.swift in Sources */,

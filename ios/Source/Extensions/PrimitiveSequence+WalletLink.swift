@@ -5,12 +5,12 @@ import RxSwift
 
 extension PrimitiveSequence where Trait == RxSwift.SingleTrait {
     /// Helper method to return Single.just(())
-    public static func justVoid() -> Single<Void> {
+    static func justVoid() -> Single<Void> {
         return .just(())
     }
 
     /// Maps the current observable to a `Single<Void>`
-    public func asVoid() -> PrimitiveSequence<SingleTrait, Void> {
+    func asVoid() -> PrimitiveSequence<SingleTrait, Void> {
         return map { _ -> Void in () }
     }
 }
