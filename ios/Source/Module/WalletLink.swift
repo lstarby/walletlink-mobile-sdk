@@ -6,7 +6,7 @@ import os.log
 import RxSwift
 
 public class WalletLink: WalletLinkProtocol {
-    private var connectionDisposeBag = DisposeBag()
+    private var connectionDisposable: Disposable?
     private let linkStore = LinkStore()
     private let connection: WalletLinkConnection
     private let operationQueue = OperationQueue()
@@ -40,9 +40,9 @@ public class WalletLink: WalletLinkProtocol {
     public func start(metadata: [ClientMetadataKey: String] = [:]) {
         self.metadata = metadata
 
-        connectionDisposeBag = DisposeBag()
+        connectionDisposable?.dispose()
 
-        linkStore.observeSessions()
+        connectionDisposable = linkStore.observeSessions()
             .flatMap { [weak self] sessionIds -> Single<Void> in
                 guard let self = self else { return .justVoid() }
 
@@ -53,13 +53,13 @@ public class WalletLink: WalletLinkProtocol {
                 return self.stopConnection().catchErrorJustReturn(())
             }
             .subscribe()
-            .disposed(by: connectionDisposeBag)
     }
 
     /// Disconnect from WalletLink server and stop observing session ID updates to prevent reconnection.
     public func stop() {
         operationQueue.cancelAllOperations()
-        connectionDisposeBag = DisposeBag()
+        connectionDisposable?.dispose()
+        connectionDisposable = nil
         _ = stopConnection().subscribe()
     }
 
@@ -72,7 +72,6 @@ public class WalletLink: WalletLinkProtocol {
     /// - Returns: A single wrapping `Void` if connection was successful. Otherwise, an exception is thrown
     public func connect(sessionId: String, secret: String) -> Single<Void> {
         let session = Session(sessionId: sessionId, secret: secret)
-        let scheduler = ConcurrentDispatchQueueScheduler(qos: .userInitiated)
 
         // Connect to WalletLink server (if disconnected)
         _ = startConnection().subscribe()
@@ -83,7 +82,7 @@ public class WalletLink: WalletLinkProtocol {
             .takeSingle()
             .flatMap { _ in self.joinSession(session) }
             .map { _ in self.linkStore.save(sessionId: session.sessionId, secret: session.secret) }
-            .timeout(15, scheduler: scheduler)
+            .timeout(15, scheduler: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
             .logError()
     }
 

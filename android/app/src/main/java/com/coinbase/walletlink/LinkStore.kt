@@ -3,10 +3,12 @@ package com.coinbase.walletlink
 import java.util.concurrent.locks.ReentrantLock
 import com.coinbase.walletlink.models.Session
 import com.coinbase.store.Store
+import com.coinbase.store.interfaces.StoreInterface
 import com.coinbase.walletlink.models.StoreKeys
+import io.reactivex.Observable
 import kotlin.concurrent.withLock
 
-class LinkStore(private val store: Store) {
+class LinkStore(private val store: StoreInterface) {
     private val accessQueue = ReentrantLock()
 
     // Get stored sessions
@@ -40,6 +42,11 @@ class LinkStore(private val store: Store) {
             store.set(StoreKeys.secret(sessionId), null)
             store.set(StoreKeys.sessions, sessionIds.toTypedArray())
         }
+    }
+
+    /// Observe for distinct stored sessionIds update
+    fun observeSessions(): Observable<Array<String>> {
+        return store.observe(StoreKeys.sessions).map { it.element ?: arrayOf() }.distinctUntilChanged()
     }
 
     // Private heplers

@@ -38,7 +38,7 @@ interface WalletLinkInterface {
      *
      * @return True if the operation succeeds
      */
-    fun setMetadata(key: String, value: String): Single<Unit>
+    fun setMetadata(key: ClientMetadataKey, value: String): Single<Unit>
 
     /**
      * Send signature request approval to the requesting host

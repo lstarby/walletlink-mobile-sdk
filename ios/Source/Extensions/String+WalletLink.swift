@@ -15,7 +15,13 @@ extension String {
         }
     }
 
-    /// Encrypt
+    /// Encrypt string using AES256 algorithm for given secret and iv
+    ///
+    ///     - Secret: Secret used to encrypt the data
+    ///     - iv: Initialization vector. Acts as a salt
+    ///
+    /// - Returns: The encrypted data
+    /// - Throws: An `WalletLinkError.unableToEncryptData` if unable to encrypt data
     func encryptUsingAES256GCM(secret: String, iv: Data) throws -> String {
         guard
             let secretData = Data(base64Encoded: secret),

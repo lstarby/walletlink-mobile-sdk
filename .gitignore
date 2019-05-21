@@ -38,3 +38,4 @@ node_modules/
 *.xcbkptlist
 
 UserInterfaceState.xcuserstate
+/ios/Pods/Pods.xcodeproj/xcuserdata/**

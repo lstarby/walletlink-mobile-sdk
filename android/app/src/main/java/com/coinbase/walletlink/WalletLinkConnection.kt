@@ -6,6 +6,7 @@ import com.coinbase.networking.WebSocket
 import com.coinbase.walletlink.extensions.logError
 import com.coinbase.walletlink.extensions.takeSingle
 import com.coinbase.walletlink.interfaces.JsonSerializable
+import com.coinbase.walletlink.models.ClientMetadataKey
 import com.coinbase.walletlink.models.JoinSessionMessage
 import com.coinbase.walletlink.models.MessageResponse
 import com.coinbase.walletlink.models.PublishEventMessage
@@ -90,12 +91,12 @@ class WalletLinkConnection(url: String) {
      *
      * @return True if the operation succeeds
      */
-    fun setMetadata(key: String, value: String, sessionId: String): Single<Boolean> {
+    fun setMetadata(key: ClientMetadataKey, value: String, sessionId: String): Single<Boolean> {
         val callback = createCallback()
         val message = SetMetadataMessage(
             requestId = callback.requestId,
             sessionId = sessionId,
-            key = key,
+            key = key.rawValue,
             value = value
         )
 
