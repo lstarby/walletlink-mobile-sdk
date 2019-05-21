@@ -1,6 +1,7 @@
 // Copyright (c) 2017-2019 Coinbase Inc. See LICENSE
 
 import CBStore
+import RxSwift
 
 /// Persist session secrets
 final class LinkStore {
@@ -42,6 +43,11 @@ final class LinkStore {
             self.store.set(.secret(for: sessionId), value: nil)
             self.store.set(.sessions, value: sessions)
         }
+    }
+
+    /// Observe for distinct stored sessionIds update
+    func observeSessions() -> Observable<[String]> {
+        return store.observe(.sessions).map { $0 ?? [] }.distinctUntilChanged()
     }
 
     // MARK: - Private helpers

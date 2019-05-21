@@ -1,4 +1,4 @@
-  // Copyright (c) 2017-2019 Coinbase Inc. See LICENSE
+// Copyright (c) 2017-2019 Coinbase Inc. See LICENSE
 
 import CBHTTP
 import RxSwift
@@ -81,12 +81,12 @@ final class WalletLinkConnection {
     ///   - sessionId: Session ID scanned offline (QR code, NFC, etc)
     ///
     /// - Returns: True if the operation succeeds
-    func setMetadata(key: String, value: String, for sessionId: String) -> Single<Bool> {
+    func setMetadata(key: ClientMetadataKey, value: String, for sessionId: String) -> Single<Bool> {
         let callback = createCallback()
         let message = SetMetadataMessage(
             requestId: callback.requestId,
             sessionId: sessionId,
-            key: key,
+            key: key.rawValue,
             value: value
         )
 

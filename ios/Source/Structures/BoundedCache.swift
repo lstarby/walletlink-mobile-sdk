@@ -21,7 +21,7 @@ final class BoundedCache<K: Hashable, V> {
     /// Subscript setter/getter
     subscript(_ key: K) -> V? {
         get { return cache[key] }
-        set(newValue) {
+        set {
             if let value = newValue {
                 return insertOrUpdate(key: key, value: value)
             }

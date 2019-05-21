@@ -2,10 +2,9 @@ PODS:
   - CBCrypto (0.1.0):
     - CryptoSwift (~> 1.0.0)
   - CBHTTP (0.1.0):
-    - RxCocoa (~> 4.4.0)
-    - RxSwift (~> 4.4.0)
-    - Socket.IO-Client-Swift (~> 15.0.0)
-    - Starscream (~> 3.1)
+    - RxCocoa
+    - RxSwift
+    - Starscream
   - CBStore (0.1.0):
     - RxSwift (~> 4.4.0)
   - CryptoSwift (1.0.0)
@@ -14,14 +13,15 @@ PODS:
     - RxSwift (>= 4.4.2, ~> 4.4)
   - RxSwift (4.4.2):
     - RxAtomic (>= 4.4.2, ~> 4.4)
-  - Socket.IO-Client-Swift (15.0.0):
-    - Starscream (~> 3.1)
   - Starscream (3.1.0)
 
 DEPENDENCIES:
-  - "CBCrypto (from `git@github.com:CoinbaseWallet/CBCrypto.git`, commit `367b8b024adecf495ce17bb98b7f39ce346637d7`)"
-  - CBHTTP (from `../../CBHTTP`)
+  - "CBCrypto (from `git@github.com:CoinbaseWallet/CBCrypto.git`, commit `24ff5f6b2dd8e9cbe9ebf3df058e1cddf3632a1b`)"
+  - "CBHTTP (from `git@github.com:CoinbaseWallet/CBHTTP.git`, commit `9a129b1d0b6950a3c8e528771b92b603de689209`)"
   - "CBStore (from `git@github.com:CoinbaseWallet/Stores.git`, commit `f6780247a1c25797c944c2f43f259d1150147ef7`)"
+  - RxCocoa (~> 4.4.0)
+  - RxSwift (~> 4.4.0)
+  - Starscream (~> 3.1)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -29,38 +29,40 @@ SPEC REPOS:
     - RxAtomic
     - RxCocoa
     - RxSwift
-    - Socket.IO-Client-Swift
     - Starscream
 
 EXTERNAL SOURCES:
   CBCrypto:
-    :commit: 367b8b024adecf495ce17bb98b7f39ce346637d7
+    :commit: 24ff5f6b2dd8e9cbe9ebf3df058e1cddf3632a1b
     :git: "git@github.com:CoinbaseWallet/CBCrypto.git"
   CBHTTP:
-    :path: "../../CBHTTP"
+    :commit: 9a129b1d0b6950a3c8e528771b92b603de689209
+    :git: "git@github.com:CoinbaseWallet/CBHTTP.git"
   CBStore:
     :commit: f6780247a1c25797c944c2f43f259d1150147ef7
     :git: "git@github.com:CoinbaseWallet/Stores.git"
 
 CHECKOUT OPTIONS:
   CBCrypto:
-    :commit: 367b8b024adecf495ce17bb98b7f39ce346637d7
+    :commit: 24ff5f6b2dd8e9cbe9ebf3df058e1cddf3632a1b
     :git: "git@github.com:CoinbaseWallet/CBCrypto.git"
+  CBHTTP:
+    :commit: 9a129b1d0b6950a3c8e528771b92b603de689209
+    :git: "git@github.com:CoinbaseWallet/CBHTTP.git"
   CBStore:
     :commit: f6780247a1c25797c944c2f43f259d1150147ef7
     :git: "git@github.com:CoinbaseWallet/Stores.git"
 
 SPEC CHECKSUMS:
-  CBCrypto: e30cef98066abe065d6b39c213444b25dd081d19
-  CBHTTP: 27d0667d4bd771f0d808d90680d70af0582b322c
-  CBStore: 382acf90474bfd62e5882e9446dbca73483fc1e1
+  CBCrypto: b5e8ebe32eb738f92d289d475867e5835564610e
+  CBHTTP: b3880fbe34e9b78a48b9022d8f0f3e2eee5eea18
+  CBStore: bc68a812594ac854a4fbaffb97aa9a3ca788494c
   CryptoSwift: d81eeaa59dc5a8d03720fe919a6fd07b51f7439f
   RxAtomic: d00e97c10db88c6f08540e0bf2752fc5a2404167
   RxCocoa: 477990dc3b4c3ff55fb0ac77e1cc06244e0aaec8
   RxSwift: 74c29b693c8e42b0f64400e8b06564575742d649
-  Socket.IO-Client-Swift: c039a808195d22a7192962841b8c035cb61ea49e
   Starscream: 08172b481e145289c4930cb567230fb55897cfa4
 
-PODFILE CHECKSUM: 6f18246779cf48fe5670c1af943d1509ccd5019d
+PODFILE CHECKSUM: cd6e53856f90bfc79897ed1980e74461e2ab0480
 
-COCOAPODS: 1.6.2
+COCOAPODS: 1.7.0.beta.3

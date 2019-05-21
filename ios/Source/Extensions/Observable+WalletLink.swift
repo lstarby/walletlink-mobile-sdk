@@ -7,4 +7,9 @@ extension Observable {
     func takeSingle() -> Single<Element> {
         return take(1).asSingle()
     }
+
+    /// Helper method to return Single.just(())
+    public static func justVoid() -> Observable<Void> {
+        return Observable<Void>.just(())
+    }
 }

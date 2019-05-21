@@ -6,12 +6,13 @@ import os.log
 import RxSwift
 
 public class WalletLink: WalletLinkProtocol {
+    private var connectionDisposeBag = DisposeBag()
     private let linkStore = LinkStore()
     private let connection: WalletLinkConnection
     private let operationQueue = OperationQueue()
     private let isConnectedSubject = ReplaySubject<Bool>.create(bufferSize: 1)
     private let signatureRequestsSubject = PublishSubject<SignatureRequest>()
-    private var metadata: [ClientMetadataKey: String]
+    private var metadata = [ClientMetadataKey: String]()
 
     /// Incoming signature requests
     public let signatureRequestObservable: Observable<SignatureRequest>
@@ -20,13 +21,46 @@ public class WalletLink: WalletLinkProtocol {
     ///
     /// - Parameters:
     ///     -  url: WalletLink server URL
-    ///     - metadata: client metadata forwarded to host once link is established
-    public required init(url: URL, metadata: [ClientMetadataKey: String]) {
-        self.metadata = metadata
-
+    public required init(url: URL) {
         connection = WalletLinkConnection(url: url)
         operationQueue.maxConcurrentOperationCount = 1
         signatureRequestObservable = signatureRequestsSubject.asObservable()
+    }
+
+    /// Stop connection when WalletLink instance is deallocated
+    deinit {
+        self.stop()
+    }
+
+    /// Starts WalletLink connection with the server if a stored session exists. Otherwise, this is a noop. This method
+    /// should be called immediately on app launch.
+    ///
+    /// - Parameters:
+    ///     - metadata: client metadata forwarded to host once link is established
+    public func start(metadata: [ClientMetadataKey: String] = [:]) {
+        self.metadata = metadata
+
+        connectionDisposeBag = DisposeBag()
+
+        linkStore.observeSessions()
+            .flatMap { [weak self] sessionIds -> Single<Void> in
+                guard let self = self else { return .justVoid() }
+
+                // If credentials list is not empty, try connecting to WalletLink server
+                guard sessionIds.isEmpty else { return self.startConnection().catchErrorJustReturn(()) }
+
+                // Otherwise, disconnect
+                return self.stopConnection().catchErrorJustReturn(())
+            }
+            .subscribe()
+            .disposed(by: connectionDisposeBag)
+    }
+
+    /// Disconnect from WalletLink server and stop observing session ID updates to prevent reconnection.
+    public func stop() {
+        operationQueue.cancelAllOperations()
+        connectionDisposeBag = DisposeBag()
+        _ = stopConnection().subscribe()
     }
 
     /// Connect to WalletLink server using parameters extracted from QR code scan
@@ -60,7 +94,9 @@ public class WalletLink: WalletLinkProtocol {
     ///   - value: Metadata value
     ///
     /// - Returns: True if the operation succeeds
-    public func setMetadata(key: String, value: String) -> Single<Void> {
+    public func setMetadata(key: ClientMetadataKey, value: String) -> Single<Void> {
+        metadata[key] = value
+
         let setMetadataSingles: [Single<Bool>] = linkStore.sessions.compactMap { session in
             guard
                 let iv = Data.randomBytes(12),
@@ -109,6 +145,7 @@ public class WalletLink: WalletLinkProtocol {
             .takeSingle()
             .flatMap { _ in self.connection.connect() }
             .map { self.isConnectedSubject.onNext(true) }
+            .flatMap { self.joinSessions() }
 
         return operationQueue.addSingle(connectSingle)
     }
@@ -117,7 +154,7 @@ public class WalletLink: WalletLinkProtocol {
         operationQueue.cancelAllOperations()
 
         let disconnectSingle = connection.disconnect()
-            // .logError()
+            .logError()
             .catchErrorJustReturn(())
             .map { self.isConnectedSubject.onNext(false) }
 
@@ -133,7 +170,7 @@ public class WalletLink: WalletLinkProtocol {
     }
 
     private func joinSession(_ session: Session) -> Single<Bool> {
-        let sessionKey = "\(session.sessionId) \(session.secret) WalletLink" // FIXME: hish -.sha256()
+        let sessionKey = "\(session.sessionId) \(session.secret) WalletLink".sha256()
 
         return connection.joinSession(using: sessionKey, for: session.sessionId)
             .flatMap { success -> Single<Bool> in

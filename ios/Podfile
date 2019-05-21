@@ -5,8 +5,11 @@ target 'WalletLink' do
   # use_frameworks!
 
   # Pods for WalletLink
-  pod 'CBHTTP', path: "../../CBHTTP" #git: 'git@github.com:CoinbaseWallet/CBHTTP.git', commit: "4195f48d91b99a2c8c6b03004bd9da30206ae485"
+  pod 'CBHTTP', git: 'git@github.com:CoinbaseWallet/CBHTTP.git', commit: "9a129b1d0b6950a3c8e528771b92b603de689209"
   pod 'CBStore', git: 'git@github.com:CoinbaseWallet/Stores.git', commit: "f6780247a1c25797c944c2f43f259d1150147ef7"
-  pod 'CBCrypto', git: 'git@github.com:CoinbaseWallet/CBCrypto.git', commit: "367b8b024adecf495ce17bb98b7f39ce346637d7"
+  pod 'CBCrypto', git: 'git@github.com:CoinbaseWallet/CBCrypto.git', commit: "24ff5f6b2dd8e9cbe9ebf3df058e1cddf3632a1b"
+  pod 'RxSwift', '~> 4.4.0'
+  pod 'RxCocoa', '~> 4.4.0'
+  pod 'Starscream', '~> 3.1'
 
 end

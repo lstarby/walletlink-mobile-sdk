@@ -1,15 +1,8 @@
-//
-//  WalletLinkProtocol.swift
-//  WalletLink
-//
-//  Created by Hish Bouabdallah on 5/19/19.
-//  Copyright © 2019 Coinbase Inc. All rights reserved.
-//
+// Copyright (c) 2017-2019 Coinbase Inc. See LICENSE
 
 import RxSwift
 
 public protocol WalletLinkProtocol: class {
-
     /// Incoming signature requests
     var signatureRequestObservable: Observable<SignatureRequest> { get }
 
@@ -17,8 +10,17 @@ public protocol WalletLinkProtocol: class {
     ///
     /// - Parameters:
     ///     -  url: WalletLink server URL
+    init(url: URL)
+
+    /// Starts WalletLink connection with the server if a stored session exists. Otherwise, this is a noop. This method
+    /// should be called immediately on app launch.
+    ///
+    /// - Parameters:
     ///     - metadata: client metadata forwarded to host once link is established
-    init(url: URL, metadata: [ClientMetadataKey : String])
+    func start(metadata: [ClientMetadataKey: String])
+
+    /// Disconnect from WalletLink server and stop observing session ID updates to prevent reconnection.
+    func stop()
 
     /// Connect to WalletLink server using parameters extracted from QR code scan
     ///
@@ -36,7 +38,7 @@ public protocol WalletLinkProtocol: class {
     ///   - value: Metadata value
     ///
     /// - Returns: True if the operation succeeds
-    func setMetadata(key: String, value: String) -> Single<Void>
+    func setMetadata(key: ClientMetadataKey, value: String) -> Single<Void>
 
     /// Send signature request approval to the requesting host
     ///

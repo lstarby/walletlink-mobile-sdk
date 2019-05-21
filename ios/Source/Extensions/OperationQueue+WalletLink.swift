@@ -3,7 +3,7 @@
 import RxSwift
 
 extension OperationQueue {
-    /// Add Single into an opertion qeueue
+    /// Add a `Single` to the operation qeueue
     ///
     /// - Parameters:
     ///     - single: Instance of single to execute as part of the operation queue

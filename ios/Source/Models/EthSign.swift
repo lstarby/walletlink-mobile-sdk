@@ -1,10 +1,4 @@
-//
-//  EthSign.swift
-//  WalletLink
-//
-//  Created by Hish on 5/20/19.
-//  Copyright © 2019 Coinbase Inc. All rights reserved.
-//
+// Copyright (c) 2017-2019 Coinbase Inc. See LICENSE
 
 import Foundation
 
