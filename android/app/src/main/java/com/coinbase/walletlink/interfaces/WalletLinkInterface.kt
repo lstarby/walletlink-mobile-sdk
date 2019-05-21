@@ -1,12 +1,24 @@
 package com.coinbase.walletlink.interfaces
 
 import com.coinbase.walletlink.SignatureRequest
+import com.coinbase.walletlink.models.ClientMetadataKey
 import io.reactivex.Observable
 import io.reactivex.Single
 
 interface WalletLinkInterface {
     // Incoming signature requests
     val signatureRequestsObservable: Observable<SignatureRequest>
+
+    /**
+    * Starts WalletLink connection with the server if a stored session exists. Otherwise, this is a noop. This method
+    * should be called immediately on app launch.
+    *
+    * @param metadata client metadata forwarded to host once link is established
+    */
+    fun start(metadata: Map<ClientMetadataKey, String>)
+
+    // Disconnect from WalletLink server and stop observing session ID updates to prevent reconnection.
+    fun stop()
 
     /**
      * Connect to WalletLink server using parameters extracted from QR code scan

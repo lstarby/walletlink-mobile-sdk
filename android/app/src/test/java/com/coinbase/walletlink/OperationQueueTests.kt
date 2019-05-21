@@ -2,14 +2,9 @@ package com.coinbase.walletlink
 
 import com.coinbase.walletlink.concurrency.BlockOperation
 import com.coinbase.walletlink.concurrency.OperationQueue
-import com.coinbase.walletlink.concurrency.SingleOperation
 import io.reactivex.Single
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test
-import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger

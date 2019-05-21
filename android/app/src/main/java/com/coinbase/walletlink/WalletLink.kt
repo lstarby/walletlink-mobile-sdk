@@ -2,6 +2,7 @@ package com.coinbase.walletlink
 
 import com.coinbase.walletlink.concurrency.OperationQueue
 import com.coinbase.walletlink.interfaces.WalletLinkInterface
+import com.coinbase.walletlink.models.ClientMetadataKey
 import com.coinbase.walletlink.models.Session
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -9,16 +10,28 @@ import io.reactivex.subjects.PublishSubject
 
 data class SignatureRequest(val eventId: Int)
 
-public class WalletLink(
-    val url: String,
-    val metadata: Map<String, String>
-) : WalletLinkInterface { // FIXME: hish - key should be `ClientMetadataKey`
+public class WalletLink(val url: String) : WalletLinkInterface {
     private val connection = WalletLinkConnection(url)
     private val operationQueue = OperationQueue(1)
     private val signatureRequestsSubject = PublishSubject.create<SignatureRequest>()
 
     // Incoming signature requests
     override val signatureRequestsObservable: Observable<SignatureRequest> = signatureRequestsSubject.hide()
+
+    /**
+     * Starts WalletLink connection with the server if a stored session exists. Otherwise, this is a noop. This method
+     * should be called immediately on app launch.
+     *
+     * @param metadata client metadata forwarded to host once link is established
+     */
+    override fun start(metadata: Map<ClientMetadataKey, String> = mapOf()) {
+
+    }
+
+    /// Disconnect from WalletLink server and stop observing session ID updates to prevent reconnection.
+    override fun stop() {
+
+    }
 
     /**
      * Connect to WalletLink server using parameters extracted from QR code scan

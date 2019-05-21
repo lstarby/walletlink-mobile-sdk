@@ -16,23 +16,17 @@ Icon
 !default.mode2v3
 *.perspectivev3
 !default.perspectivev3
-xcuserdata
-*.xccheckout
+ios/WalletLink.xcworkspace/xcuserdata/**
+ios/WalletLink.xcodeproj/xcuserdata/**
+ios/WalletLink.xcodeproj/*.xccheckout
 *.moved-aside
 DerivedData
 *.hmap
 *.ipa
-*.xcuserstate
+
 *.xcscmblueprint
 *.gcno
 *.gcda
-
-# Carthage
-/Carthage/Checkouts
-Carthage/Build/Mac
-Carthage/Build/tvOS
-Carthage/Build/watchOS
-Carthage/Build/.*.version
 
 # AppCode
 /.idea
@@ -42,5 +36,5 @@ vendor/bundle
 .bundle/
 node_modules/
 *.xcbkptlist
-/ios/WalletLink.xcworkspace/xcuserdata/hichambouabdallah.xcuserdatad/UserInterfaceState.xcuserstate
+
 UserInterfaceState.xcuserstate

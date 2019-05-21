@@ -5,11 +5,9 @@ import android.support.test.runner.AndroidJUnit4
 import com.coinbase.store.Store
 import com.coinbase.store.models.StoreKey
 import com.coinbase.store.models.StoreKind
-
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.junit.Assert.*
 
 /**
  * Instrumented test, which will execute on an Android device.

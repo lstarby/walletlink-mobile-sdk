@@ -204,8 +204,8 @@ public class WalletLink: WalletLinkProtocol {
         }
 
         return connection.setSessionConfig(
-            webhookId: "", // FIXME: hish - fill
-            webhookUrl: "", // FIXME: hish - fill
+            webhookId: "1", // FIXME: hish - fill
+            webhookUrl: "http://www.walletlink.org", // FIXME: hish - fill
             metadata: encryptedMetadata,
             for: session.sessionId
         )
