@@ -4,7 +4,7 @@ import android.content.Context
 import com.coinbase.store.interfaces.Storage
 import com.orhanobut.hawk.Hawk
 
-class SharedPreferencesStorage(context: Context): Storage {
+class SharedPreferencesStorage(context: Context) : Storage {
     init {
         Hawk.init(context).build()
     }

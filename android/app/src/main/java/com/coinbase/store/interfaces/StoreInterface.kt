@@ -29,4 +29,4 @@ interface StoreInterface {
      * @returns: True if value exists
      */
     fun <T> has(key: StoreKey<T>): Boolean
- }
+}

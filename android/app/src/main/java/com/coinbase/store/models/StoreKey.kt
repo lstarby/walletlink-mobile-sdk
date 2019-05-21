@@ -9,5 +9,4 @@ open class StoreKey<T>(id: String, uuid: String? = null, val kind: StoreKind, va
         )
         .filterNotNull()
         .joinToString("_")
-
 }

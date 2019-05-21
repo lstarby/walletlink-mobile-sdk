@@ -1,7 +1,7 @@
 package com.coinbase.networking
 
 // Represents data type received via web live connection
-sealed class WebIncomingDataType;
+sealed class WebIncomingDataType
 
 // Text message received from server
 data class WebIncomingText(val string: String) : WebIncomingDataType()

@@ -7,6 +7,7 @@ buildscript {
     ext.okhttp3Version = "3.12.0"
     ext.moshiVersion = "1.8.0"
     ext.kotlinCoroutineVersion = "1.2.1"
+    ext.ktlintVersion = "0.31.0"
 
     repositories {
         google()

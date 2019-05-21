@@ -10,7 +10,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock
 
 // FIXME: hish - Figure out how to split encrypted vs non-encrypted
 
-class Store(context: Context): StoreInterface {
+class Store(context: Context) : StoreInterface {
     private val appPrefStorage = SharedPreferencesStorage(context)
     private val memoryStorage = MemoryStorage()
     private val changeObservers = mutableMapOf<String, Any>()

@@ -22,7 +22,7 @@ public class WebSocket(
     private val connectionTimeout: Long = 15,
     private val minReconnectDelay: Long = 1,
     private val maxReconnectDelay: Long = 5
-): WebSocketListener() {
+) : WebSocketListener() {
     private val accessQueue = ReentrantLock()
     private val incomingSubject = PublishSubject.create<WebIncomingDataType>()
     private val connectionStateSubject = ReplaySubject.create<WebConnectionState>()
@@ -114,7 +114,7 @@ public class WebSocket(
      *
      *  @returns A single wrapping `Void` fired when send request completes
      */
-    public fun sendData(data: ByteArray) : Single<Unit> {
+    public fun sendData(data: ByteArray): Single<Unit> {
         val bytes = ByteString.of(data, 0, data.size)
 
         if (socket?.send(bytes) == true) {
@@ -190,7 +190,6 @@ public class WebSocket(
                 }
                 .subscribe()
         }
-
     }
 
     // Socket helpers

@@ -1,0 +1,43 @@
+excluded:
+  - Toshi/Generated
+  - Tests/Generated
+  - Pods
+  - .bundle
+  - Frameworks
+disabled_rules:
+  - file_length
+  - function_body_length
+  - function_parameter_count
+  - trailing_comma
+  - type_body_length
+  - type_name
+opt_in_rules:
+  - empty_count
+  - empty_string
+  - explicit_init
+  - fatal_error_message
+  - first_where
+  - operator_usage_whitespace
+  - overridden_super_call
+  - override_in_extension
+  - private_action
+  - private_outlet
+  - prohibited_super_call
+  - redundant_nil_coalescing
+  - switch_case_on_newline
+  - unused_private_declaration
+cyclomatic_complexity:
+  ignores_case_statements: true
+identifier_name:
+  min_length:
+    warning: 1
+  max_length: 
+    warning: 1000
+    error: 1000
+  allowed_symbols:
+    - _
+line_length:
+  warning: 120
+  error: 9999
+private_outlet:
+  allow_private_set: true

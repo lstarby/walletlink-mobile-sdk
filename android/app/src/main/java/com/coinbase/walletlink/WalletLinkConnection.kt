@@ -179,7 +179,7 @@ class WalletLinkConnection(url: String) {
         pendingSignerRequestsAccessQueue.withLock { pendingSignerRequests.remove(requestId) }
     }
 
-    /// This is called when the host sends a response to a request initiated by the signer
+    // / This is called when the host sends a response to a request initiated by the signer
     private fun receivedMessageResponse(response: MessageResponse) {
         val requestId = response.requestId
         if (requestId == null) {
@@ -206,4 +206,3 @@ class WalletLinkConnection(url: String) {
         TODO("Implement")
     }
 }
-

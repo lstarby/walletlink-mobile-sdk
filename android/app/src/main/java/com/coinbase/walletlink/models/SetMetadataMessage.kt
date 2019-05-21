@@ -11,7 +11,7 @@ data class SetMetadataMessage(
     val sessionId: String,
     val key: String,
     val value: String
-): JsonSerializable {
+) : JsonSerializable {
     override fun asJsonString(): String {
         val moshi = Moshi.Builder().build() // FIXME: hish - shared?
         val adapter = moshi.adapter<SetMetadataMessage>(SetMetadataMessage::class.java)

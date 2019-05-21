@@ -78,5 +78,3 @@ class TestKeys {
         val memoryString = StoreKey(id = "memory_string", kind = StoreKind.MEMORY, clazz = String::class.java)
     }
 }
-
-

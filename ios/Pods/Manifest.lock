@@ -14,6 +14,8 @@ PODS:
   - RxSwift (4.4.2):
     - RxAtomic (>= 4.4.2, ~> 4.4)
   - Starscream (3.1.0)
+  - SwiftFormat/CLI (0.37.2)
+  - SwiftLint (0.32.0)
 
 DEPENDENCIES:
   - "CBCrypto (from `git@github.com:CoinbaseWallet/CBCrypto.git`, commit `24ff5f6b2dd8e9cbe9ebf3df058e1cddf3632a1b`)"
@@ -22,6 +24,8 @@ DEPENDENCIES:
   - RxCocoa (~> 4.4.0)
   - RxSwift (~> 4.4.0)
   - Starscream (~> 3.1)
+  - SwiftFormat/CLI (= 0.37.2)
+  - SwiftLint
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -30,6 +34,8 @@ SPEC REPOS:
     - RxCocoa
     - RxSwift
     - Starscream
+    - SwiftFormat
+    - SwiftLint
 
 EXTERNAL SOURCES:
   CBCrypto:
@@ -62,7 +68,9 @@ SPEC CHECKSUMS:
   RxCocoa: 477990dc3b4c3ff55fb0ac77e1cc06244e0aaec8
   RxSwift: 74c29b693c8e42b0f64400e8b06564575742d649
   Starscream: 08172b481e145289c4930cb567230fb55897cfa4
+  SwiftFormat: abbfb26dde4c6d683923cde153c88e10da9d7881
+  SwiftLint: 009a898ef2a1c851f45e1b59349bf6ff2ddc990d
 
-PODFILE CHECKSUM: cd6e53856f90bfc79897ed1980e74461e2ab0480
+PODFILE CHECKSUM: f860993c17acc3804bc6df4f1fb9582f3e6e3c86
 
-COCOAPODS: 1.7.0.beta.3
+COCOAPODS: 1.6.2

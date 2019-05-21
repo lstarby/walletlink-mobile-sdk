@@ -24,13 +24,11 @@ public class WalletLink(val url: String) : WalletLinkInterface {
      *
      * @param metadata client metadata forwarded to host once link is established
      */
-    override fun start(metadata: Map<ClientMetadataKey, String> = mapOf()) {
-
+    override fun start(metadata: Map<ClientMetadataKey, String>) {
     }
 
-    /// Disconnect from WalletLink server and stop observing session ID updates to prevent reconnection.
+    // / Disconnect from WalletLink server and stop observing session ID updates to prevent reconnection.
     override fun stop() {
-
     }
 
     /**
@@ -44,10 +42,8 @@ public class WalletLink(val url: String) : WalletLinkInterface {
     override fun connect(sessionId: String, secret: String): Single<Unit> {
         val session = Session(sessionId, secret)
 
-
         return Single.just(Unit)
     }
-
 
     /**
      * Set metadata in all active sessions. This metadata will be forwarded to all the hosts
@@ -85,7 +81,7 @@ public class WalletLink(val url: String) : WalletLinkInterface {
 
     // Connection management
 
-    private fun startConnection():  Single<Unit> {
+    private fun startConnection(): Single<Unit> {
 //        operationQueue.cancelAllOperations()
 
 //        let connectSingle = Internet.statusChanges

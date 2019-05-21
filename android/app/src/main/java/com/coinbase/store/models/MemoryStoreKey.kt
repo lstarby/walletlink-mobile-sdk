@@ -4,4 +4,4 @@ class MemoryStoreKey<T>(
     id: String,
     uuid: String? = null,
     clazz: Class<T>
-): StoreKey<T>(id, uuid, StoreKind.MEMORY, clazz)
+) : StoreKey<T>(id, uuid, StoreKind.MEMORY, clazz)

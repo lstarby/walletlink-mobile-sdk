@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.system.measureTimeMillis
 
-
 class OperationQueueTests {
     @Test
     fun testSingleThread() {
@@ -20,7 +19,7 @@ class OperationQueueTests {
         val totalFinished = AtomicInteger()
         val millis = measureTimeMillis {
             for (i in 0 until numberOfBlocks) {
-                val operation =  BlockOperation {
+                val operation = BlockOperation {
                     Thread.sleep(1000)
                     totalFinished.incrementAndGet()
                     latch.countDown()
@@ -45,7 +44,7 @@ class OperationQueueTests {
         val totalFinished = AtomicInteger()
         val millis = measureTimeMillis {
             for (i in 0 until numberOfBlocks) {
-                val operation =  BlockOperation {
+                val operation = BlockOperation {
                     Thread.sleep(1000)
                     totalFinished.incrementAndGet()
                     latch.countDown()

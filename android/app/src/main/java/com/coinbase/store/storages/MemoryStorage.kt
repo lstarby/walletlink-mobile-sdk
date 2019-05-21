@@ -3,7 +3,7 @@ package com.coinbase.store.storages
 import com.coinbase.store.interfaces.Storage
 import java.util.concurrent.ConcurrentHashMap
 
-class MemoryStorage: Storage {
+class MemoryStorage : Storage {
     private val storage = ConcurrentHashMap<String, Any?>()
 
     override fun <T> set(key: String, value: T?, clazz: Class<T>) {

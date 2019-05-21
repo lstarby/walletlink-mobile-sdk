@@ -10,7 +10,7 @@ data class JoinSessionMessage(
     @field:Json(name = "id") val requestId: Int,
     val sessionId: String,
     val sessionKey: String
-): JsonSerializable {
+) : JsonSerializable {
     override fun asJsonString(): String {
         val moshi = Moshi.Builder().build() // FIXME: hish - shared?
         val adapter = moshi.adapter<JoinSessionMessage>(JoinSessionMessage::class.java)
