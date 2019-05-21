@@ -4,3 +4,6 @@ format:
 
 lint:
 	Pods/SwiftLint/swiftlint
+
+init:
+	 brew install gradle
