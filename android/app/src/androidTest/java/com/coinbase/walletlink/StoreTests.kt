@@ -5,9 +5,13 @@ import android.support.test.runner.AndroidJUnit4
 import com.coinbase.store.Store
 import com.coinbase.store.models.StoreKey
 import com.coinbase.store.models.StoreKind
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -64,6 +68,30 @@ class ExampleInstrumentedTest {
         store.set(TestKeys.memoryString, expected)
 
         assertEquals(expected, store.get(TestKeys.memoryString))
+    }
+
+    @Test
+    fun testObserver() {
+        val expected = "Testing observer"
+        val appContext = InstrumentationRegistry.getTargetContext()
+        val store = Store(appContext)
+        val latchDown = CountDownLatch(1)
+        var actual = ""
+
+        GlobalScope.launch {
+            store.observe(TestKeys.memoryString)
+                .filter { it != null }
+                .timeout(6, TimeUnit.SECONDS)
+                .subscribe({
+                    actual = it.element ?: throw AssertionError("No element found")
+                    latchDown.countDown()
+                }, { latchDown.countDown() })
+        }
+
+        store.set(TestKeys.memoryString, expected)
+        latchDown.await()
+
+        assertEquals(expected, actual)
     }
 }
 

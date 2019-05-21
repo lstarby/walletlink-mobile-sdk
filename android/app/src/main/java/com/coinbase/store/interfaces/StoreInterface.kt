@@ -1,6 +1,8 @@
 package com.coinbase.store.interfaces
 
+import com.coinbase.store.models.Optional
 import com.coinbase.store.models.StoreKey
+import io.reactivex.Observable
 
 // Store operation interface. Generally used to stub out Stores in unit tests
 interface StoreInterface {
@@ -29,4 +31,13 @@ interface StoreInterface {
      * @returns: True if value exists
      */
     fun <T> has(key: StoreKey<T>): Boolean
+
+    /**
+     * Add observer for store changes
+     *
+     * @param key Key to start observing for changes
+     *
+     * @return Observer
+     */
+    fun <T> observe(key: StoreKey<T>): Observable<Optional<T>>
 }

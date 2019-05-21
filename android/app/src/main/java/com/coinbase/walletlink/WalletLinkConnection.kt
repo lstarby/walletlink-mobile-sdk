@@ -3,8 +3,8 @@ package com.coinbase.walletlink
 import android.util.LruCache
 import com.coinbase.networking.WebIncomingDataType
 import com.coinbase.networking.WebSocket
-import com.coinbase.walletlink.extension.logError
-import com.coinbase.walletlink.extension.takeSingle
+import com.coinbase.walletlink.extensions.logError
+import com.coinbase.walletlink.extensions.takeSingle
 import com.coinbase.walletlink.interfaces.JsonSerializable
 import com.coinbase.walletlink.models.JoinSessionMessage
 import com.coinbase.walletlink.models.MessageResponse

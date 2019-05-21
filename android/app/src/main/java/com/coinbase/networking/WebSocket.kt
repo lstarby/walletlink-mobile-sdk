@@ -1,8 +1,8 @@
 package com.coinbase.networking
 
-import com.coinbase.walletlink.error.WebSocketException
-import com.coinbase.walletlink.extension.asUnit
-import com.coinbase.walletlink.extension.takeSingle
+import com.coinbase.walletlink.exceptions.WebSocketException
+import com.coinbase.walletlink.extensions.asUnit
+import com.coinbase.walletlink.extensions.takeSingle
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject

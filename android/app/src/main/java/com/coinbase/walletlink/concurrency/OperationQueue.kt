@@ -1,6 +1,6 @@
 package com.coinbase.walletlink.concurrency
 
-import com.coinbase.walletlink.error.OperationException
+import com.coinbase.walletlink.exceptions.OperationException
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.GlobalScope

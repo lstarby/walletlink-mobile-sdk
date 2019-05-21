@@ -1,4 +1,4 @@
-package com.coinbase.walletlink.extension
+package com.coinbase.walletlink.extensions
 
 import io.reactivex.Observable
 import io.reactivex.Single
