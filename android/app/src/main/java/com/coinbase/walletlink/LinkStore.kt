@@ -2,7 +2,6 @@ package com.coinbase.walletlink
 
 import java.util.concurrent.locks.ReentrantLock
 import com.coinbase.walletlink.models.Session
-import com.coinbase.store.Store
 import com.coinbase.store.interfaces.StoreInterface
 import com.coinbase.walletlink.models.StoreKeys
 import io.reactivex.Observable
@@ -44,7 +43,7 @@ class LinkStore(private val store: StoreInterface) {
         }
     }
 
-    /// Observe for distinct stored sessionIds update
+    // / Observe for distinct stored sessionIds update
     fun observeSessions(): Observable<Array<String>> {
         return store.observe(StoreKeys.sessions).map { it.element ?: arrayOf() }.distinctUntilChanged()
     }

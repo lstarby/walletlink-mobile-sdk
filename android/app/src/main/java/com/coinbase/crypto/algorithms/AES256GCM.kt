@@ -1,12 +1,14 @@
 package com.coinbase.crypto.algorithms
 
 import com.coinbase.crypto.exceptions.EncryptionException
-import com.coinbase.walletlink.utils.ByteArrayUtils
+import javax.crypto.Cipher
+import javax.crypto.spec.GCMParameterSpec
+import javax.crypto.spec.SecretKeySpec
 
 // Utility used to encrypt/decrypt using AES-256 GCM
 class AES256GCM {
     companion object {
-        private const val AES256_ALGORITHM = "PBKDF2WithHmacSHA256"
+        private const val AUTH_TAG_SIZE = 128
 
         /**
          * Encrypt data using using AES-256 GCM
@@ -15,36 +17,30 @@ class AES256GCM {
          * @param key Secret used to encrypt the data
          * @param iv Initialization vector. Acts as a salt
          *
-         * @return The encrypted data
+         * @return A pair with encrypted data and authTag respectively
          * @throws `EncryptionException.invalidAES256GCMData` if unable to encrypt data
          */
         @Throws(EncryptionException.InvalidAES256GCMData::class)
         fun encrypt(data: ByteArray, key: ByteArray, iv: ByteArray): Pair<ByteArray, ByteArray> {
-            return Pair(ByteArrayUtils.randomBytes(1), ByteArrayUtils.randomBytes(1))
+            val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+            val paramSpec = GCMParameterSpec(AUTH_TAG_SIZE, iv)
+            val keySpec = SecretKeySpec(key, "AES")
 
-            // FIXME: hish
-            /*
-               val keySpec = PBEKeySpec(key.toCharArray(), salt, ITERATIONS, KEY_SIZE)
-               val gcmSpec = GCMParameterSpec(AUTH_TAG_SIZE, iv)
-               val secretKey = SecretKeySpec(SecretKeyFactory.getInstance(ALGORITHM).generateSecret(keySpec).encoded, "AES")
-               val cipher = Cipher.getInstance(CIPHER_DERIVATION_PATH)
-               cipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmSpec)
-               val cipherTextWithAuthTag = cipher.doFinal(mnemonic.toByteArray())
-               val cipherText = cipherTextWithAuthTag.copyOfRange(0, cipherTextWithAuthTag.size - (AUTH_TAG_SIZE / Byte.SIZE_BITS))
-               val authTag = cipherTextWithAuthTag.copyOfRange(cipherTextWithAuthTag.size - (AUTH_TAG_SIZE / Byte.SIZE_BITS), cipherTextWithAuthTag.size)
-               val timestamp = simpleDateFormat.format(Date())
+            // FIXME: hish - do I need to catch runtime exceptions?
 
-               val backupPayload = BackupPayload(
-                   salt = salt.toBase64String(),
-                   iv = iv.toBase64String(),
-                   cipherText = cipherText.toBase64String(),
-                   authTag = authTag.toBase64String(),
-                   hash = hashMnemonic(mnemonic),
-                   timestamp = timestamp,
-                   username = username)
+            cipher.init(Cipher.ENCRYPT_MODE, keySpec, paramSpec)
+            val cipherBytes = cipher.doFinal(data)
+            val cipherTextBytes = cipherBytes.copyOfRange(
+                0,
+                cipherBytes.size - (AUTH_TAG_SIZE / Byte.SIZE_BITS)
+            )
 
-               return BackupPayloadJsonAdapter(moshi).toJson(backupPayload)
-               */
+            val authTagBytes = cipherBytes.copyOfRange(
+                cipherBytes.size - (AUTH_TAG_SIZE / Byte.SIZE_BITS),
+                cipherBytes.size
+            )
+
+            return Pair(cipherTextBytes, authTagBytes)
         }
     }
 }

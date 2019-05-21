@@ -1,34 +1,38 @@
 package com.coinbase.walletlink.extensions
 
+import android.util.Base64
+import com.coinbase.crypto.algorithms.AES256GCM
 import com.coinbase.walletlink.exceptions.WalletLinkExeception
 
-
-/// Encrypt string using AES256 algorithm for given secret and iv
-///
-///     - Secret: Secret used to encrypt the data
-///     - iv: Initialization vector. Acts as a salt
-///
-/// - Returns: The encrypted data
-/// - Throws: An `WalletLinkError.unableToEncryptData` if unable to encrypt data
+/**
+ * Encrypt string using AES256 algorithm for given secret and iv
+ *
+ *  @param secret Secret used to encrypt the data
+ *  @param iv Initialization vector. Acts as a salt
+ *
+ * @return The encrypted data
+ * @throws A `WalletLinkError.unableToEncryptData` if unable to encrypt data
+ */
 @Throws(WalletLinkExeception.unableToEncryptData::class)
 fun String.encryptUsingAES256GCM(secret: String, iv: ByteArray): String {
-    // FIXME: hish
-    return ""
-//    guard
-//    let secretData = Data(base64Encoded: secret),
-//    let dataToEncrypt = self.data(using: .utf8),
-//    let (encryptedData, _) = try? AES256GCM.encrypt(
-//        data: dataToEncrypt,
-//        key: secretData,
-//        initializationVector: iv
-//        )
-//        else {
-//            throw WalletLinkError.unableToEncryptData
-//        }
-//
-//        var mutableData = Data()
-//        mutableData.append(iv)
-//        mutableData.append(encryptedData)
-//
-//        return mutableData.base64EncodedString()
+    try {
+        val secretData = secret.base64EncodedByteArray()
+        val dataToEncrypt = this.toByteArray()
+        val result = AES256GCM.encrypt(dataToEncrypt, secretData, iv)
+        val combinedByteArray = iv + result.first
+
+        return combinedByteArray.base64EncodedString()
+    } catch (err: IllegalAccessException) {
+        throw WalletLinkExeception.unableToEncryptData()
     }
+}
+
+/**
+ * Convert String to ByteArray
+ *
+ * @throws A `IllegalArgumentException` if unable to convert to base64
+ */
+@Throws(IllegalArgumentException::class)
+fun String.base64EncodedByteArray(): ByteArray {
+    return Base64.decode(this, Base64.NO_WRAP)
+}
