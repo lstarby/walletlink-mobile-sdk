@@ -1,4 +1,4 @@
-package com.coinbase.networking
+package com.coinbase.networking.models
 
 // Represents data type received via web live connection
 sealed class WebIncomingDataType

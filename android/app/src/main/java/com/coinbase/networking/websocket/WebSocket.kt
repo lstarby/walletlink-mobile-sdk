@@ -1,5 +1,12 @@
-package com.coinbase.networking
+package com.coinbase.networking.websocket
 
+import com.coinbase.networking.models.WebConnectionConnected
+import com.coinbase.networking.models.WebConnectionDisconnected
+import com.coinbase.networking.models.WebConnectionState
+import com.coinbase.networking.models.WebIncomingData
+import com.coinbase.networking.models.WebIncomingDataType
+import com.coinbase.networking.models.WebIncomingText
+import com.coinbase.networking.models.isConnected
 import com.coinbase.walletlink.exceptions.WebSocketException
 import com.coinbase.walletlink.extensions.asUnit
 import com.coinbase.walletlink.extensions.takeSingle
@@ -55,7 +62,7 @@ public class WebSocket(
 
         accessQueue.withLock {
             isCurrentlyConnected = this.isConnected
-            this.isManualClose = true
+            this.isManualClose = false
         }
 
         if (isCurrentlyConnected) {
@@ -64,6 +71,7 @@ public class WebSocket(
 
         return connectionStateObservable
             .doOnSubscribe { connectSocket() }
+            .filter { it.isConnected }
             .takeSingle()
             .timeout(connectionTimeout, TimeUnit.SECONDS)
             .asUnit()
@@ -88,6 +96,7 @@ public class WebSocket(
 
         return connectionStateObservable
             .doOnSubscribe { disconnectSocket() }
+            .filter { !it.isConnected }
             .takeSingle()
             .asUnit()
     }

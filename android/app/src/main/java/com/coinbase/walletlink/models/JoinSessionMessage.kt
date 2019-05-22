@@ -8,6 +8,7 @@ import com.squareup.moshi.Moshi
 @JsonClass(generateAdapter = true)
 data class JoinSessionMessage(
     @field:Json(name = "id") val requestId: Int,
+    val type: ClientMessageType = ClientMessageType.JOIN_SESSION,
     val sessionId: String,
     val sessionKey: String
 ) : JsonSerializable {

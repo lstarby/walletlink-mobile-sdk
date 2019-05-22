@@ -7,6 +7,7 @@ import com.squareup.moshi.Moshi
 
 @JsonClass(generateAdapter = true)
 data class SetSessionConfigMessage(
+    val type: ClientMessageType = ClientMessageType.SET_SESSION_CONFIG,
     @field:Json(name = "id") val requestId: Int,
     val sessionId: String,
     val webhookId: String,

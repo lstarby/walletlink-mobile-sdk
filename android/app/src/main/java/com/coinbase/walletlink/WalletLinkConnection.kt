@@ -1,8 +1,10 @@
 package com.coinbase.walletlink
 
 import android.util.LruCache
-import com.coinbase.networking.WebIncomingDataType
-import com.coinbase.networking.WebSocket
+import com.coinbase.networking.models.WebIncomingDataType
+import com.coinbase.networking.models.WebIncomingText
+import com.coinbase.networking.websocket.WebSocket
+import com.coinbase.walletlink.extensions.jsonMap
 import com.coinbase.walletlink.extensions.logError
 import com.coinbase.walletlink.extensions.takeSingle
 import com.coinbase.walletlink.interfaces.JsonSerializable
@@ -10,6 +12,7 @@ import com.coinbase.walletlink.models.ClientMetadataKey
 import com.coinbase.walletlink.models.JoinSessionMessage
 import com.coinbase.walletlink.models.MessageResponse
 import com.coinbase.walletlink.models.PublishEventMessage
+import com.coinbase.walletlink.models.ServerMessageType
 import com.coinbase.walletlink.models.SetMetadataMessage
 import com.coinbase.walletlink.models.SetSessionConfigMessage
 import io.reactivex.Single
@@ -182,7 +185,7 @@ class WalletLinkConnection(url: String) {
 
     // / This is called when the host sends a response to a request initiated by the signer
     private fun receivedMessageResponse(response: MessageResponse) {
-        val requestId = response.requestId
+        val requestId = response.id
         if (requestId == null) {
             assert(false) // FIXME: hish , "Invalid WalletLink message link response")
             return
@@ -192,7 +195,7 @@ class WalletLinkConnection(url: String) {
 
         pendingSignerRequestsAccessQueue.withLock {
             subject = pendingSignerRequests.get(requestId)
-            pendingSignerRequests.remove(response.requestId)
+            pendingSignerRequests.remove(response.id)
         }
 
         subject?.onNext(response)
@@ -204,6 +207,20 @@ class WalletLinkConnection(url: String) {
     }
 
     private fun handleIncomingType(incoming: WebIncomingDataType) {
-        TODO("Implement")
+        val incomingText = incoming as? WebIncomingText ?: return
+        val jsonString = incomingText.string
+        val json = jsonString.jsonMap() ?: return
+        val typeString = json["type"] as? String ?: return
+        val type = ServerMessageType.fromRawValue(typeString) ?: return
+
+        when (type) {
+            ServerMessageType.OK, ServerMessageType.FAIL -> {
+                val response = MessageResponse.fromJsonString(jsonString) ?: return
+                receivedMessageResponse(response)
+            }
+            ServerMessageType.EVENT -> {
+                TODO("Missing event implementation. Call receivedMessageEvent") // FIXME: hish
+            }
+        }
     }
 }

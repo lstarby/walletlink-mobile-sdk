@@ -10,7 +10,7 @@ public class WalletLink: WalletLinkProtocol {
     private let linkStore = LinkStore()
     private let connection: WalletLinkConnection
     private let operationQueue = OperationQueue()
-    private let isConnectedSubject = ReplaySubject<Bool>.create(bufferSize: 1)
+    private let isConnectedObservable: Observable<Bool>
     private let signatureRequestsSubject = PublishSubject<SignatureRequest>()
     private var metadata = [ClientMetadataKey: String]()
 
@@ -25,6 +25,7 @@ public class WalletLink: WalletLinkProtocol {
         connection = WalletLinkConnection(url: url)
         operationQueue.maxConcurrentOperationCount = 1
         signatureRequestObservable = signatureRequestsSubject.asObservable()
+        isConnectedObservable = connection.connectionStateObservable.map { $0.isConnected }
     }
 
     /// Stop connection when WalletLink instance is deallocated
@@ -77,7 +78,7 @@ public class WalletLink: WalletLinkProtocol {
         _ = startConnection().subscribe()
 
         // wait for connection to be established, then attempt to join and persist the new session.
-        return isConnectedSubject
+        return isConnectedObservable
             .filter { $0 == true }
             .takeSingle()
             .flatMap { _ in self.joinSession(session) }
@@ -143,7 +144,6 @@ public class WalletLink: WalletLinkProtocol {
             .filter { $0.isOnline }
             .takeSingle()
             .flatMap { _ in self.connection.connect() }
-            .map { self.isConnectedSubject.onNext(true) }
             .flatMap { self.joinSessions() }
 
         return operationQueue.addSingle(connectSingle)
@@ -155,7 +155,6 @@ public class WalletLink: WalletLinkProtocol {
         let disconnectSingle = connection.disconnect()
             .logError()
             .catchErrorJustReturn(())
-            .map { self.isConnectedSubject.onNext(false) }
 
         return operationQueue.addSingle(disconnectSingle)
     }

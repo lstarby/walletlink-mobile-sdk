@@ -14,7 +14,7 @@ class WalletLinkTests {
     @Test
     fun testWalletLinkConnect() {
         val appContext = InstrumentationRegistry.getTargetContext()
-        val walletLink = WalletLink(url = "ws://127.0.0.1:8080/rpc/", context = appContext)
+        val walletLink = WalletLink(url = "ws://10.0.2.2:3003/rpc", context = appContext)
         val latch = CountDownLatch(1)
 
         GlobalScope.launch {

@@ -7,6 +7,7 @@ import com.squareup.moshi.Moshi
 
 @JsonClass(generateAdapter = true)
 data class SetMetadataMessage(
+    val type: ClientMessageType = ClientMessageType.SET_METADATA,
     @field:Json(name = "id") val requestId: Int,
     val sessionId: String,
     val key: String,

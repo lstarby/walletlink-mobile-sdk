@@ -3,6 +3,8 @@ package com.coinbase.walletlink.extensions
 import android.util.Base64
 import com.coinbase.crypto.algorithms.AES256GCM
 import com.coinbase.walletlink.exceptions.WalletLinkExeception
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 
 /**
  * Encrypt string using AES256 algorithm for given secret and iv
@@ -35,4 +37,12 @@ fun String.encryptUsingAES256GCM(secret: String, iv: ByteArray): String {
 @Throws(IllegalArgumentException::class)
 fun String.base64EncodedByteArray(): ByteArray {
     return Base64.decode(this, Base64.NO_WRAP)
+}
+
+// Convert JSON string to Map<String, Any>
+fun String.jsonMap(): Map<String, Any>? {
+    val moshi = Moshi.Builder().build() // FIXME: hish - shared?
+    val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+    val adapter = moshi.adapter<Map<String, Any>>(type)
+    return adapter.fromJson(this)
 }

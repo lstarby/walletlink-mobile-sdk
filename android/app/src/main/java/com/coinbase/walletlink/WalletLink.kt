@@ -2,6 +2,7 @@ package com.coinbase.walletlink
 
 import android.content.Context
 import com.coinbase.crypto.extensions.sha256
+import com.coinbase.networking.models.isConnected
 import com.coinbase.store.Store
 import com.coinbase.walletlink.concurrency.OperationQueue
 import com.coinbase.walletlink.exceptions.WalletLinkExeception
@@ -13,11 +14,9 @@ import com.coinbase.walletlink.interfaces.WalletLinkInterface
 import com.coinbase.walletlink.models.ClientMetadataKey
 import com.coinbase.walletlink.models.Session
 import com.coinbase.walletlink.utils.ByteArrayUtils
-import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.ReplaySubject
 import java.util.concurrent.TimeUnit
 
 data class SignatureRequest(val eventId: Int)
@@ -27,12 +26,12 @@ public class WalletLink(url: String, context: Context) : WalletLinkInterface {
     private var connectionDisposable: Disposable? = null
     private val connection = WalletLinkConnection(url)
     private val operationQueue = OperationQueue(1)
-    private val isConnectedSubject = ReplaySubject.create<Boolean>(1)
     private val signatureRequestsSubject = PublishSubject.create<SignatureRequest>()
     private var metadata = mutableMapOf<ClientMetadataKey, String>()
+    private val isConnectedObservable = connection.connectionStateObservable.map { it.isConnected }
 
     // Incoming signature requests
-    override val signatureRequestsObservable: Observable<SignatureRequest> = signatureRequestsSubject.hide()
+    override val signatureRequestsObservable = signatureRequestsSubject.hide()
 
     /**
      * Starts WalletLink connection with the server if a stored session exists. Otherwise, this is a noop. This method
@@ -83,7 +82,7 @@ public class WalletLink(url: String, context: Context) : WalletLinkInterface {
         startConnection().subscribe()
 
         // wait for connection to be established, then attempt to join and persist the new session.
-        return isConnectedSubject
+        return isConnectedObservable
             .filter { it }
             .takeSingle()
             .flatMap { joinSession(session) }
@@ -150,7 +149,6 @@ public class WalletLink(url: String, context: Context) : WalletLinkInterface {
 //                .filter { $0.isOnline }
 
         val connectSingle = connection.connect()
-            .map { isConnectedSubject.onNext(true) }
             .flatMap { joinSessions() }
 
         return operationQueue.addSingle(connectSingle)
@@ -162,7 +160,6 @@ public class WalletLink(url: String, context: Context) : WalletLinkInterface {
         val disconnectSingle = connection.disconnect()
             .logError()
             .onErrorResumeNext { Single.just(Unit) }
-            .map { isConnectedSubject.onNext(false) }
 
         return operationQueue.addSingle(disconnectSingle)
     }
@@ -173,7 +170,7 @@ public class WalletLink(url: String, context: Context) : WalletLinkInterface {
         val joinSessionSingles = linkStore.sessions
             .map { joinSession(it).asUnit().onErrorResumeNext { Single.just(Unit) } }
 
-        return Single.zip(joinSessionSingles) { }.asUnit()
+        return Single.zip(joinSessionSingles) { it.filterIsInstance<List<Unit>>() }.asUnit()
     }
 
     private fun joinSession(session: Session): Single<Boolean> {

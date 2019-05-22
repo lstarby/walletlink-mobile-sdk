@@ -111,10 +111,10 @@
 		5159CC70228FDE2800A257C0 = {
 			isa = PBXGroup;
 			children = (
-				5159CC7C228FDE2800A257C0 /* Source */,
 				515663758C5992CAA12B3FAE /* Frameworks */,
 				D3D20C12EB57C0AE031483E8 /* Pods */,
 				5159CC7B228FDE2800A257C0 /* Products */,
+				5159CC7C228FDE2800A257C0 /* Source */,
 			);
 			sourceTree = "<group>";
 		};
@@ -157,6 +157,9 @@
 			isa = PBXGroup;
 			children = (
 				51D42E1F2290029500048066 /* ClientMessageType.swift */,
+				5108610D22900EAF0060C12F /* ClientMetadataKey.swift */,
+				E7B355342293596700DDBE84 /* EthSendTransaction.swift */,
+				E7B355362293597700DDBE84 /* EthSign.swift */,
 				51D42E1D2290027A00048066 /* JoinSessionMessage.swift */,
 				5159CC98228FE40C00A257C0 /* MessageEvent.swift */,
 				51D42E18229001BA00048066 /* MessageResponse.swift */,
@@ -166,9 +169,6 @@
 				5108610B229009B60060C12F /* SetMetadataMessage.swift */,
 				51086109229008E30060C12F /* SetSessionConfigMessage.swift */,
 				5159CCA2228FE65D00A257C0 /* SignatureRequest.swift */,
-				5108610D22900EAF0060C12F /* ClientMetadataKey.swift */,
-				E7B355342293596700DDBE84 /* EthSendTransaction.swift */,
-				E7B355362293597700DDBE84 /* EthSign.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
