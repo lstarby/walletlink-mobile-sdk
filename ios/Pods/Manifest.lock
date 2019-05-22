@@ -19,7 +19,7 @@ PODS:
 
 DEPENDENCIES:
   - "CBCrypto (from `git@github.com:CoinbaseWallet/CBCrypto.git`, commit `24ff5f6b2dd8e9cbe9ebf3df058e1cddf3632a1b`)"
-  - "CBHTTP (from `git@github.com:CoinbaseWallet/CBHTTP.git`, commit `efc22abb7f982f2a5ff8e73142ce7810823a963c`)"
+  - "CBHTTP (from `git@github.com:CoinbaseWallet/CBHTTP.git`, commit `41422b2159a660ca53de152b419ff7338523af6c`)"
   - "CBStore (from `git@github.com:CoinbaseWallet/Stores.git`, commit `f6780247a1c25797c944c2f43f259d1150147ef7`)"
   - RxCocoa (~> 4.4.0)
   - RxSwift (~> 4.4.0)
@@ -42,7 +42,7 @@ EXTERNAL SOURCES:
     :commit: 24ff5f6b2dd8e9cbe9ebf3df058e1cddf3632a1b
     :git: "git@github.com:CoinbaseWallet/CBCrypto.git"
   CBHTTP:
-    :commit: efc22abb7f982f2a5ff8e73142ce7810823a963c
+    :commit: 41422b2159a660ca53de152b419ff7338523af6c
     :git: "git@github.com:CoinbaseWallet/CBHTTP.git"
   CBStore:
     :commit: f6780247a1c25797c944c2f43f259d1150147ef7
@@ -53,7 +53,7 @@ CHECKOUT OPTIONS:
     :commit: 24ff5f6b2dd8e9cbe9ebf3df058e1cddf3632a1b
     :git: "git@github.com:CoinbaseWallet/CBCrypto.git"
   CBHTTP:
-    :commit: efc22abb7f982f2a5ff8e73142ce7810823a963c
+    :commit: 41422b2159a660ca53de152b419ff7338523af6c
     :git: "git@github.com:CoinbaseWallet/CBHTTP.git"
   CBStore:
     :commit: f6780247a1c25797c944c2f43f259d1150147ef7
@@ -71,6 +71,6 @@ SPEC CHECKSUMS:
   SwiftFormat: abbfb26dde4c6d683923cde153c88e10da9d7881
   SwiftLint: 009a898ef2a1c851f45e1b59349bf6ff2ddc990d
 
-PODFILE CHECKSUM: 1fa4b3a1bb083a8bd0ac14457319c60ef74a7b70
+PODFILE CHECKSUM: 6e0d449852461c36e86dc7c1285a3ecaed9bfc6e
 
 COCOAPODS: 1.6.2

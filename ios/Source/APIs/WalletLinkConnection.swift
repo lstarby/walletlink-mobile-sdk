@@ -22,11 +22,6 @@ final class WalletLinkConnection {
     /// WalletLink Connection state
     let connectionStateObservable: Observable<WebConnectionState>
 
-    /// Determine whether WalletLink connection is still available
-    var isConnected: Bool {
-        return connection.isConnected
-    }
-
     /// Constructor
     ///
     /// - Parameters:

@@ -45,9 +45,6 @@ class WalletLinkConnection(url: String) {
     // WalletLink Connection state
     val connectionStateObservable = connection.connectionStateObservable
 
-    // Determine whether WalletLink connection is still available
-    val isConnected: Boolean get() = connection.isConnected
-
     init {
         connection.incomingObservable
             .observeOn(Schedulers.io())

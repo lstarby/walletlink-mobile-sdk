@@ -41,16 +41,13 @@ public class WebSocket(
     private var socket: WebSocket? = null
     private var isManualClose: Boolean = false
     private var reconnectAttempts = 0
+    private var isConnected: Boolean = false
 
     // Observable for all incoming text or data messages
     public val incomingObservable: Observable<WebIncomingDataType> = incomingSubject.hide()
 
     // Observable for web socket connection state
     public val connectionStateObservable: Observable<WebConnectionState> = connectionStateSubject.hide()
-
-    // Determine whether connection to websocket server has been established
-    public var isConnected: Boolean = false
-        private set
 
     /**
      * Connect to given web socket
