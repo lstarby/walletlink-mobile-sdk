@@ -30,7 +30,7 @@ public class WalletLink: WalletLinkProtocol {
 
     /// Stop connection when WalletLink instance is deallocated
     deinit {
-        self.stop()
+        self.disconnect()
     }
 
     /// Starts WalletLink connection with the server if a stored session exists. Otherwise, this is a noop. This method
@@ -38,7 +38,7 @@ public class WalletLink: WalletLinkProtocol {
     ///
     /// - Parameters:
     ///     - metadata: client metadata forwarded to host once link is established
-    public func start(metadata: [ClientMetadataKey: String] = [:]) {
+    public func connect(metadata: [ClientMetadataKey: String] = [:]) {
         self.metadata = metadata
 
         connectionDisposable?.dispose()
@@ -57,7 +57,7 @@ public class WalletLink: WalletLinkProtocol {
     }
 
     /// Disconnect from WalletLink server and stop observing session ID updates to prevent reconnection.
-    public func stop() {
+    public func disconnect() {
         operationQueue.cancelAllOperations()
         connectionDisposable?.dispose()
         connectionDisposable = nil
@@ -71,7 +71,7 @@ public class WalletLink: WalletLinkProtocol {
     ///     - secret: WalletLink host/guest shared secret
     ///
     /// - Returns: A single wrapping `Void` if connection was successful. Otherwise, an exception is thrown
-    public func connect(sessionId: String, secret: String) -> Single<Void> {
+    public func link(sessionId: String, secret: String) -> Single<Void> {
         let session = Session(sessionId: sessionId, secret: secret)
 
         // Connect to WalletLink server (if disconnected)

@@ -1,16 +1,17 @@
 package com.coinbase.networking.models
 
 // Represents connection state of any web connection
-sealed class WebConnectionState
+sealed class WebConnectionState {
+    // The connection is currently live
+    class Connected : WebConnectionState()
 
-// The connection is currently live
-class WebConnectionConnected : WebConnectionState()
+    // The connection is not currently live
+    data class Disconnected(val t: Throwable?) : WebConnectionState()
 
-// The connection is not currently live
-data class WebConnectionDisconnected(val t: Throwable?) : WebConnectionState()
-
-val WebConnectionState.isConnected: Boolean
+    // Determine whether web connection is established
+    val isConnected: Boolean
     get() = when (this) {
-        is WebConnectionConnected -> true
-        is WebConnectionDisconnected -> false
+        is Connected -> true
+        is Disconnected -> false
     }
+}

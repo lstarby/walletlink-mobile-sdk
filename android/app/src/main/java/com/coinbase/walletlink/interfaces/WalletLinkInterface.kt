@@ -15,10 +15,10 @@ interface WalletLinkInterface {
     *
     * @param metadata client metadata forwarded to host once link is established
     */
-    fun start(metadata: Map<ClientMetadataKey, String>)
+    fun connect(metadata: Map<ClientMetadataKey, String>)
 
     // Disconnect from WalletLink server and stop observing session ID updates to prevent reconnection.
-    fun stop()
+    fun disconnect()
 
     /**
      * Connect to WalletLink server using parameters extracted from QR code scan
@@ -28,7 +28,7 @@ interface WalletLinkInterface {
      *
      * @return A single wrapping `Void` if connection was successful. Otherwise, an exception is thrown
      */
-    fun connect(sessionId: String, secret: String): Single<Unit>
+    fun link(sessionId: String, secret: String): Single<Unit>
 
     /**
      * Set metadata in all active sessions. This metadata will be forwarded to all the hosts

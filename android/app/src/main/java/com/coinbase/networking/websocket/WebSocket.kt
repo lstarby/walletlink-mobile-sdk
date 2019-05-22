@@ -1,12 +1,9 @@
 package com.coinbase.networking.websocket
 
-import com.coinbase.networking.models.WebConnectionConnected
-import com.coinbase.networking.models.WebConnectionDisconnected
 import com.coinbase.networking.models.WebConnectionState
 import com.coinbase.networking.models.WebIncomingData
 import com.coinbase.networking.models.WebIncomingDataType
 import com.coinbase.networking.models.WebIncomingText
-import com.coinbase.networking.models.isConnected
 import com.coinbase.walletlink.exceptions.WebSocketException
 import com.coinbase.walletlink.extensions.asUnit
 import com.coinbase.walletlink.extensions.takeSingle
@@ -158,7 +155,7 @@ public class WebSocket(
             reconnectAttempts = 0
         }
 
-        connectionStateSubject.onNext(WebConnectionConnected())
+        connectionStateSubject.onNext(WebConnectionState.Connected())
 
         if (isManualClose) {
             disconnectSocket()
@@ -178,7 +175,7 @@ public class WebSocket(
             isConnected = false
         }
 
-        connectionStateSubject.onNext(WebConnectionDisconnected(t))
+        connectionStateSubject.onNext(WebConnectionState.Disconnected(t))
 
         // check if the connection was manually re-established. If so, make sure we reconnect.
         if (!isManualClose) {

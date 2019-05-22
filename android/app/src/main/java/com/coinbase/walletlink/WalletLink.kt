@@ -2,7 +2,6 @@ package com.coinbase.walletlink
 
 import android.content.Context
 import com.coinbase.crypto.extensions.sha256
-import com.coinbase.networking.models.isConnected
 import com.coinbase.store.Store
 import com.coinbase.walletlink.concurrency.OperationQueue
 import com.coinbase.walletlink.exceptions.WalletLinkExeception
@@ -39,7 +38,7 @@ public class WalletLink(url: String, context: Context) : WalletLinkInterface {
      *
      * @param metadata client metadata forwarded to host once link is established
      */
-    override fun start(metadata: Map<ClientMetadataKey, String>) {
+    override fun connect(metadata: Map<ClientMetadataKey, String>) {
         this.metadata = metadata.toMutableMap()
 
         connectionDisposable?.dispose()
@@ -60,7 +59,7 @@ public class WalletLink(url: String, context: Context) : WalletLinkInterface {
     }
 
     // Disconnect from WalletLink server and stop observing session ID updates to prevent reconnection.
-    override fun stop() {
+    override fun disconnect() {
         // FIXME: hish operationQueue.cancelAllOperations()
         connectionDisposable?.dispose()
         connectionDisposable = null
@@ -75,7 +74,7 @@ public class WalletLink(url: String, context: Context) : WalletLinkInterface {
      *
      * @return A single wrapping `Void` if connection was successful. Otherwise, an exception is thrown
      */
-    override fun connect(sessionId: String, secret: String): Single<Unit> {
+    override fun link(sessionId: String, secret: String): Single<Unit> {
         val session = Session(sessionId, secret)
 
         // Connect to WalletLink server (if disconnected)
@@ -86,7 +85,7 @@ public class WalletLink(url: String, context: Context) : WalletLinkInterface {
             .filter { it }
             .takeSingle()
             .flatMap { joinSession(session) }
-            .map { _ -> linkStore.save(session.sessionId, session.secret) }
+            .map { linkStore.save(session.sessionId, session.secret) }
             .timeout(15, TimeUnit.SECONDS)
             .logError()
     }

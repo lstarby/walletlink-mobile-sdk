@@ -17,10 +17,10 @@ public protocol WalletLinkProtocol: class {
     ///
     /// - Parameters:
     ///     - metadata: client metadata forwarded to host once link is established
-    func start(metadata: [ClientMetadataKey: String])
+    func connect(metadata: [ClientMetadataKey: String])
 
     /// Disconnect from WalletLink server and stop observing session ID updates to prevent reconnection.
-    func stop()
+    func disconnect()
 
     /// Connect to WalletLink server using parameters extracted from QR code scan
     ///
@@ -29,7 +29,7 @@ public protocol WalletLinkProtocol: class {
     ///     - secret: WalletLink host/guest shared secret
     ///
     /// - Returns: A single wrapping `Void` if connection was successful. Otherwise, an exception is thrown
-    func connect(sessionId: String, secret: String) -> Single<Void>
+    func link(sessionId: String, secret: String) -> Single<Void>
 
     /// Set metadata in all active sessions. This metadata will be forwarded to all the hosts
     ///

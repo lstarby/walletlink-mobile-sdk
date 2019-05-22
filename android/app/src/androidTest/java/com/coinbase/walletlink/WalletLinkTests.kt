@@ -18,7 +18,7 @@ class WalletLinkTests {
         val latch = CountDownLatch(1)
 
         GlobalScope.launch {
-            walletLink.connect(
+            walletLink.link(
                 sessionId = "c9db0147e942b2675045e3f61b247692",
                 secret = "29115acb7e001f1092e97552471c1116"
             )
