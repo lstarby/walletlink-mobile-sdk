@@ -13,16 +13,10 @@ import org.junit.runner.RunWith
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-/**
- * Instrumented test, which will execute on an Android device.
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-
 data class MockComplexObject(val name: String, val age: Int, val wallets: List<String>)
 
 @RunWith(AndroidJUnit4::class)
-class ExampleInstrumentedTest {
+class StoreTests {
     @Test
     fun useAppContext() {
         // Context of the app under test.

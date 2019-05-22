@@ -11,17 +11,19 @@ class SingleOperation<T>(private val single: Single<T>) : Operation {
 
     override fun main() {
         val countDownLatch = CountDownLatch(1)
+        var response: Result<T>? = null
 
         GlobalScope.launch {
             single.subscribe({
-                result = Result(response = it)
+                response = Result(response = it)
                 countDownLatch.countDown()
             }, {
-                result = Result(throwable = null)
+                response = Result(throwable = it)
                 countDownLatch.countDown()
             })
         }
 
         countDownLatch.await()
+        this.result = response
     }
 }
