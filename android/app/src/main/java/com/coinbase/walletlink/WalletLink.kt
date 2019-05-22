@@ -127,7 +127,10 @@ public class WalletLink(url: String, context: Context) : WalletLinkInterface {
      * @return A single wrapping a `Void` if successful, or an exception is thrown
      */
     override fun approve(requestId: String, signedData: ByteArray): Single<Unit> {
-        return Single.just(Unit)
+        return isConnectedObservable
+            .filter { it }
+            .takeSingle()
+            .flatMap { Single.just(Unit) }
     }
 
     /**
@@ -138,7 +141,10 @@ public class WalletLink(url: String, context: Context) : WalletLinkInterface {
      * @return A single wrapping a `Void` if successful, or an exception is thrown
      */
     override fun reject(requestId: String): Single<Unit> {
-        return Single.just(Unit)
+        return isConnectedObservable
+            .filter { it }
+            .takeSingle()
+            .flatMap { Single.just(Unit) }
     }
 
     // Connection management

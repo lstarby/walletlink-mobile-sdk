@@ -122,7 +122,10 @@ public class WalletLink: WalletLinkProtocol {
     ///
     /// - Returns: A single wrapping a `Void` if successful, or an exception is thrown
     public func approve(requestId _: String, signedData _: Data) -> Single<Void> {
-        return .just(())
+        return isConnectedObservable
+            .filter { $0 }
+            .takeSingle()
+            .flatMap { _ in Single.just(()) }
     }
 
     /// Send signature request rejection to the requesting host
@@ -132,7 +135,10 @@ public class WalletLink: WalletLinkProtocol {
     ///
     /// - Returns: A single wrapping a `Void` if successful, or an exception is thrown
     public func reject(requestId _: String) -> Single<Void> {
-        return .just(())
+        return isConnectedObservable
+            .filter { $0 }
+            .takeSingle()
+            .flatMap { _ in Single.just(()) }
     }
 
     // MARK: - Connection management
