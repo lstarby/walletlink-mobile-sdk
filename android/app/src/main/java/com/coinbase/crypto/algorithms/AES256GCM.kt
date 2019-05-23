@@ -1,9 +1,6 @@
 package com.coinbase.crypto.algorithms
 
-import com.coinbase.crypto.exceptions.EncryptionException
-import javax.crypto.BadPaddingException
 import javax.crypto.Cipher
-import javax.crypto.IllegalBlockSizeException
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -21,10 +18,8 @@ class AES256GCM {
          * @param key Secret used to encrypt the data
          * @param iv Initialization vector. Acts as a salt
          *
-         * @return A pair with encrypted data and authTag
-         * @throws `EncryptionException.invalidAES256GCMData` if unable to encrypt data
+         * @return A pair of encrypted data and authTag
          */
-        @Throws(EncryptionException.InvalidAES256GCMData::class)
         fun encrypt(data: ByteArray, key: ByteArray, iv: ByteArray): Pair<ByteArray, ByteArray> {
             val cipher = Cipher.getInstance(TRANSFORMATION)
             val paramSpec = GCMParameterSpec(AUTH_TAG_SIZE, iv)
@@ -35,13 +30,21 @@ class AES256GCM {
             cipher.init(Cipher.ENCRYPT_MODE, keySpec, paramSpec)
             val cipherBytes = cipher.doFinal(data)
             val ciphertextEndIndex = cipherBytes.size - (AUTH_TAG_SIZE / Byte.SIZE_BITS)
-            val cipherTextBytes = cipherBytes.copyOfRange(0, ciphertextEndIndex)
+            val encryptedBytes = cipherBytes.copyOfRange(0, ciphertextEndIndex)
             val authTagBytes = cipherBytes.copyOfRange(ciphertextEndIndex, cipherBytes.size)
 
-            return Pair(cipherTextBytes, authTagBytes)
+            return Pair(encryptedBytes, authTagBytes)
         }
 
-        @Throws(EncryptionException.InvalidAES256GCMData::class)
+        /**
+         * Encrypt data with AES-256 GCM using using Android KeyStore secret key
+         *
+         * @param data Data to encrypt
+         * @param secretKey Secret key from Android KeyStore
+         *
+         * @return A triple of iv, authTag, and encrypted data
+         * @throws `EncryptionException.invalidAES256GCMData` if unable to encrypt data
+         */
         fun encrypt(data: ByteArray, secretKey: SecretKey): Triple<ByteArray, ByteArray, ByteArray> {
             val cipher = Cipher.getInstance(TRANSFORMATION)
 
@@ -49,11 +52,11 @@ class AES256GCM {
 
             cipher.init(Cipher.ENCRYPT_MODE, secretKey)
             val cipherBytes = cipher.doFinal(data)
-            val ciphertextEndIndex = cipherBytes.size - (AUTH_TAG_SIZE / Byte.SIZE_BITS)
-            val cipherTextBytes = cipherBytes.copyOfRange(0, ciphertextEndIndex)
-            val authTagBytes = cipherBytes.copyOfRange(ciphertextEndIndex, cipherBytes.size)
+            val cipherEndIndex = cipherBytes.size - (AUTH_TAG_SIZE / Byte.SIZE_BITS)
+            val encryptedBytes = cipherBytes.copyOfRange(0, cipherEndIndex)
+            val authTagBytes = cipherBytes.copyOfRange(cipherEndIndex, cipherBytes.size)
 
-            return Triple(cipher.iv, authTagBytes, cipherTextBytes)
+            return Triple(cipher.iv, authTagBytes, encryptedBytes)
         }
 
         /**
@@ -67,7 +70,6 @@ class AES256GCM {
          * @return The decrypted data
          * @throws`EncryptionError.invalidAES256GCMData` if unable to decrypt data
          */
-        @Throws(IllegalBlockSizeException::class, BadPaddingException::class)
         fun decrypt(data: ByteArray, key: ByteArray, iv: ByteArray, authTag: ByteArray): ByteArray {
             val cipher = Cipher.getInstance(TRANSFORMATION)
             val paramSpec = GCMParameterSpec(AUTH_TAG_SIZE, iv)
@@ -79,7 +81,16 @@ class AES256GCM {
             return cipher.doFinal(encryptedData)
         }
 
-        @Throws(IllegalBlockSizeException::class, BadPaddingException::class)
+        /**
+         * Decrypt data with AES-256 GCM using using Android KeyStore secret key
+         *
+         * @param data Data to decrypt
+         * @param secretKey Secret key from Android KeyStore
+         * @param iv Initialization vector. Acts as a salt
+         * @param authTag authentication tag. Used to verify the integrity of the data
+         *
+         * @return A triple of iv, authTag, and encrypted data
+         */
         fun decrypt(data: ByteArray, secretKey: SecretKey, iv: ByteArray, authTag: ByteArray): ByteArray {
             val cipher = Cipher.getInstance(TRANSFORMATION)
             val paramSpec = GCMParameterSpec(AUTH_TAG_SIZE, iv)

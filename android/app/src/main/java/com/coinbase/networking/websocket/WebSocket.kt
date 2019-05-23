@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
+// Represents WebSocket client
 public class WebSocket(
     private val url: String,
     private val connectionTimeout: Long = 15,

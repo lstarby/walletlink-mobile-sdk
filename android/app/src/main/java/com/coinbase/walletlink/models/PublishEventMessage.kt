@@ -2,8 +2,10 @@ package com.coinbase.walletlink.models
 
 import com.coinbase.walletlink.interfaces.JsonSerializable
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 
+@JsonClass(generateAdapter = true)
 data class PublishEventMessage(
     val type: ClientMessageType = ClientMessageType.PUBLISH_EVENT,
     @field:Json(name = "id") val requestId: Int,

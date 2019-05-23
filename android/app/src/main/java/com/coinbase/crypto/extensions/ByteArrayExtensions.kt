@@ -1,5 +1,6 @@
 package com.coinbase.crypto.extensions
 
+// Convert ByteArray to hex encoded string
 fun ByteArray.toHexString(): String {
     val result = StringBuffer()
     for (byt in this) {

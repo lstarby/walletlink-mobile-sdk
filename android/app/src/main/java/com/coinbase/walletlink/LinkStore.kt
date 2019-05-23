@@ -48,7 +48,7 @@ class LinkStore(private val store: StoreInterface) {
         return store.observe(StoreKeys.sessions).map { it.element ?: arrayOf() }.distinctUntilChanged()
     }
 
-    // Private heplers
+    // Private helpers
 
     private fun getStoredSessions(): List<Session> {
         var result = listOf<Session>()

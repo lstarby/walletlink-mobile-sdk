@@ -24,6 +24,7 @@ class SingleOperation<T>(private val single: Single<T>) : Operation {
         }
 
         countDownLatch.await()
+
         this.result = response
     }
 }

@@ -5,6 +5,7 @@ import com.coinbase.walletlink.models.ClientMetadataKey
 import io.reactivex.Observable
 import io.reactivex.Single
 
+// WalletLINK SDK interface
 interface WalletLinkInterface {
     // Incoming signature requests
     val signatureRequestsObservable: Observable<SignatureRequest>
