@@ -2,12 +2,14 @@ package com.coinbase.store
 
 import android.content.Context
 import com.coinbase.store.exceptions.StoreException
+import com.coinbase.store.interfaces.Storage
 import com.coinbase.store.interfaces.StoreInterface
 import com.coinbase.store.models.Optional
 import com.coinbase.store.models.StoreKey
 import com.coinbase.store.models.StoreKind
-import com.coinbase.store.storages.SharedPreferencesStorage
+import com.coinbase.store.storages.EncryptedSharedPreferencesStorage
 import com.coinbase.store.storages.MemoryStorage
+import com.coinbase.store.storages.SharedPreferencesStorage
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import java.util.concurrent.locks.ReentrantReadWriteLock
@@ -17,23 +19,18 @@ import kotlin.concurrent.write
 // FIXME: hish - Figure out how to split encrypted vs non-encrypted
 
 class Store(context: Context) : StoreInterface {
-    private val appPrefStorage = SharedPreferencesStorage(context)
+    private val prefsStorage = SharedPreferencesStorage(context)
+    private val encryptedPrefsStorage = EncryptedSharedPreferencesStorage(context)
     private val memoryStorage = MemoryStorage()
     private val changeObservers = mutableMapOf<String, Any>()
     private val changeObserversLock = ReentrantReadWriteLock()
 
     override fun <T> set(key: StoreKey<T>, value: T?) {
-        return when (key.kind) {
-            StoreKind.SHARED_PREFERENCES -> appPrefStorage.set(key.name, value, key.clazz)
-            StoreKind.MEMORY -> memoryStorage.set(key.name, value, key.clazz)
-        }
+        storageForKey(key).set(key, value)
     }
 
     override fun <T> get(key: StoreKey<T>): T? {
-        return when (key.kind) {
-            StoreKind.SHARED_PREFERENCES -> appPrefStorage.get(key.name, key.clazz)
-            StoreKind.MEMORY -> memoryStorage.get(key.name, key.clazz)
-        }
+        return storageForKey(key).get(key)
     }
 
     override fun <T> has(key: StoreKey<T>): Boolean {
@@ -42,6 +39,16 @@ class Store(context: Context) : StoreInterface {
 
     override fun <T> observe(key: StoreKey<T>): Observable<Optional<T>> {
         return observer(key).hide()
+    }
+
+    // Private helpers
+
+    private fun <T> storageForKey(key: StoreKey<T>): Storage {
+        return when (key.kind) {
+            StoreKind.SHARED_PREFERENCES -> prefsStorage
+            StoreKind.ENCRYPTED_SHARED_PREFERENCES -> encryptedPrefsStorage
+            StoreKind.MEMORY -> memoryStorage
+        }
     }
 
     @Suppress("UNCHECKED_CAST")

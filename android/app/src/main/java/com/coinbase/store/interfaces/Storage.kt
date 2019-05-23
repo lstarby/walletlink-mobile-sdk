@@ -1,14 +1,15 @@
 package com.coinbase.store.interfaces
 
+import com.coinbase.store.models.StoreKey
+
 interface Storage {
     /**
      * Store value for key
      *
      * @param key Key used to store value
      * @param value Value to be stored. If nil is passed, the entry will be removed.
-     * @param clazz Value class type
      */
-    fun <T> set(key: String, value: T?, clazz: Class<T>)
+    fun <T> set(key: StoreKey<T>, value: T?)
 
     /**
      * Get value by key
@@ -18,8 +19,5 @@ interface Storage {
      *
      * @return The stored value if available. Otherwise, nil
      */
-    fun <T> get(key: String, clazz: Class<T>): T?
-
-    // Delete all keys in storage
-    fun destroy()
+    fun <T> get(key: StoreKey<T>): T?
 }

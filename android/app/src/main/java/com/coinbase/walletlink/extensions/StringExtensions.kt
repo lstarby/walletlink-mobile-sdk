@@ -7,21 +7,20 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 
 /**
- * Encrypt string using AES256 algorithm for given secret and iv
+ * Encrypt string using AES256GCM algorithm for given secret and iv
  *
- *  @param secret Secret used to encrypt the data
+ *  @param key Secret used to encrypt the data
  *  @param iv Initialization vector. Acts as a salt
  *
  * @return The encrypted data
- * @throws A `WalletLinkError.unableToEncryptData` if unable to encrypt data
+ * @throws `WalletLinkError.unableToEncryptData` if unable to encrypt data
  */
 @Throws(WalletLinkExeception.unableToEncryptData::class)
-fun String.encryptUsingAES256GCM(secret: String, iv: ByteArray): String {
+fun String.encryptUsingAES256GCM(key: ByteArray, iv: ByteArray): String {
     try {
-        val secretData = secret.base64EncodedByteArray()
         val dataToEncrypt = this.toByteArray()
-        val result = AES256GCM.encrypt(dataToEncrypt, secretData, iv)
-        val combinedByteArray = iv + result.first
+        val result = AES256GCM.encrypt(dataToEncrypt, key, iv)
+        val combinedByteArray = iv + result.second + result.first
 
         return combinedByteArray.base64EncodedString()
     } catch (err: IllegalAccessException) {
@@ -29,13 +28,35 @@ fun String.encryptUsingAES256GCM(secret: String, iv: ByteArray): String {
     }
 }
 
+// Helper function to allow String `secret`. See function above for details
+@Throws(WalletLinkExeception.unableToEncryptData::class)
+fun String.encryptUsingAES256GCM(key: String, iv: ByteArray): String {
+    return encryptUsingAES256GCM(key.toByteArray(), iv)
+}
+
+/**
+ * Parse AES256 GCM payload i.e. IV (12 bytes) + Auth Tag (16 bytes) + CiperText (rest of bytes)
+ *
+ * @returns Triple containing UV + Auth Tag + Cipher text
+ */
+fun String.parseAES256GMPayload(): Triple<ByteArray, ByteArray, ByteArray>? {
+    val encryptedData = this.base64DecodedByteArray()
+    val ivEndIndex = 12
+    val authTagEndIndex = ivEndIndex + 16
+    val iv = encryptedData.copyOfRange(0, ivEndIndex)
+    val authTag = encryptedData.copyOfRange(ivEndIndex, authTagEndIndex)
+    val cipherText = encryptedData.copyOfRange(authTagEndIndex, encryptedData.size)
+
+    return Triple(iv, authTag, cipherText)
+}
+
 /**
  * Convert String to ByteArray
  *
- * @throws A `IllegalArgumentException` if unable to convert to base64
+ * @throws `IllegalArgumentException` if unable to convert to base64
  */
 @Throws(IllegalArgumentException::class)
-fun String.base64EncodedByteArray(): ByteArray {
+fun String.base64DecodedByteArray(): ByteArray {
     return Base64.decode(this, Base64.NO_WRAP)
 }
 

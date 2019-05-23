@@ -26,7 +26,7 @@ extension String {
         guard
             let secretData = Data(base64Encoded: secret),
             let dataToEncrypt = self.data(using: .utf8),
-            let (encryptedData, _) = try? AES256GCM.encrypt(
+            let (encryptedData, authTag) = try? AES256GCM.encrypt(
                 data: dataToEncrypt,
                 key: secretData,
                 initializationVector: iv
@@ -37,6 +37,7 @@ extension String {
 
         var mutableData = Data()
         mutableData.append(iv)
+        mutableData.append(authTag)
         mutableData.append(encryptedData)
 
         return mutableData.base64EncodedString()
