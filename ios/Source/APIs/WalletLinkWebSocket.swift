@@ -8,7 +8,7 @@ private typealias WalletLinkCallback = (requestId: Int32, subject: ReplaySubject
 private let sendTimeout: RxTimeInterval = 15
 
 /// Represents a WalletLink WebSocket connection
-final class WalletLinkConnection {
+final class WalletLinkWebSocket {
     private let disposeBag = DisposeBag()
     private let connection: WebSocket
     private var requestIdSequence = AtomicInt32()

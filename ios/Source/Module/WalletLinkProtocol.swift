@@ -27,6 +27,7 @@ public protocol WalletLinkProtocol: class {
     /// - Parameters:
     ///     - sessionId: WalletLink host generated session ID
     ///     - secret: WalletLink host/guest shared secret
+    ///     -
     ///
     /// - Returns: A single wrapping `Void` if connection was successful. Otherwise, an exception is thrown
     func link(sessionId: String, secret: String) -> Single<Void>
@@ -47,7 +48,7 @@ public protocol WalletLinkProtocol: class {
     ////    - signedData: User signed data
     ///
     /// - Returns: A single wrapping a `Void` if successful, or an exception is thrown
-    func approve(requestId _: String, signedData _: Data) -> Single<Void>
+    func approve(requestId: String, signedData: Data) -> Single<Void>
 
     /// Send signature request rejection to the requesting host
     ///
@@ -55,5 +56,5 @@ public protocol WalletLinkProtocol: class {
     ///     - requestId: WalletLink request ID
     ///
     /// - Returns: A single wrapping a `Void` if successful, or an exception is thrown
-    func reject(requestId _: String) -> Single<Void>
+    func reject(requestId: String) -> Single<Void>
 }

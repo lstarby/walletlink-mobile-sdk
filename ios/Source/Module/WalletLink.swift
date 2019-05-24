@@ -8,7 +8,7 @@ import RxSwift
 public class WalletLink: WalletLinkProtocol {
     private var connectionDisposable: Disposable?
     private let linkStore = LinkStore()
-    private let connection: WalletLinkConnection
+    private let connection: WalletLinkWebSocket
     private let operationQueue = OperationQueue()
     private let isConnectedObservable: Observable<Bool>
     private let signatureRequestsSubject = PublishSubject<SignatureRequest>()
@@ -22,7 +22,7 @@ public class WalletLink: WalletLinkProtocol {
     /// - Parameters:
     ///     -  url: WalletLink server URL
     public required init(url: URL) {
-        connection = WalletLinkConnection(url: url)
+        connection = WalletLinkWebSocket(url: url)
         operationQueue.maxConcurrentOperationCount = 1
         signatureRequestObservable = signatureRequestsSubject.asObservable()
         isConnectedObservable = connection.connectionStateObservable.map { $0.isConnected }
