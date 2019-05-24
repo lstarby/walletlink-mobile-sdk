@@ -24,19 +24,23 @@ public class WalletLink: WalletLinkProtocol {
     }
 
     public func connect(metadata: [ClientMetadataKey: String]) {
-        // FIXME: hish - make one connection per RPC url
         connectionAccessQueue.sync {
-            self.connections = sessionStore.sessions.reduce(into: [:]) { dict, session in
+            var connections = [String: WalletLinkConnection]()
+            let sessionsByUrl: [URL: [Session]] = sessionStore.sessions
+                .reduce(into: [:]) { $0[$1.rpcUrl, default: []].append($1) }
+
+            sessionsByUrl.forEach { rpcUrl, sessions in
                 let conn = WalletLinkConnection(
-                    url: session.rpcUrl,
+                    url: rpcUrl,
                     webhookId: webhookId,
                     webhookUrl: webhookUrl,
                     sessionStore: sessionStore,
                     metadata: metadata
                 )
 
-                dict[session.id] = conn
                 self.observeConnection(conn)
+                sessions.forEach { connections[$0.id] = conn }
+                self.connections = connections
             }
         }
     }

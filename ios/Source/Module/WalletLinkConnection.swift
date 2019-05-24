@@ -9,7 +9,7 @@ class WalletLinkConnection {
     private let webhookId: String
     private let webhookUrl: URL
     private let url: URL
-    private var connectionDisposable: Disposable?
+    private var disposeBag = DisposeBag()
     private let sessionStore: SessionStore
     private let socket: WalletLinkWebSocket
     private let operationQueue = OperationQueue()
@@ -46,7 +46,7 @@ class WalletLinkConnection {
         signatureRequestObservable = signatureRequestsSubject.asObservable()
         isConnectedObservable = socket.connectionStateObservable.map { $0.isConnected }
 
-        connectionDisposable = sessionStore.observeSessions()
+        sessionStore.observeSessions(for: url)
             .flatMap { [weak self] sessionIds -> Single<Void> in
                 guard let self = self else { return .justVoid() }
 
@@ -57,13 +57,20 @@ class WalletLinkConnection {
                 return self.stopConnection().catchErrorJustReturn(())
             }
             .subscribe()
+            .disposed(by: disposeBag)
+
+        socket.incomingHostEventsObservable
+            .subscribe(onNext: { [weak self] event in
+                self?.handleIncomingEvent(event)
+            })
+            .disposed(by: disposeBag)
+
     }
 
     /// Stop connection when WalletLink instance is deallocated
     deinit {
         operationQueue.cancelAllOperations()
-        connectionDisposable?.dispose()
-        connectionDisposable = nil
+        disposeBag = DisposeBag()
         _ = stopConnection().subscribe()
     }
 
@@ -93,7 +100,7 @@ class WalletLinkConnection {
 
                 throw WalletLinkConnectionError.invalidSession
             }
-            .timeout(1500, scheduler: ConcurrentDispatchQueueScheduler(qos: .userInitiated)) // FIXME: hish - change back to 15
+            .timeout(15, scheduler: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
             .logError()
     }
 
@@ -107,7 +114,7 @@ class WalletLinkConnection {
     func setMetadata(key: ClientMetadataKey, value: String) -> Single<Void> {
         metadata[key] = value
 
-        let setMetadataSingles: [Single<Bool>] = sessionStore.sessions.compactMap { session in
+        let setMetadataSingles: [Single<Bool>] = sessionStore.getSessions(for: url).compactMap { session in
             guard
                 let iv = Data.randomBytes(12),
                 let encryptedValue = try? value.encryptUsingAES256GCM(secret: session.secret, iv: iv)
@@ -178,7 +185,8 @@ class WalletLinkConnection {
     // MARK: - Session management
 
     private func joinSessions() -> Single<Void> {
-        let joinSessionSingles = sessionStore.sessions.map { self.joinSession($0).asVoid().catchErrorJustReturn(()) }
+        let joinSessionSingles = sessionStore.getSessions(for: url)
+            .map { self.joinSession($0).asVoid().catchErrorJustReturn(()) }
 
         return Single.zip(joinSessionSingles).asVoid()
     }
@@ -223,5 +231,17 @@ class WalletLinkConnection {
             metadata: encryptedMetadata,
             for: session.id
         )
+    }
+
+    private func handleIncomingEvent(_ event: MessageEvent) {
+        guard
+            let session = sessionStore.getSession(id: event.sessionId, url: url),
+            let decrypted = try? event.data.decryptUsingAES256GCM(secret: session.secret),
+            let json = try? JSONSerialization.jsonObject(with: decrypted, options: [])
+        else {
+            return assertionFailure("Invalid event \(event)")
+        }
+
+        print("json \(json)")
     }
 }

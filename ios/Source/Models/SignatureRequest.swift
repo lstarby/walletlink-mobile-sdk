@@ -9,6 +9,9 @@ public enum SignatureRequest {
     /// A transaction signature request
     case transaction(sessionId: String, requestId: String, transaction: EthSendTransaction)
 
+    /// EIP 1102. Permission to allow message/transaction signature requests
+  //  case dappPermission(sessionId: String, requestId: String, eventId: String)
+
     /// WalletLink request ID
     var requestId: String {
         switch self {
@@ -16,6 +19,8 @@ public enum SignatureRequest {
             return requestId
         case let .transaction(_, requestId, _):
             return requestId
+//        case let .dappPermission(_, requestId, _):
+//            return requestId
         }
     }
 
@@ -26,6 +31,8 @@ public enum SignatureRequest {
             return sessionId
         case let .transaction(sessionId, _, _):
             return sessionId
+//        case let .dappPermission(sessionId, _, _):
+//            return sessionId
         }
     }
 }

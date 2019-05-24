@@ -6,6 +6,9 @@ enum WalletLinkError: Error {
     /// Unable to encrypt data using shared secret
     case unableToEncryptData
 
+    /// Unable to decrypt data using shared secret
+    case unableToDecryptData
+
     /// Throws when trying to link a session that's already connected
     case sessionAlreadyLinked
 

@@ -17,6 +17,22 @@ final class SessionStore {
         return getStoredSessions()
     }
 
+    /// Get stored sessions filtered by url
+    ///
+    /// - Parameters:
+    ///     - url: URL to filter sessions
+    ///
+    /// - Returns: Sessions for given URL
+    func getSessions(for url: URL) -> [Session] {
+        return getStoredSessions().filter { $0.rpcUrl == url }
+    }
+
+    // FIXME: hish - make sure to always check for sesionID and URL as unique key
+
+    func getSession(id: String, url: URL) -> Session? {
+        return getStoredSessions().first { $0.rpcUrl == url && $0.id == id }
+    }
+
     /// Store session/secret to keychain
     ///
     /// - Parameters:
@@ -46,8 +62,15 @@ final class SessionStore {
     }
 
     /// Observe for distinct stored sessionIds update
-    func observeSessions() -> Observable<[Session]> {
-        return store.observe(.sessions).map { $0?.items ?? [] }.distinctUntilChanged()
+    ///
+    /// - Parameters:
+    ///     - url: URL to filter sessions
+    ///
+    /// - Returns: Session observable for given URL
+    func observeSessions(for url: URL) -> Observable<[Session]> {
+        return store.observe(.sessions)
+            .map { list in list?.items.filter { $0.rpcUrl == url } ?? [] }
+            .distinctUntilChanged()
     }
 
     // MARK: - Private helpers

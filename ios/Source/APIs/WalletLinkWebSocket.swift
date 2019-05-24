@@ -215,3 +215,18 @@ final class WalletLinkWebSocket {
         }
     }
 }
+
+enum EventType: String {
+    /// Web3 related requests
+    case web3Request = "Web3Request"
+}
+
+/*
+ {
+ "type":"Event",
+ "sessionId":"39750b194d6cdc126fc91875bc8e5b5a",
+ "eventId":"03244a14",
+ "event":"Web3Request",
+ "data":"0d7743fa1e43df2c805a1a407073fee0bdb894863e13ad3a7f13ad6a670bdfcf74cdd1097191a850c9826feeea1bd30e6f2d60f1a2036ef17b2baef2a0a04a84e5378426a382a1714a45de230b3de6bcb378ba8311e7c6d4f18ea9be9b326d39699a4ba184f081338d2b75c0f24216c83b985e2531b551ae9b8db8304edc5a85dfed2aedc844e502443013d967257174f04d0ee3a2d11ba0d69936b9615e3c08eb1781ae25d9c7e77d"
+ }
+*/

@@ -41,6 +41,35 @@ extension String {
         mutableData.append(authTag)
         mutableData.append(encryptedData)
 
-        return mutableData.base64EncodedString()
+        return mutableData.toHexString()
+    }
+
+    func decryptUsingAES256GCM(secret: String) throws -> Data {
+        let data = Data(hex: self)
+        let secretData = Data(hex: secret)
+        let iv = data.subdata(in: 0..<12)
+        let authTag = data.subdata(in: 12..<28)
+        let dataToDecrypt = data.subdata(in: 28..<data.count)
+
+        // FIXME: hish - make sure to check for out of index
+
+        guard
+            let decryptedData = try? AES256GCM.decrypt(
+                data: dataToDecrypt,
+                key: secretData,
+                initializationVector: iv,
+                authenticationTag: authTag
+            )
+        else {
+            throw WalletLinkError.unableToDecryptData
+        }
+
+        return decryptedData
+    }
+}
+
+extension Data {
+    func subdata(in range: ClosedRange<Index>) -> Data {
+        return subdata(in: range.lowerBound ..< range.upperBound + 1)
     }
 }
