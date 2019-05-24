@@ -3,9 +3,6 @@
 import CBStore
 
 extension StoreKeys {
-    static let sessions = UserDefaultsStoreKey<[String]>("walletlink_sessions", syncNow: true)
-
-    static func secret(for sessionId: String) -> KeychainStoreKey<String> {
-        return KeychainStoreKey<String>("walletlink_secrets", uuid: sessionId, accessible: .whenUnlocked)
-    }
+    /// Store key to keeping track of WalletLink sessions
+    static let sessions = KeychainStoreKey<SessionList>("walletlink_sessions", accessible: .whenUnlocked)
 }

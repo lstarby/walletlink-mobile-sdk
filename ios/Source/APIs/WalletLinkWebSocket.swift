@@ -91,15 +91,15 @@ final class WalletLinkWebSocket {
     /// Set session config once a link is established
     ///
     /// - Parameters:
-    ///   - webhookId: FIXME: hish
-    ///   - webhookUrl: FIXME: hish
+    ///     - webhookId: Webhook ID used to push notifications to mobile client
+    ///     - webhookUrl: Webhook URL used to push notifications to mobile client
     ///   - metadata: Metadata forwarded to host
     ///   - sessionId: Session ID scanned offline (QR code, NFC, etc)
     ///
     /// - Returns: True if the operation succeeds
     func setSessionConfig(
         webhookId: String,
-        webhookUrl: String,
+        webhookUrl: URL,
         metadata: [String: String],
         for sessionId: String
     ) -> Single<Bool> {
@@ -108,7 +108,7 @@ final class WalletLinkWebSocket {
             requestId: callback.requestId,
             sessionId: sessionId,
             webhookId: webhookId,
-            webhookUrl: webhookUrl,
+            webhookUrl: webhookUrl.absoluteString,
             metadata: metadata
         )
 

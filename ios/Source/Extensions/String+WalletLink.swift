@@ -21,10 +21,11 @@ extension String {
     ///     - iv: Initialization vector. Acts as a salt
     ///
     /// - Returns: The encrypted data
-    /// - Throws: An `WalletLinkError.unableToEncryptData` if unable to encrypt data
+    /// - Throws: `WalletLinkError.unableToEncryptData` if unable to encrypt data
     func encryptUsingAES256GCM(secret: String, iv: Data) throws -> String {
+        let secretData = Data(hex: secret)
+
         guard
-            let secretData = Data(base64Encoded: secret),
             let dataToEncrypt = self.data(using: .utf8),
             let (encryptedData, authTag) = try? AES256GCM.encrypt(
                 data: dataToEncrypt,

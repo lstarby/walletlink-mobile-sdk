@@ -8,4 +8,7 @@ enum WalletLinkConnectionError: Error {
 
     /// Thrown when WalletLink is unable to to serialize message json
     case unableToSerializeMessageJSON
+
+    /// Thrown when trying to conenct with an invalid session
+    case invalidSession
 }

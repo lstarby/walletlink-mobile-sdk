@@ -6,11 +6,12 @@ public protocol WalletLinkProtocol: class {
     /// Incoming signature requests
     var signatureRequestObservable: Observable<SignatureRequest> { get }
 
-    /// Constructor
+    /// Default required constructor
     ///
     /// - Parameters:
-    ///     -  url: WalletLink server URL
-    init(url: URL)
+    ///     - webhookId: Webhook ID used to push notifications to mobile client
+    ///     - webhookUrl: Webhook URL used to push notifications to mobile client
+    init(webhookId: String, webhookUrl: URL)
 
     /// Starts WalletLink connection with the server if a stored session exists. Otherwise, this is a noop. This method
     /// should be called immediately on app launch.
@@ -27,10 +28,11 @@ public protocol WalletLinkProtocol: class {
     /// - Parameters:
     ///     - sessionId: WalletLink host generated session ID
     ///     - secret: WalletLink host/guest shared secret
-    ///     -
+    ///     - rpcURL: WalletLink server websocket URL
+    ///     - metadata: client metadata forwarded to host once link is established
     ///
     /// - Returns: A single wrapping `Void` if connection was successful. Otherwise, an exception is thrown
-    func link(sessionId: String, secret: String) -> Single<Void>
+    func link(sessionId: String, secret: String, rpcURL: URL, metadata: [ClientMetadataKey: String]) -> Single<Void>
 
     /// Set metadata in all active sessions. This metadata will be forwarded to all the hosts
     ///
@@ -44,17 +46,19 @@ public protocol WalletLinkProtocol: class {
     /// Send signature request approval to the requesting host
     ///
     /// - Parameters:
+    ///     - sessionId: WalletLink host generated session ID
     ///     - requestId: WalletLink request ID
     ////    - signedData: User signed data
     ///
     /// - Returns: A single wrapping a `Void` if successful, or an exception is thrown
-    func approve(requestId: String, signedData: Data) -> Single<Void>
+    func approve(sessionId: String, requestId: String, signedData: Data) -> Single<Void>
 
     /// Send signature request rejection to the requesting host
     ///
     /// - Parameters:
+    ///     - sessionId: WalletLink host generated session ID
     ///     - requestId: WalletLink request ID
     ///
     /// - Returns: A single wrapping a `Void` if successful, or an exception is thrown
-    func reject(requestId: String) -> Single<Void>
+    func reject(sessionId: String, requestId: String) -> Single<Void>
 }
