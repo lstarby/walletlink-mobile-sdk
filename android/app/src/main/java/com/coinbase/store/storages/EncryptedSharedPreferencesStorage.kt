@@ -25,7 +25,6 @@ class EncryptedSharedPreferencesStorage(context: Context) : Storage {
 
     companion object {
         private const val KEYSTORE = "AndroidKeyStore"
-        // private const val TRANSFORMATION = "AES/GCM/NoPadding"
         private const val ALIAS = "com.coinbase.wallet.CBStore"
     }
 
@@ -54,9 +53,9 @@ class EncryptedSharedPreferencesStorage(context: Context) : Storage {
 
     private fun encrypt(value: String): String {
         val tuple = AES256GCM.encrypt(data = value.toByteArray(), secretKey = getSecretKey())
-        val encryptedata = tuple.first + tuple.second + tuple.third
+        val encrypteData = tuple.first + tuple.second + tuple.third
 
-        return encryptedata.base64EncodedString()
+        return encrypteData.base64EncodedString()
     }
 
     private fun decrypt(value: String): String? {

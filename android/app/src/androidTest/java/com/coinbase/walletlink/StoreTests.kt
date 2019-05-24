@@ -40,16 +40,27 @@ class StoreTests {
         val stringKey = SharedPrefsStoreKey(id = "string_key", uuid = "id", clazz = String::class.java)
         val boolKey = SharedPrefsStoreKey(id = "bool_key", uuid = "id", clazz = Boolean::class.java)
         val complexObjectKey = SharedPrefsStoreKey(id = "complex_object", clazz = MockComplexObject::class.java)
+        val intKey = SharedPrefsStoreKey(id = "intKey", clazz = Int::class.java)
+        val floatKey = SharedPrefsStoreKey(id = "floatKey", clazz = Float::class.java)
+        val longKey = SharedPrefsStoreKey(id = "longKey", clazz = Long::class.java)
         val expected = "Hello Android CBStore"
         val expectedComplex = MockComplexObject(name = "hish", age = 37, wallets = listOf("hello", "world"))
+        val expectedInt = 12345
+        val expectedFloat = 1420f
+        val expectedLong = 650022L
 
+        store.set(intKey, expectedInt)
+        store.set(floatKey, expectedFloat)
+        store.set(longKey, expectedLong)
         store.set(stringKey, expected)
         store.set(boolKey, false)
         store.set(complexObjectKey, expectedComplex)
         store.set(TestKeys.computedKey(uuid = "random"), "hello")
-
         store.set(TestKeys.activeUser, "random")
 
+        assertEquals(expectedInt, store.get(intKey))
+        assertEquals(expectedFloat, store.get(floatKey))
+        assertEquals(expectedLong, store.get(longKey))
         assertEquals(expected, store.get(stringKey))
         assertEquals(false, store.get(boolKey))
         assertEquals(expectedComplex, store.get(complexObjectKey))
