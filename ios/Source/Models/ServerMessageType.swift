@@ -10,6 +10,18 @@ enum ServerMessageType: String, Codable {
     /// A successful response to a client initiated request
     case ok = "OK"
 
+    /// A successful response to a client `PublishEvent`
+    case publishEventOK = "PublishEventOK"
+
     /// An error response to a client initiated request
     case fail = "Fail"
+
+    var isOK: Bool {
+        switch self {
+        case .ok, .publishEventOK:
+            return true
+        case .fail, .event:
+            return false
+        }
+    }
 }

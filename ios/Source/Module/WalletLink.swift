@@ -6,49 +6,43 @@ public class WalletLink: WalletLinkProtocol {
     private let webhookId: String
     private let webhookUrl: URL
     private let disposeBag = DisposeBag()
-    private var connections = [String: WalletLinkConnection]()
-    private var connectionAccessQueue = DispatchQueue(label: "WalletLink.connectionAccessQueue")
-    private let signatureRequestSubject = PublishSubject<SignatureRequest>()
+    private var connections = ConcurrentCache<URL, WalletLinkConnection>()
+    private let requestsSubject = PublishSubject<HostRequest>()
     private let sessionStore = SessionStore()
-    private let signatureRequestScheduler = SerialDispatchQueueScheduler(
-        internalSerialQueueName: "WalletLink.signatureRequest"
-    )
+    private let requestsScheduler = SerialDispatchQueueScheduler(internalSerialQueueName: "WalletLink.request")
 
-    public let signatureRequestObservable: Observable<SignatureRequest>
+    public let requestsObservable: Observable<HostRequest>
 
     public required init(webhookId: String, webhookUrl: URL) {
         self.webhookId = webhookId
         self.webhookUrl = webhookUrl
 
-        signatureRequestObservable = signatureRequestSubject.asObservable()
+        requestsObservable = requestsSubject.asObservable()
     }
 
     public func connect(metadata: [ClientMetadataKey: String]) {
-        connectionAccessQueue.sync {
-            var connections = [String: WalletLinkConnection]()
-            let sessionsByUrl: [URL: [Session]] = sessionStore.sessions
-                .reduce(into: [:]) { $0[$1.rpcUrl, default: []].append($1) }
+        let connections = ConcurrentCache<URL, WalletLinkConnection>()
+        let sessionsByUrl: [URL: [Session]] = sessionStore.sessions
+            .reduce(into: [:]) { $0[$1.rpcUrl, default: []].append($1) }
 
-            sessionsByUrl.forEach { rpcUrl, sessions in
-                let conn = WalletLinkConnection(
-                    url: rpcUrl,
-                    webhookId: webhookId,
-                    webhookUrl: webhookUrl,
-                    sessionStore: sessionStore,
-                    metadata: metadata
-                )
+        sessionsByUrl.forEach { rpcUrl, sessions in
+            let conn = WalletLinkConnection(
+                url: rpcUrl,
+                webhookId: webhookId,
+                webhookUrl: webhookUrl,
+                sessionStore: sessionStore,
+                metadata: metadata
+            )
 
-                self.observeConnection(conn)
-                sessions.forEach { connections[$0.id] = conn }
-                self.connections = connections
-            }
+            self.observeConnection(conn)
+            sessions.forEach { connections[$0.rpcUrl] = conn }
         }
+
+        self.connections = connections
     }
 
     public func disconnect() {
-        connectionAccessQueue.sync {
-            self.connections.removeAll()
-        }
+        connections.removeAll()
     }
 
     public func link(
@@ -57,14 +51,8 @@ public class WalletLink: WalletLinkProtocol {
         rpcURL: URL,
         metadata: [ClientMetadataKey: String]
     ) -> Single<Void> {
-        var isLinked = false
-
-        connectionAccessQueue.sync {
-            isLinked = self.connections[sessionId] != nil
-        }
-
-        if isLinked {
-            return .error(WalletLinkError.sessionAlreadyLinked)
+        if let connection = connections[rpcURL] {
+            return connection.link(sessionId: sessionId, secret: secret)
         }
 
         let connection = WalletLinkConnection(
@@ -75,60 +63,55 @@ public class WalletLink: WalletLinkProtocol {
             metadata: metadata
         )
 
+        self.connections[rpcURL] = connection
+
         return connection.link(sessionId: sessionId, secret: secret)
-            .map { _ in
-                // this means the link was successfully established. Cache the active connection
-                self.connectionAccessQueue.sync {
-                    self.connections[sessionId] = connection
-                    self.observeConnection(connection)
-                }
+            .map { _ in self.observeConnection(connection) }
+            .catchError { err in
+                self.connections[rpcURL] = nil
+                throw err
             }
     }
 
     public func setMetadata(key: ClientMetadataKey, value: String) -> Single<Void> {
-        var setMetadatasingles: [Single<Void>]!
-
-        connectionAccessQueue.sync {
-            setMetadatasingles = self.connections.values
-                .map { $0.setMetadata(key: key, value: value).catchErrorJustReturn(()) }
-        }
+        let setMetadatasingles = connections.values
+            .map { $0.setMetadata(key: key, value: value).catchErrorJustReturn(()) }
 
         return Single.zip(setMetadatasingles).asVoid()
     }
 
-    public func approve(sessionId: String, requestId: String, signedData: Data) -> Single<Void> {
-        guard let conn = connection(for: sessionId) else { return .error(WalletLinkError.noConnectionFound) }
+    public func approve(requestId: HostRequestId, signedData: Data) -> Single<Void> {
+        guard let connection = connections[requestId.rpcURL] else {
+            return .error(WalletLinkError.noConnectionFound)
+        }
 
-        return conn.approve(requestId: requestId, signedData: signedData)
+        return connection.approve(
+            sessionId: requestId.sessionId,
+            requestId: requestId.id,
+            signedData: signedData
+        )
     }
 
-    public func reject(sessionId: String, requestId: String) -> Single<Void> {
-        guard let conn = connection(for: sessionId) else { return .error(WalletLinkError.noConnectionFound) }
+    public func reject(requestId: HostRequestId) -> Single<Void> {
+        guard let connection = connections[requestId.rpcURL] else {
+            return .error(WalletLinkError.noConnectionFound)
+        }
 
-        return conn.reject(requestId: requestId)
+        return connection.reject(sessionId: requestId.sessionId, requestId: requestId.id)
     }
 
     // MARK: - Helpers
 
-    private func connection(for sessionId: String) -> WalletLinkConnection? {
-        var connection: WalletLinkConnection?
-
-        connectionAccessQueue.sync {
-            connection = connections[sessionId]
-        }
-
-        return connection
-    }
-
     private func observeConnection(_ conn: WalletLinkConnection) {
-        conn.signatureRequestObservable
-            .map { request -> SignatureRequest? in request }
+        conn.requestsObservable
+            .observeOn(requestsScheduler)
+            .map { request -> HostRequest? in request }
             .catchErrorJustReturn(nil)
             .unwrap()
-            .observeOn(signatureRequestScheduler)
             .subscribe(onNext: { [weak self] request in
-                self?.signatureRequestSubject.onNext(request)
+                self?.requestsSubject.onNext(request)
             })
             .disposed(by: disposeBag)
     }
 }
+

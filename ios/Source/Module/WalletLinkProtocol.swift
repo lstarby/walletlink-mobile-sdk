@@ -3,8 +3,8 @@
 import RxSwift
 
 public protocol WalletLinkProtocol: class {
-    /// Incoming signature requests
-    var signatureRequestObservable: Observable<SignatureRequest> { get }
+    /// Incoming host requests
+    var requestsObservable: Observable<HostRequest> { get }
 
     /// Default required constructor
     ///
@@ -46,19 +46,17 @@ public protocol WalletLinkProtocol: class {
     /// Send signature request approval to the requesting host
     ///
     /// - Parameters:
-    ///     - sessionId: WalletLink host generated session ID
-    ///     - requestId: WalletLink request ID
-    ////    - signedData: User signed data
+    ///     - requestId: WalletLink host generated request ID
+    ///     - signedData: User signed data
     ///
-    /// - Returns: A single wrapping a `Void` if successful, or an exception is thrown
-    func approve(sessionId: String, requestId: String, signedData: Data) -> Single<Void>
+    /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
+    func approve(requestId: HostRequestId, signedData: Data) -> Single<Void>
 
     /// Send signature request rejection to the requesting host
     ///
     /// - Parameters:
-    ///     - sessionId: WalletLink host generated session ID
-    ///     - requestId: WalletLink request ID
+    ///     - requestId: WalletLink host generated request ID
     ///
-    /// - Returns: A single wrapping a `Void` if successful, or an exception is thrown
-    func reject(sessionId: String, requestId: String) -> Single<Void>
+    /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
+    func reject(requestId: HostRequestId) -> Single<Void>
 }

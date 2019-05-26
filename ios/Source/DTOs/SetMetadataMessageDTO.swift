@@ -3,12 +3,12 @@
 import Foundation
 
 /// Client message to update metadata for given key
-struct SetMetadataMessage: Codable, JSONDeserializable, JSONSerializable {
+struct SetMetadataMessageDTO: Codable, JSONDeserializable, JSONSerializable {
     /// Type of message
     let type: ClientMessageType = .setMetadata
 
     /// Client generated request ID
-    let requestId: Int32
+    let id: Int32
 
     /// Server generated session ID
     let sessionId: String
@@ -18,12 +18,4 @@ struct SetMetadataMessage: Codable, JSONDeserializable, JSONSerializable {
 
     /// Metadata value
     let value: String
-
-    enum CodingKeys: String, CodingKey {
-        case type
-        case requestId = "id"
-        case sessionId
-        case key
-        case value
-    }
 }

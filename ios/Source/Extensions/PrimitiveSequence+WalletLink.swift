@@ -25,3 +25,27 @@ extension PrimitiveSequence {
         }
     }
 }
+
+extension PrimitiveSequence where Trait == RxSwift.SingleTrait {
+    /// Retry Single on error using given delay.
+    ///
+    /// - Parameters:
+    ///     - maxAttempts: Maximum number of times to attempt the sequence subscription.
+    ///     - delay: Number of miliseconds to wait before firing the next retry attempt
+    ///     - sceduler: Scheduler to run delay timers on.
+    ///
+    /// - Returns: Next sequence in the stream or error is thrown once maxAttempts is reached.
+    func retry(
+        _ maxAttempts: Int,
+        delay: RxTimeInterval,
+        scheduler: SchedulerType = ConcurrentDispatchQueueScheduler(qos: .userInitiated)
+    ) -> PrimitiveSequence<SingleTrait, Element> {
+        return retryWhen { errors in
+            errors.enumerated().flatMap { attempt, error -> Observable<Void> in
+                guard maxAttempts > attempt + 1 else { return .error(error) }
+
+                return Observable<Int>.timer(delay, scheduler: scheduler).asVoid()
+            }
+        }
+    }
+}

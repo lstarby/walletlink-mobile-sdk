@@ -2,9 +2,9 @@
 
 import Foundation
 
-/// Represents a size bounded cache. Oldest keys will be evicted.
+/// A size bounded cache. Oldest keys will be evicted.
 final class BoundedCache<K: Hashable, V> {
-    private var cache = [AnyHashable: V]()
+    private var cache = ConcurrentCache<K, V>()
     private var keys = NSMutableOrderedSet()
     private let maxSize: Int
 

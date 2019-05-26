@@ -12,6 +12,11 @@ extension Observable {
     public static func justVoid() -> Observable<Void> {
         return Observable<Void>.just(())
     }
+
+    /// Maps the current observable to a `Observable<Void>`
+    func asVoid() -> Observable<Void> {
+        return map { _ in () }
+    }
 }
 
 extension Observable where Element: OptionalType {

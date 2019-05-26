@@ -2,9 +2,6 @@
 platform :ios, '11.0'
 
 target 'WalletLink' do
-  # use_frameworks!
-
-  # Pods for WalletLink
   pod 'CBHTTP', git: 'git@github.com:CoinbaseWallet/CBHTTP.git', commit: "41422b2159a660ca53de152b419ff7338523af6c"
   pod 'CBStore', git: 'git@github.com:CoinbaseWallet/Stores.git', commit: "f6780247a1c25797c944c2f43f259d1150147ef7"
   pod 'CBCrypto', git: 'git@github.com:CoinbaseWallet/CBCrypto.git', commit: "24ff5f6b2dd8e9cbe9ebf3df058e1cddf3632a1b"
@@ -13,5 +10,5 @@ target 'WalletLink' do
   pod 'Starscream', '~> 3.1'
   pod 'SwiftLint'
   pod 'SwiftFormat/CLI', '0.37.2'
-
+  pod 'BigInt',  '~> 3.1.0'
 end

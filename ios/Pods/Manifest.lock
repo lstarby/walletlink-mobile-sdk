@@ -1,4 +1,6 @@
 PODS:
+  - BigInt (3.1.0):
+    - SipHash (~> 1.2)
   - CBCrypto (0.1.0):
     - CryptoSwift (~> 1.0.0)
   - CBHTTP (0.1.0):
@@ -13,11 +15,13 @@ PODS:
     - RxSwift (>= 4.4.2, ~> 4.4)
   - RxSwift (4.4.2):
     - RxAtomic (>= 4.4.2, ~> 4.4)
+  - SipHash (1.2.2)
   - Starscream (3.1.0)
   - SwiftFormat/CLI (0.37.2)
   - SwiftLint (0.32.0)
 
 DEPENDENCIES:
+  - BigInt (~> 3.1.0)
   - "CBCrypto (from `git@github.com:CoinbaseWallet/CBCrypto.git`, commit `24ff5f6b2dd8e9cbe9ebf3df058e1cddf3632a1b`)"
   - "CBHTTP (from `git@github.com:CoinbaseWallet/CBHTTP.git`, commit `41422b2159a660ca53de152b419ff7338523af6c`)"
   - "CBStore (from `git@github.com:CoinbaseWallet/Stores.git`, commit `f6780247a1c25797c944c2f43f259d1150147ef7`)"
@@ -29,10 +33,12 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - BigInt
     - CryptoSwift
     - RxAtomic
     - RxCocoa
     - RxSwift
+    - SipHash
     - Starscream
     - SwiftFormat
     - SwiftLint
@@ -60,17 +66,19 @@ CHECKOUT OPTIONS:
     :git: "git@github.com:CoinbaseWallet/Stores.git"
 
 SPEC CHECKSUMS:
-  CBCrypto: b5e8ebe32eb738f92d289d475867e5835564610e
+  BigInt: 76b5dfdfa3e2e478d4ffdf161aeede5502e2742f
+  CBCrypto: e30cef98066abe065d6b39c213444b25dd081d19
   CBHTTP: e7812754bfafb4d99cf2a3a93043554e3dcc513b
-  CBStore: bc68a812594ac854a4fbaffb97aa9a3ca788494c
+  CBStore: 382acf90474bfd62e5882e9446dbca73483fc1e1
   CryptoSwift: d81eeaa59dc5a8d03720fe919a6fd07b51f7439f
   RxAtomic: d00e97c10db88c6f08540e0bf2752fc5a2404167
   RxCocoa: 477990dc3b4c3ff55fb0ac77e1cc06244e0aaec8
   RxSwift: 74c29b693c8e42b0f64400e8b06564575742d649
+  SipHash: fad90a4683e420c52ef28063063dbbce248ea6d4
   Starscream: 08172b481e145289c4930cb567230fb55897cfa4
   SwiftFormat: abbfb26dde4c6d683923cde153c88e10da9d7881
   SwiftLint: 009a898ef2a1c851f45e1b59349bf6ff2ddc990d
 
-PODFILE CHECKSUM: 6e0d449852461c36e86dc7c1285a3ecaed9bfc6e
+PODFILE CHECKSUM: d0055b5bb2a5d7a2f56b4b248ca0a037197b5447
 
 COCOAPODS: 1.6.2
