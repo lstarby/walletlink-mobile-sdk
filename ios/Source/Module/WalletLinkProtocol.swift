@@ -9,9 +9,9 @@ public protocol WalletLinkProtocol: class {
     /// Default required constructor
     ///
     /// - Parameters:
-    ///     - webhookId: Webhook ID used to push notifications to mobile client
-    ///     - webhookUrl: Webhook URL used to push notifications to mobile client
-    init(webhookId: String, webhookUrl: URL)
+    ///     - userId: User ID to deliver push notifications to
+    ///     - notificationUrl: Webhook URL used to push notifications to mobile client
+    init(userId: String, notificationUrl: URL)
 
     /// Starts WalletLink connection with the server if a stored session exists. Otherwise, this is a noop. This method
     /// should be called immediately on app launch.

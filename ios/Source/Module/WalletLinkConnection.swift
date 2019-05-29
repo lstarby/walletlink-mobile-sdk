@@ -12,8 +12,8 @@ let kAES256GCMAuthTagSize = 16
 private typealias JoinSessionEvent = (sessionId: String, joined: Bool)
 
 class WalletLinkConnection {
-    private let webhookId: String
-    private let webhookUrl: URL
+    private let userId: String
+    private let notificationUrl: URL
     private let url: URL
     private let sessionStore: SessionStore
     private let socket: WalletLinkWebSocket
@@ -31,21 +31,21 @@ class WalletLinkConnection {
     ///
     /// - Parameters:
     ///     -  url: WalletLink server URL
-    ///     - webhookId: Webhook ID used to push notifications to mobile client
-    ///     - webhookUrl: Webhook URL used to push notifications to mobile client
+    ///     - userId: User ID to deliver push notifications to
+    ///     - notificationUrl: Webhook URL used to push notifications to mobile client
     ///     - sessionStore: WalletLink session data store
     ///     - metadata: client metadata forwarded to host once link is established
     required init(
         url: URL,
-        webhookId: String,
-        webhookUrl: URL,
+        userId: String,
+        notificationUrl: URL,
         sessionStore: SessionStore,
         metadata: [ClientMetadataKey: String]
     ) {
         self.url = url
         self.sessionStore = sessionStore
-        self.webhookUrl = webhookUrl
-        self.webhookId = webhookId
+        self.notificationUrl = notificationUrl
+        self.userId = userId
         self.metadata = metadata
 
         socket = WalletLinkWebSocket(url: url)
@@ -260,8 +260,8 @@ class WalletLinkConnection {
         }
 
         return socket.setSessionConfig(
-            webhookId: webhookId,
-            webhookUrl: webhookUrl,
+            webhookId: userId,
+            webhookUrl: notificationUrl,
             metadata: encryptedMetadata,
             for: session.id
         )

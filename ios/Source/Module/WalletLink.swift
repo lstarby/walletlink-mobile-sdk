@@ -3,8 +3,8 @@
 import RxSwift
 
 public class WalletLink: WalletLinkProtocol {
-    private let webhookId: String
-    private let webhookUrl: URL
+    private let userId: String
+    private let notificationUrl: URL
     private let disposeBag = DisposeBag()
     private var connections = ConcurrentCache<URL, WalletLinkConnection>()
     private let requestsSubject = PublishSubject<HostRequest>()
@@ -13,9 +13,9 @@ public class WalletLink: WalletLinkProtocol {
 
     public let requestsObservable: Observable<HostRequest>
 
-    public required init(webhookId: String, webhookUrl: URL) {
-        self.webhookId = webhookId
-        self.webhookUrl = webhookUrl
+    public required init(userId: String, notificationUrl: URL) {
+        self.userId = userId
+        self.notificationUrl = notificationUrl
 
         requestsObservable = requestsSubject.asObservable()
     }
@@ -28,8 +28,8 @@ public class WalletLink: WalletLinkProtocol {
         sessionsByUrl.forEach { rpcUrl, sessions in
             let conn = WalletLinkConnection(
                 url: rpcUrl,
-                webhookId: webhookId,
-                webhookUrl: webhookUrl,
+                userId: userId,
+                notificationUrl: notificationUrl,
                 sessionStore: sessionStore,
                 metadata: metadata
             )
@@ -57,8 +57,8 @@ public class WalletLink: WalletLinkProtocol {
 
         let connection = WalletLinkConnection(
             url: rpcURL,
-            webhookId: webhookId,
-            webhookUrl: webhookUrl,
+            userId: userId,
+            notificationUrl: notificationUrl,
             sessionStore: sessionStore,
             metadata: metadata
         )
