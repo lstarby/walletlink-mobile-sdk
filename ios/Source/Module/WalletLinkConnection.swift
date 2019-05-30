@@ -390,7 +390,7 @@ class WalletLinkConnection {
             id: web3Request.id,
             sessionId: serverRequest.sessionId,
             eventId: serverRequest.eventId,
-            rpcURL: self.url,
+            rpcURL: url,
             dappUrl: web3Request.origin,
             dappName: nil
         )

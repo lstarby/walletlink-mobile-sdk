@@ -1,8 +1,6 @@
 package com.coinbase.walletlink
 
 import android.content.Context
-import com.coinbase.wallet.crypto.extensions.sha256
-import com.coinbase.wallet.store.Store
 import com.coinbase.walletlink.concurrency.OperationQueue
 import com.coinbase.walletlink.exceptions.WalletLinkExeception
 import com.coinbase.walletlink.extensions.asUnit
@@ -20,7 +18,7 @@ import java.util.concurrent.TimeUnit
 
 data class SignatureRequest(val eventId: Int)
 
-public class WalletLink(url: String, context: Context) : WalletLinkInterface {
+class WalletLink(url: String, context: Context) : WalletLinkInterface {
     private val linkStore = LinkStore(Store(context))
     private var connectionDisposable: Disposable? = null
     private val connection = WalletLinkConnection(url)

@@ -63,7 +63,7 @@ public class WalletLink: WalletLinkProtocol {
             metadata: metadata
         )
 
-        self.connections[rpcURL] = connection
+        connections[rpcURL] = connection
 
         return connection.link(sessionId: sessionId, secret: secret)
             .map { _ in self.observeConnection(connection) }
@@ -114,4 +114,3 @@ public class WalletLink: WalletLinkProtocol {
             .disposed(by: disposeBag)
     }
 }
-
