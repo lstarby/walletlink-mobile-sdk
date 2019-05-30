@@ -1,7 +1,7 @@
 package com.coinbase.walletlink.models
 
-import com.coinbase.store.models.EncryptedSharedPrefsStoreKey
-import com.coinbase.store.models.SharedPrefsStoreKey
+import com.coinbase.wallet.store.models.EncryptedSharedPrefsStoreKey
+import com.coinbase.wallet.store.models.SharedPrefsStoreKey
 
 class StoreKeys {
     companion object {

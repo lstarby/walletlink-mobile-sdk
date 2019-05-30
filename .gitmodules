@@ -1,0 +1,3 @@
+[submodule "android/libraries/store"]
+	path = android/libraries/store
+	url = git@github.com:CoinbaseWallet/CBStore.git

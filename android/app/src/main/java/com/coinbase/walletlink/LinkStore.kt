@@ -1,10 +1,10 @@
 package com.coinbase.walletlink
 
-import java.util.concurrent.locks.ReentrantLock
+import com.coinbase.wallet.store.interfaces.StoreInterface
 import com.coinbase.walletlink.models.Session
-import com.coinbase.store.interfaces.StoreInterface
 import com.coinbase.walletlink.models.StoreKeys
 import io.reactivex.Observable
+import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 class LinkStore(private val store: StoreInterface) {

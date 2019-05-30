@@ -3,7 +3,7 @@ package com.coinbase.walletlink
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import android.util.Base64
-import com.coinbase.crypto.algorithms.AES256GCM
+import com.coinbase.wallet.crypto.algorithms.AES256GCM
 import com.coinbase.walletlink.extensions.base64EncodedString
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

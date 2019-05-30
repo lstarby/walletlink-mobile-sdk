@@ -32,6 +32,8 @@ dependencies {
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
     ktlint "com.pinterest:ktlint:${ktlintVersion}"
 
+    // Module deps
+    implementation project(':libraries:store')
     implementation("com.squareup.moshi:moshi-kotlin:$moshiVersion")
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -39,9 +41,9 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxkotlin:$rxKotlinVersion"
     implementation "com.squareup.okhttp3:okhttp:$okhttp3Version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutineVersion"
-//    implementation "com.orhanobut:hawk:2.0.1"
-    implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.android.support:appcompat-v7:28.0.0'
+
+    // Test deps
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

@@ -1,7 +1,7 @@
 package com.coinbase.walletlink.extensions
 
 import android.util.Base64
-import com.coinbase.crypto.algorithms.AES256GCM
+import com.coinbase.wallet.crypto.algorithms.AES256GCM
 import com.coinbase.walletlink.exceptions.WalletLinkExeception
 
 // Convert ByteArray to base64 String

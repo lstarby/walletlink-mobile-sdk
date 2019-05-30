@@ -1,1 +1,5 @@
 include ':app'
+
+include ':libraries:store'
+
+project(':libraries:store').projectDir = new File('libraries/store/android/store')

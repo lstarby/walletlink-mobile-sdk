@@ -1,8 +1,8 @@
 package com.coinbase.walletlink
 
 import android.content.Context
-import com.coinbase.crypto.extensions.sha256
-import com.coinbase.store.Store
+import com.coinbase.wallet.crypto.extensions.sha256
+import com.coinbase.wallet.store.Store
 import com.coinbase.walletlink.concurrency.OperationQueue
 import com.coinbase.walletlink.exceptions.WalletLinkExeception
 import com.coinbase.walletlink.extensions.asUnit

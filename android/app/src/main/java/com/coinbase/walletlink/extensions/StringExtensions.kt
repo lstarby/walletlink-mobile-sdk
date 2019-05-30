@@ -1,7 +1,7 @@
 package com.coinbase.walletlink.extensions
 
 import android.util.Base64
-import com.coinbase.crypto.algorithms.AES256GCM
+import com.coinbase.wallet.crypto.algorithms.AES256GCM
 import com.coinbase.walletlink.exceptions.WalletLinkExeception
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
