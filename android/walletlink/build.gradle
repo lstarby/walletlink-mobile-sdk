@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 apply plugin: 'kotlin-android'
 
@@ -9,7 +9,7 @@ apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.coinbase.walletlink"
+        //applicationId "com.coinbase.walletlink"
         minSdkVersion 23
         targetSdkVersion 28
         versionCode 1
