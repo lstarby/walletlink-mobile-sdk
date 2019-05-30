@@ -23,6 +23,7 @@ class WalletLinkConnection {
     private let requestsSubject = PublishSubject<HostRequest>()
     private var disposeBag = DisposeBag()
     private var metadata: [ClientMetadataKey: String]
+    private let api: WalletLinkAPI
 
     /// Incoming host requests for action
     let requestsObservable: Observable<HostRequest>
@@ -47,6 +48,7 @@ class WalletLinkConnection {
         self.notificationUrl = notificationUrl
         self.userId = userId
         self.metadata = metadata
+        self.api = WalletLinkAPI(rpcUrl: url)
 
         socket = WalletLinkWebSocket(url: url)
         operationQueue.maxConcurrentOperationCount = 1
@@ -186,6 +188,24 @@ class WalletLinkConnection {
         return submitWeb3Response(response, session: session)
     }
 
+    /// Get a Host initiated request
+    ///
+    /// - Parameters:
+    ///   - eventId: The request's event ID
+    ///   - sessionId: The request's session ID
+    ///
+    /// - Returns: A Single wrapping the HostRequest
+    func getRequest(eventId: String, sessionId: String) -> Single<HostRequest> {
+        return api.getEvent(eventId: eventId, sessionId: sessionId)
+            .map { request in
+                guard let signatureRequest = self.parseRequest(request) else {
+                    throw WalletLinkError.unableToParseEvent
+                }
+
+                return signatureRequest
+            }
+    }
+
     // MARK: - Connection management
 
     private func startConnection() -> Single<Void> {
@@ -268,24 +288,13 @@ class WalletLinkConnection {
     }
 
     private func handleIncomingRequest(_ request: ServerRequestDTO) {
-        guard
-            let session = sessionStore.getSession(id: request.sessionId, url: url),
-            let decrypted = try? request.data.decryptUsingAES256GCM(secret: session.secret),
-            let json = try? JSONSerialization.jsonObject(with: decrypted, options: []) as? [String: Any]
-        else { return assertionFailure("Invalid request \(request)") }
+        guard let signatureRequest = parseRequest(request) else { return }
 
-        switch request.event {
-        case .web3Request:
-            guard
-                let requestObject = json?["request"] as? [String: Any],
-                let requestMethodString = requestObject["method"] as? String,
-                let method = RequestMethod(rawValue: requestMethodString),
-                let signatureRequest = parseWeb3Request(request, method: method, data: decrypted)
-            else { return assertionFailure("Invalid web3Request \(request)") }
-
-            // FIXME: hish - delete this once UI is available
+        // FIXME: hish - delete this once UI is available
+        switch signatureRequest {
+        case .dappPermission:
             DispatchQueue.main.async {
-                if method == .requestEthereumAddresses, let eth = self.metadata[.ethereumAddress] {
+                if let eth = self.metadata[.ethereumAddress] {
                     let response = Web3ResponseDTO<[String]>(
                         id: signatureRequest.requestId,
                         result: [eth.lowercased()]
@@ -301,8 +310,36 @@ class WalletLinkConnection {
                     }
                 }
             }
+        default:
+            break
+        }
 
-            requestsSubject.onNext(signatureRequest)
+        requestsSubject.onNext(signatureRequest)
+    }
+
+    private func parseRequest(_ request: ServerRequestDTO) -> HostRequest? {
+        guard
+            let session = sessionStore.getSession(id: request.sessionId, url: url),
+            let decrypted = try? request.data.decryptUsingAES256GCM(secret: session.secret),
+            let json = try? JSONSerialization.jsonObject(with: decrypted, options: []) as? [String: Any]
+        else {
+            assertionFailure("Invalid request \(request)")
+            return nil
+        }
+
+        switch request.event {
+        case .web3Request:
+            guard
+                let requestObject = json?["request"] as? [String: Any],
+                let requestMethodString = requestObject["method"] as? String,
+                let method = RequestMethod(rawValue: requestMethodString),
+                let signatureRequest = parseWeb3Request(request, method: method, data: decrypted)
+            else {
+                assertionFailure("Invalid web3Request \(request)")
+                return nil
+            }
+
+            return signatureRequest
         }
     }
 

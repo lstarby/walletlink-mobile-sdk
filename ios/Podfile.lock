@@ -23,7 +23,7 @@ PODS:
 DEPENDENCIES:
   - BigInt (~> 3.1.0)
   - "CBCrypto (from `git@github.com:CoinbaseWallet/CBCrypto.git`, commit `24ff5f6b2dd8e9cbe9ebf3df058e1cddf3632a1b`)"
-  - "CBHTTP (from `git@github.com:CoinbaseWallet/CBHTTP.git`, commit `41422b2159a660ca53de152b419ff7338523af6c`)"
+  - "CBHTTP (from `git@github.com:CoinbaseWallet/CBHTTP.git`, commit `9f0a70aa0eaef0a86b648554d84fe171b31a83db`)"
   - "CBStore (from `git@github.com:CoinbaseWallet/Stores.git`, commit `f6780247a1c25797c944c2f43f259d1150147ef7`)"
   - RxCocoa (~> 4.4.0)
   - RxSwift (~> 4.4.0)
@@ -48,7 +48,7 @@ EXTERNAL SOURCES:
     :commit: 24ff5f6b2dd8e9cbe9ebf3df058e1cddf3632a1b
     :git: "git@github.com:CoinbaseWallet/CBCrypto.git"
   CBHTTP:
-    :commit: 41422b2159a660ca53de152b419ff7338523af6c
+    :commit: 9f0a70aa0eaef0a86b648554d84fe171b31a83db
     :git: "git@github.com:CoinbaseWallet/CBHTTP.git"
   CBStore:
     :commit: f6780247a1c25797c944c2f43f259d1150147ef7
@@ -59,7 +59,7 @@ CHECKOUT OPTIONS:
     :commit: 24ff5f6b2dd8e9cbe9ebf3df058e1cddf3632a1b
     :git: "git@github.com:CoinbaseWallet/CBCrypto.git"
   CBHTTP:
-    :commit: 41422b2159a660ca53de152b419ff7338523af6c
+    :commit: 9f0a70aa0eaef0a86b648554d84fe171b31a83db
     :git: "git@github.com:CoinbaseWallet/CBHTTP.git"
   CBStore:
     :commit: f6780247a1c25797c944c2f43f259d1150147ef7
@@ -68,7 +68,7 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   BigInt: 76b5dfdfa3e2e478d4ffdf161aeede5502e2742f
   CBCrypto: e30cef98066abe065d6b39c213444b25dd081d19
-  CBHTTP: e7812754bfafb4d99cf2a3a93043554e3dcc513b
+  CBHTTP: a079a9c9b3bfe9cfbdd50329a91d436ec8451687
   CBStore: 382acf90474bfd62e5882e9446dbca73483fc1e1
   CryptoSwift: d81eeaa59dc5a8d03720fe919a6fd07b51f7439f
   RxAtomic: d00e97c10db88c6f08540e0bf2752fc5a2404167
@@ -79,6 +79,6 @@ SPEC CHECKSUMS:
   SwiftFormat: abbfb26dde4c6d683923cde153c88e10da9d7881
   SwiftLint: 009a898ef2a1c851f45e1b59349bf6ff2ddc990d
 
-PODFILE CHECKSUM: d0055b5bb2a5d7a2f56b4b248ca0a037197b5447
+PODFILE CHECKSUM: 5fecd5f96b4b55036c5ed885d01e6810d4789694
 
-COCOAPODS: 1.6.2
+COCOAPODS: 1.7.0

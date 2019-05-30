@@ -59,4 +59,14 @@ public protocol WalletLinkProtocol: class {
     ///
     /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
     func reject(requestId: HostRequestId) -> Single<Void>
+
+    /// Get an event
+    ///
+    /// - Parameters:
+    ///   - eventId: The event ID
+    ///   - sessionId: The session ID
+    ///   - rpcUrl: The RPC URL
+    ///
+    /// - Returns: A Single wrapping the HostRequest
+    func getRequest(eventId: String, sessionId: String, rpcUrl: URL) -> Single<HostRequest>
 }
