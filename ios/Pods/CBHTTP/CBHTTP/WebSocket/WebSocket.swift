@@ -47,7 +47,10 @@ public final class WebSocket: WebSocketDelegate {
         incomingObservable = incomingSubject.asObservable()
         connectionStateObservable = connectionStateSubject.asObservable()
 
-        socket = Starscream.WebSocket(url: url)
+        var request = URLRequest(url: url)
+        request.allHTTPHeaderFields = ["Origin": ""]
+
+        socket = Starscream.WebSocket(request: request)
         socket.delegate = self
         socket.callbackQueue = DispatchQueue(label: "WebSocket.socket.callbackQueue")
     }
@@ -68,7 +71,9 @@ public final class WebSocket: WebSocketDelegate {
         }
 
         return connectionStateObservable
-            .do(onSubscribed: { [weak self] in self?.socket.connect() })
+            .do(onSubscribed: {
+                DispatchQueue.global(qos: .userInitiated).async { self.socket.connect() }
+            })
             .filter { $0.isConnected }
             .take(1)
             .asSingle()
@@ -90,7 +95,9 @@ public final class WebSocket: WebSocketDelegate {
         guard isCurrentlyConnected else { return .just(()) }
 
         return connectionStateObservable
-            .do(onSubscribed: { [weak self] in self?.socket.disconnect() })
+            .do(onSubscribed: {
+                DispatchQueue.global(qos: .userInitiated).async { self.socket.disconnect() }
+            })
             .filter { !$0.isConnected }
             .take(1)
             .asSingle()

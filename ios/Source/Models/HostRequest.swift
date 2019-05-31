@@ -26,6 +26,17 @@ public enum HostRequest {
     /// EIP 1102. Permission to allow message/transaction signature requests
     case dappPermission(requestId: HostRequestId)
 
+    /// The name of the dapp making the request
+    public var dappName: String? {
+        switch self {
+        case let .signMessage(hostRequestId, _, _, _),
+             let .signAndSubmitTx(hostRequestId, _, _, _, _, _, _, _, _, _),
+             let .dappPermission(hostRequestId),
+             let .submitSignedTx(hostRequestId, _, _):
+            return hostRequestId.dappName
+        }
+    }
+
     /// WalletLink event ID
     var eventId: String {
         switch self {

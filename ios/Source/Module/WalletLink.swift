@@ -1,5 +1,6 @@
 // Copyright (c) 2017-2019 Coinbase Inc. See LICENSE
 
+import CBHTTP
 import RxSwift
 
 public class WalletLink: WalletLinkProtocol {
@@ -98,6 +99,14 @@ public class WalletLink: WalletLinkProtocol {
         }
 
         return connection.reject(sessionId: requestId.sessionId, requestId: requestId.id)
+    }
+
+    public func getRequest(eventId: String, sessionId: String, rpcUrl: URL) -> Single<HostRequest> {
+        guard let connection = connections[rpcUrl] else {
+            return .error(WalletLinkError.noConnectionFound)
+        }
+
+        return connection.getRequest(eventId: eventId, sessionId: sessionId)
     }
 
     // MARK: - Helpers

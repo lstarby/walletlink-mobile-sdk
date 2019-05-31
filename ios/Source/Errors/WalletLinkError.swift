@@ -24,4 +24,16 @@ enum WalletLinkError: Error {
     /// Thrown if unable to approve or reject signature request. This generally happens if no internet or internal
     /// server error
     case unableToSendSignatureRequestConfirmation
+
+    /// The RPC URL given is not valid
+    case invalidRPCURL
+
+    /// A session with the given ID was not found
+    case sessionNotFound
+
+    /// An event with the given ID was not found
+    case eventNotFound
+
+    /// The event data could not be parsed
+    case unableToParseEvent
 }
