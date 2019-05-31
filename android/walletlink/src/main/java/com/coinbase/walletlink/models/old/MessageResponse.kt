@@ -1,4 +1,4 @@
-package com.coinbase.walletlink.models
+package com.coinbase.walletlink.models.old
 
 import com.coinbase.walletlink.interfaces.JsonDeserializable
 import com.squareup.moshi.Json

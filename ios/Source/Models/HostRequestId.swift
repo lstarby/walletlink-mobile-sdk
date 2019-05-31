@@ -14,7 +14,7 @@ public struct HostRequestId: Hashable {
     public let eventId: String
 
     /// Host RPC URL
-    public let rpcURL: URL
+    public let rpcUrl: URL
 
     /// The dapp URL
     public let dappUrl: URL

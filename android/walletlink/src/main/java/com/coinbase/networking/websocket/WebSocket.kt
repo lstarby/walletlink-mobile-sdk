@@ -17,13 +17,14 @@ import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
+import java.net.URL
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 // Represents WebSocket client
 public class WebSocket(
-    private val url: String,
+    private val url: URL,
     private val connectionTimeout: Long = 15,
     private val minReconnectDelay: Long = 1,
     private val maxReconnectDelay: Long = 5

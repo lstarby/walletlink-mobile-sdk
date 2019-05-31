@@ -8,18 +8,19 @@ import com.coinbase.walletlink.extensions.jsonMap
 import com.coinbase.walletlink.extensions.logError
 import com.coinbase.walletlink.extensions.takeSingle
 import com.coinbase.walletlink.interfaces.JsonSerializable
-import com.coinbase.walletlink.models.ClientMetadataKey
-import com.coinbase.walletlink.models.JoinSessionMessage
-import com.coinbase.walletlink.models.MessageResponse
-import com.coinbase.walletlink.models.PublishEventMessage
-import com.coinbase.walletlink.models.ServerMessageType
-import com.coinbase.walletlink.models.SetMetadataMessage
-import com.coinbase.walletlink.models.SetSessionConfigMessage
+import com.coinbase.walletlink.models.old.ClientMetadataKey
+import com.coinbase.walletlink.models.old.JoinSessionMessage
+import com.coinbase.walletlink.models.old.MessageResponse
+import com.coinbase.walletlink.models.old.PublishEventMessage
+import com.coinbase.walletlink.models.old.ServerMessageType
+import com.coinbase.walletlink.models.old.SetMetadataMessage
+import com.coinbase.walletlink.models.old.SetSessionConfigMessage
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
+import java.net.URL
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.locks.ReentrantLock
@@ -31,7 +32,7 @@ private data class WalletLinkCallback(val requestId: Int, val subject: ReplaySub
 
 private const val sendTimeout: Long = 15
 
-class WalletLinkConnection(url: String) {
+class WalletLinkConnection(url: URL) {
     private val disposeBag = CompositeDisposable()
     private val connection = WebSocket(url)
     private val requestIdSequence = AtomicInteger()

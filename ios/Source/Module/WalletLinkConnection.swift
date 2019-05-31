@@ -120,7 +120,7 @@ class WalletLinkConnection {
         }
 
         return isConnectedObservable
-            .do(onSubscribe: { self.sessionStore.save(rpcURL: self.url, sessionId: sessionId, secret: secret) })
+            .do(onSubscribe: { self.sessionStore.save(rpcUrl: self.url, sessionId: sessionId, secret: secret) })
             .filter { $0 }
             .takeSingle()
             .flatMap { _ in self.joinSessionEventsSubject.filter { $0.sessionId == sessionId }.takeSingle() }
@@ -390,7 +390,7 @@ class WalletLinkConnection {
             id: web3Request.id,
             sessionId: serverRequest.sessionId,
             eventId: serverRequest.eventId,
-            rpcURL: url,
+            rpcUrl: url,
             dappUrl: web3Request.origin,
             dappName: nil
         )

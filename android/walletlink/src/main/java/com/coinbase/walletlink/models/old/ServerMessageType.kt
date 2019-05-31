@@ -1,4 +1,4 @@
-package com.coinbase.walletlink.models
+package com.coinbase.walletlink.models.old
 
 // Type of incoming server message
 enum class ServerMessageType(val rawValue: String) {

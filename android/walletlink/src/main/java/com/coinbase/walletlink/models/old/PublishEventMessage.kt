@@ -1,4 +1,4 @@
-package com.coinbase.walletlink.models
+package com.coinbase.walletlink.models.old
 
 import com.coinbase.walletlink.interfaces.JsonSerializable
 import com.squareup.moshi.Json
@@ -6,16 +6,16 @@ import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 
 @JsonClass(generateAdapter = true)
-data class SetMetadataMessage(
-    val type: ClientMessageType = ClientMessageType.SET_METADATA,
+data class PublishEventMessage(
+    val type: ClientMessageType = ClientMessageType.PUBLISH_EVENT,
     @field:Json(name = "id") val requestId: Int,
     val sessionId: String,
-    val key: String,
-    val value: String
+    val event: String,
+    val data: Map<String, String>
 ) : JsonSerializable {
     override fun asJsonString(): String {
         val moshi = Moshi.Builder().build() // FIXME: hish - shared?
-        val adapter = moshi.adapter<SetMetadataMessage>(SetMetadataMessage::class.java)
+        val adapter = moshi.adapter<PublishEventMessage>(PublishEventMessage::class.java)
         return adapter.toJson(this)
     }
 }

@@ -48,27 +48,27 @@ public class WalletLink: WalletLinkProtocol {
     public func link(
         sessionId: String,
         secret: String,
-        rpcURL: URL,
+        rpcUrl: URL,
         metadata: [ClientMetadataKey: String]
     ) -> Single<Void> {
-        if let connection = connections[rpcURL] {
+        if let connection = connections[rpcUrl] {
             return connection.link(sessionId: sessionId, secret: secret)
         }
 
         let connection = WalletLinkConnection(
-            url: rpcURL,
+            url: rpcUrl,
             userId: userId,
             notificationUrl: notificationUrl,
             sessionStore: sessionStore,
             metadata: metadata
         )
 
-        connections[rpcURL] = connection
+        connections[rpcUrl] = connection
 
         return connection.link(sessionId: sessionId, secret: secret)
             .map { _ in self.observeConnection(connection) }
             .catchError { err in
-                self.connections[rpcURL] = nil
+                self.connections[rpcUrl] = nil
                 throw err
             }
     }
@@ -81,7 +81,7 @@ public class WalletLink: WalletLinkProtocol {
     }
 
     public func approve(requestId: HostRequestId, signedData: Data) -> Single<Void> {
-        guard let connection = connections[requestId.rpcURL] else {
+        guard let connection = connections[requestId.rpcUrl] else {
             return .error(WalletLinkError.noConnectionFound)
         }
 
@@ -93,7 +93,7 @@ public class WalletLink: WalletLinkProtocol {
     }
 
     public func reject(requestId: HostRequestId) -> Single<Void> {
-        guard let connection = connections[requestId.rpcURL] else {
+        guard let connection = connections[requestId.rpcUrl] else {
             return .error(WalletLinkError.noConnectionFound)
         }
 

@@ -28,11 +28,11 @@ public protocol WalletLinkProtocol: class {
     /// - Parameters:
     ///     - sessionId: WalletLink host generated session ID
     ///     - secret: WalletLink host/guest shared secret
-    ///     - rpcURL: WalletLink server websocket URL
+    ///     - rpcUrl: WalletLink server websocket URL
     ///     - metadata: client metadata forwarded to host once link is established
     ///
     /// - Returns: A single wrapping `Void` if connection was successful. Otherwise, an exception is thrown
-    func link(sessionId: String, secret: String, rpcURL: URL, metadata: [ClientMetadataKey: String]) -> Single<Void>
+    func link(sessionId: String, secret: String, rpcUrl: URL, metadata: [ClientMetadataKey: String]) -> Single<Void>
 
     /// Set metadata in all active sessions. This metadata will be forwarded to all the hosts
     ///
@@ -40,7 +40,7 @@ public protocol WalletLinkProtocol: class {
     ///   - key: Metadata key
     ///   - value: Metadata value
     ///
-    /// - Returns: True if the operation succeeds
+    /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
     func setMetadata(key: ClientMetadataKey, value: String) -> Single<Void>
 
     /// Send signature request approval to the requesting host
