@@ -6,13 +6,6 @@ public protocol WalletLinkProtocol: class {
     /// Incoming host requests
     var requestsObservable: Observable<HostRequest> { get }
 
-    /// Default required constructor
-    ///
-    /// - Parameters:
-    ///     - userId: User ID to deliver push notifications to
-    ///     - notificationUrl: Webhook URL used to push notifications to mobile client
-    init(userId: String, notificationUrl: URL)
-
     /// Starts WalletLink connection with the server if a stored session exists. Otherwise, this is a noop. This method
     /// should be called immediately on app launch.
     ///
