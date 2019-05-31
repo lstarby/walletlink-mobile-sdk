@@ -2,15 +2,16 @@ package com.coinbase.walletlink.interfaces
 
 import com.coinbase.walletlink.models.HostRequest
 import com.coinbase.walletlink.models.HostRequestId
-import com.coinbase.walletlink.models.old.ClientMetadataKey
+import com.coinbase.walletlink.models.ClientMetadataKey
 import io.reactivex.Observable
 import io.reactivex.Single
 import java.net.URL
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * WalletLink SDK interface
  */
-interface WalletLinkInterface{
+interface WalletLinkInterface {
     /**
      * Incoming host requests
      */
@@ -22,7 +23,7 @@ interface WalletLinkInterface{
     *
     * @param metadata client metadata forwarded to host once link is established
     */
-    fun connect(metadata: Map<ClientMetadataKey, String>)
+    fun connect(metadata: ConcurrentHashMap<ClientMetadataKey, String>)
 
     /**
      * Disconnect from WalletLink server and stop observing session ID updates to prevent reconnection.
@@ -33,13 +34,20 @@ interface WalletLinkInterface{
      * Connect to WalletLink server using parameters extracted from QR code scan
      *
      * @param sessionId WalletLink host generated session ID
+     * @param name Host name
      * @param secret WalletLink host/guest shared secret
      * @param rpcUrl WalletLink server websocket URL
      * @param metadata client metadata forwarded to host once link is established
      *
      * @return A single wrapping `Unit` if connection was successful. Otherwise, an exception is thrown
      */
-    fun link(sessionId: String, secret: String, rpcUrl: URL, metadata: Map<ClientMetadataKey, String>): Single<Unit>
+    fun link(
+        sessionId: String,
+        name: String,
+        secret: String,
+        rpcUrl: URL,
+        metadata: ConcurrentHashMap<ClientMetadataKey, String>
+    ): Single<Unit>
 
     /**
      * Set metadata in all active sessions. This metadata will be forwarded to all the hosts
@@ -69,4 +77,14 @@ interface WalletLinkInterface{
      * @return A single wrapping `Unit` if operation was successful. Otherwise, an exception is thrown
      */
     fun reject(requestId: HostRequestId): Single<Unit>
+
+    /** Get an event
+     *
+     * @param eventId The event ID
+     * @param sessionId The session ID
+     * @param rpcUrl The RPC URL
+     *
+     * @return A Single wrapping the HostRequest
+     */
+    fun getRequest(eventId: String, sessionId: String, rpcUrl: URL): Single<HostRequest>
 }

@@ -6,9 +6,6 @@ import CBHTTP
 import os.log
 import RxSwift
 
-let kAES256GCMIVSize = 12
-let kAES256GCMAuthTagSize = 16
-
 private typealias JoinSessionEvent = (sessionId: String, joined: Bool)
 
 class WalletLinkConnection {
@@ -48,7 +45,7 @@ class WalletLinkConnection {
         self.notificationUrl = notificationUrl
         self.userId = userId
         self.metadata = metadata
-        self.api = WalletLinkAPI(rpcUrl: url)
+        api = WalletLinkAPI(rpcUrl: url)
 
         socket = WalletLinkWebSocket(url: url)
         operationQueue.maxConcurrentOperationCount = 1
@@ -56,50 +53,10 @@ class WalletLinkConnection {
         isConnectedObservable = socket.connectionStateObservable.map { $0.isConnected }
 
         socket.incomingRequestsObservable
-            .subscribe(onNext: { [weak self] request in
-                self?.handleIncomingRequest(request)
-            })
+            .subscribe(onNext: { [weak self] in self?.handleIncomingRequest($0) })
             .disposed(by: disposeBag)
 
         observeConnection()
-    }
-
-    private func observeConnection() {
-        var joinedSessionIds = Set<String>()
-        let serialScheduler = SerialDispatchQueueScheduler(internalSerialQueueName: "WalletLink.observeConnection")
-        let sessionChangesObservable = sessionStore.observeSessions(for: url)
-            .distinctUntilChanged()
-            .flatMap { [weak self] sessions -> Single<[Session]> in
-                guard let self = self else { return .just(sessions) }
-
-                // If credentials list is not empty, try connecting to WalletLink server
-                if !sessions.isEmpty {
-                    return self.startConnection().map { sessions }.catchErrorJustReturn(sessions)
-                }
-
-                // Otherwise, disconnect
-                return self.stopConnection().map { sessions }.catchErrorJustReturn(sessions)
-            }
-
-        Observable.combineLatest(isConnectedObservable, sessionChangesObservable)
-            .debounce(0.3, scheduler: serialScheduler)
-            .observeOn(serialScheduler)
-            .flatMap { [weak self] isConnected, sessions -> Observable<Void> in
-                guard let self = self else { return .justVoid() }
-
-                if !isConnected {
-                    joinedSessionIds.removeAll()
-                    return .justVoid()
-                }
-
-                let newSessions = sessions.filter { !joinedSessionIds.contains($0.id) }
-                newSessions.forEach { joinedSessionIds.insert($0.id) }
-
-                return self.joinSessions(sessions: newSessions).asObservable()
-            }
-            .catchErrorJustReturn(())
-            .subscribe()
-            .disposed(by: disposeBag)
     }
 
     /// Stop connection when WalletLink instance is deallocated
@@ -113,21 +70,24 @@ class WalletLinkConnection {
     ///
     /// - Parameters:
     ///     - sessionId: WalletLink host generated session ID
+    ///     - name: Host name
     ///     - secret: WalletLink host/guest shared secret
     ///
     /// - Returns: A single wrapping `Void` if connection was successful. Otherwise, an exception is thrown
-    func link(sessionId: String, secret: String) -> Single<Void> {
+    func link(sessionId: String, name: String, secret: String) -> Single<Void> {
         if let session = sessionStore.getSession(id: sessionId, url: url), session.secret == secret {
             return .justVoid()
         }
 
         return isConnectedObservable
-            .do(onSubscribe: { self.sessionStore.save(rpcUrl: self.url, sessionId: sessionId, secret: secret) })
+            .do(onSubscribe: {
+                self.sessionStore.save(rpcUrl: self.url, sessionId: sessionId, name: name, secret: secret)
+            })
             .filter { $0 }
             .takeSingle()
             .flatMap { _ in self.joinSessionEventsSubject.filter { $0.sessionId == sessionId }.takeSingle() }
             .map { guard $0.joined else { throw WalletLinkError.invalidSession } }
-            .timeout(30, scheduler: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+            .timeout(15, scheduler: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
             .logError()
     }
 
@@ -287,16 +247,18 @@ class WalletLinkConnection {
         )
     }
 
+    // MARK: Request Handlers
+
     private func handleIncomingRequest(_ request: ServerRequestDTO) {
-        guard let signatureRequest = parseRequest(request) else { return }
+        guard let request = parseRequest(request) else { return }
 
         // FIXME: hish - delete this once UI is available
-        switch signatureRequest {
+        switch request {
         case .dappPermission:
             DispatchQueue.main.async {
                 if let eth = self.metadata[.ethereumAddress] {
                     let response = Web3ResponseDTO<[String]>(
-                        id: signatureRequest.requestId,
+                        id: request.requestId,
                         result: [eth.lowercased()]
                     )
 
@@ -314,7 +276,7 @@ class WalletLinkConnection {
             break
         }
 
-        requestsSubject.onNext(signatureRequest)
+        requestsSubject.onNext(request)
     }
 
     private func parseRequest(_ request: ServerRequestDTO) -> HostRequest? {
@@ -333,13 +295,13 @@ class WalletLinkConnection {
                 let requestObject = json?["request"] as? [String: Any],
                 let requestMethodString = requestObject["method"] as? String,
                 let method = RequestMethod(rawValue: requestMethodString),
-                let signatureRequest = parseWeb3Request(request, method: method, data: decrypted)
+                let web3Request = parseWeb3Request(request, method: method, data: decrypted)
             else {
                 assertionFailure("Invalid web3Request \(request)")
                 return nil
             }
 
-            return signatureRequest
+            return web3Request
         }
     }
 
@@ -431,5 +393,50 @@ class WalletLinkConnection {
             dappUrl: web3Request.origin,
             dappName: nil
         )
+    }
+
+    // MARK: - Observer(s)
+
+    private func observeConnection() {
+        var joinedSessionIds = Set<String>()
+        let serialScheduler = SerialDispatchQueueScheduler(internalSerialQueueName: "WalletLink.observeConnection")
+        let sessionChangesObservable = sessionStore.observeSessions(for: url)
+            .distinctUntilChanged()
+            .flatMap { [weak self] sessions -> Single<[Session]> in
+                guard let self = self else { return .just(sessions) }
+
+                // If credentials list is not empty, try connecting to WalletLink server
+                if !sessions.isEmpty {
+                    return self.startConnection().map { sessions }.catchErrorJustReturn(sessions)
+                }
+
+                // Otherwise, disconnect
+                return self.stopConnection().map { sessions }.catchErrorJustReturn(sessions)
+            }
+
+        Observable.combineLatest(isConnectedObservable, sessionChangesObservable)
+            .debounce(0.3, scheduler: serialScheduler)
+            .observeOn(serialScheduler)
+            .flatMap { [weak self] isConnected, sessions -> Observable<Void> in
+                guard let self = self else { return .justVoid() }
+
+                if !isConnected {
+                    joinedSessionIds.removeAll()
+                    return .justVoid()
+                }
+
+                let currentSessionIds = Set<String>(sessions.map { $0.id })
+
+                // remove unlinked sessions
+                joinedSessionIds = joinedSessionIds.filter { currentSessionIds.contains($0) }
+
+                let newSessions = sessions.filter { !joinedSessionIds.contains($0.id) }
+                newSessions.forEach { joinedSessionIds.insert($0.id) }
+
+                return self.joinSessions(sessions: newSessions).asObservable()
+            }
+            .catchErrorJustReturn(())
+            .subscribe()
+            .disposed(by: disposeBag)
     }
 }

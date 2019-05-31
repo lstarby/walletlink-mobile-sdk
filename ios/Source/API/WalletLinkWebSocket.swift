@@ -53,7 +53,7 @@ final class WalletLinkWebSocket {
     ///   - sessionKey: sha256(session+secret) hash
     ///   - sessionId: session ID scanned offline (QR code, NFC, etc)
     ///
-    /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
+    /// - Returns: A single wrapping `Boolean` to indicate operation was successful
     func joinSession(using sessionKey: String, for sessionId: String) -> Single<Bool> {
         let callback = createCallback()
         let message = JoinSessionMessageDTO(id: callback.requestId, sessionId: sessionId, sessionKey: sessionKey)
@@ -65,10 +65,10 @@ final class WalletLinkWebSocket {
     ///
     /// - Parameters:
     ///   - key: Metadata key on WalletLink server
-    ///   - value: Metadata value stored on WalletLink server. This data may be encrypted.
+    ///   - value: Metadata value stored on WalletLink server. This is encrypted.
     ///   - sessionId: Session ID scanned offline (QR code, NFC, etc)
     ///
-    /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
+    /// - Returns: A single wrapping `Boolean` to indicate operation was successful
     func setMetadata(key: ClientMetadataKey, value: String, for sessionId: String) -> Single<Bool> {
         let callback = createCallback()
         let key = key.rawValue
@@ -85,7 +85,7 @@ final class WalletLinkWebSocket {
     ///   - metadata: Metadata forwarded to host
     ///   - sessionId: Session ID scanned offline (QR code, NFC, etc)
     ///
-    /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
+    /// - Returns: A single wrapping `Boolean` to indicate operation was successful
     func setSessionConfig(
         webhookId: String,
         webhookUrl: URL,
@@ -111,7 +111,7 @@ final class WalletLinkWebSocket {
     ///   - data: The encrypted data sent to host
     ///   - sessionId: Session ID scanned offline (QR code, NFC, etc)
     ///
-    /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
+    /// - Returns: A single wrapping `Boolean` to indicate operation was successful
     func publishEvent(_ event: ResponseEventType, data: String, to sessionId: String) -> Single<Bool> {
         let callback = createCallback()
         let message = PublishEventDTO(id: callback.requestId, sessionId: sessionId, event: event, data: data)

@@ -6,13 +6,17 @@ import RxSwift
 public class WalletLink: WalletLinkProtocol {
     private let userId: String
     private let notificationUrl: URL
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
     private var connections = ConcurrentCache<URL, WalletLinkConnection>()
     private let requestsSubject = PublishSubject<HostRequest>()
     private let sessionStore = SessionStore()
     private let requestsScheduler = SerialDispatchQueueScheduler(internalSerialQueueName: "WalletLink.request")
 
     public let requestsObservable: Observable<HostRequest>
+
+    public var sessions: [Session] {
+        return sessionStore.sessions
+    }
 
     public required init(userId: String, notificationUrl: URL) {
         self.userId = userId
@@ -43,17 +47,19 @@ public class WalletLink: WalletLinkProtocol {
     }
 
     public func disconnect() {
+        disposeBag = DisposeBag()
         connections.removeAll()
     }
 
     public func link(
         sessionId: String,
+        name: String,
         secret: String,
         rpcUrl: URL,
         metadata: [ClientMetadataKey: String]
     ) -> Single<Void> {
         if let connection = connections[rpcUrl] {
-            return connection.link(sessionId: sessionId, secret: secret)
+            return connection.link(sessionId: sessionId, name: name, secret: secret)
         }
 
         let connection = WalletLinkConnection(
@@ -66,7 +72,7 @@ public class WalletLink: WalletLinkProtocol {
 
         connections[rpcUrl] = connection
 
-        return connection.link(sessionId: sessionId, secret: secret)
+        return connection.link(sessionId: sessionId, name: name, secret: secret)
             .map { _ in self.observeConnection(connection) }
             .catchError { err in
                 self.connections[rpcUrl] = nil
@@ -74,11 +80,19 @@ public class WalletLink: WalletLinkProtocol {
             }
     }
 
+    /// Disconnect from given WalletLink session
+    ///
+    /// - Parameters:
+    ///     - session: Session to unlink
+    public func unlink(session: Session) {
+        sessionStore.delete(rpcURL: session.rpcUrl, sessionId: session.id)
+    }
+
     public func setMetadata(key: ClientMetadataKey, value: String) -> Single<Void> {
-        let setMetadatasingles = connections.values
+        let setMetadataSingles = connections.values
             .map { $0.setMetadata(key: key, value: value).catchErrorJustReturn(()) }
 
-        return Single.zip(setMetadatasingles).asVoid()
+        return Single.zip(setMetadataSingles).asVoid()
     }
 
     public func approve(requestId: HostRequestId, signedData: Data) -> Single<Void> {
@@ -117,9 +131,7 @@ public class WalletLink: WalletLinkProtocol {
             .map { request -> HostRequest? in request }
             .catchErrorJustReturn(nil)
             .unwrap()
-            .subscribe(onNext: { [weak self] request in
-                self?.requestsSubject.onNext(request)
-            })
+            .subscribe(onNext: { [weak self] in self?.requestsSubject.onNext($0) })
             .disposed(by: disposeBag)
     }
 }

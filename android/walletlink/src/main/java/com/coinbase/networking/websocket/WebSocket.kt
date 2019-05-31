@@ -23,7 +23,7 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 // Represents WebSocket client
-public class WebSocket(
+class WebSocket(
     private val url: URL,
     private val connectionTimeout: Long = 15,
     private val minReconnectDelay: Long = 1,
@@ -43,10 +43,10 @@ public class WebSocket(
     private var isConnected: Boolean = false
 
     // Observable for all incoming text or data messages
-    public val incomingObservable: Observable<WebIncomingDataType> = incomingSubject.hide()
+    val incomingObservable: Observable<WebIncomingDataType> = incomingSubject.hide()
 
     // Observable for web socket connection state
-    public val connectionStateObservable: Observable<WebConnectionState> = connectionStateSubject.hide()
+    val connectionStateObservable: Observable<WebConnectionState> = connectionStateSubject.hide()
 
     /**
      * Connect to given web socket
@@ -105,11 +105,12 @@ public class WebSocket(
      * @return A single wrapping `Void` fired when send request completes
      */
     public fun sendString(string: String): Single<Unit> {
+        println("hish: SEND $string")
         if (socket?.send(string) == true) {
             return Single.just(Unit)
         }
 
-        return Single.error(WebSocketException.UnableToSendData())
+        return Single.error(WebSocketException.UnableToSendData)
     }
 
     /**
@@ -126,7 +127,7 @@ public class WebSocket(
             return Single.just(Unit)
         }
 
-        return Single.error(WebSocketException.UnableToSendData())
+        return Single.error(WebSocketException.UnableToSendData)
     }
 
     // WebSocketListener method overrides
@@ -145,10 +146,12 @@ public class WebSocket(
     }
 
     override fun onMessage(webSocket: WebSocket, text: String) {
+        println("hish: RCV $text")
         incomingSubject.onNext(WebIncomingText(text))
     }
 
     override fun onOpen(webSocket: WebSocket, response: Response) {
+        println("hish: CONNECT")
         var isManualClose = false
 
         accessQueue.withLock {
@@ -165,6 +168,8 @@ public class WebSocket(
     }
 
     private fun onDisconnect(t: Throwable? = null) {
+        println("hish: DISCONNECT")
+
         var isManualClose = false
         var delay: Long = 0
 

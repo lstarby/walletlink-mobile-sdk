@@ -1,8 +1,8 @@
-package com.coinbase.walletlink.models.old
+package com.coinbase.walletlink.models
 
 import com.squareup.moshi.Json
 
-enum class ClientMessageType {
+internal enum class ClientMessageType {
     // Client wants to join the current websocket connected session
     @Json(name = "JoinSession") JOIN_SESSION,
 

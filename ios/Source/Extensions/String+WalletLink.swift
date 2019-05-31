@@ -4,6 +4,8 @@ import CBCrypto
 import os.log
 
 private let hexadecimalCharacters = "0123456789abcdef"
+private let kAES256GCMIVSize = 12
+private let kAES256GCMAuthTagSize = 16
 
 extension String {
     /// Convert to JSON object if possible

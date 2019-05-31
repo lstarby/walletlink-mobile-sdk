@@ -6,6 +6,16 @@ public protocol WalletLinkProtocol: class {
     /// Incoming host requests
     var requestsObservable: Observable<HostRequest> { get }
 
+    /// Get list of session
+    var sessions: [Session] { get }
+
+    /// Default required constructor
+    ///
+    /// - Parameters:
+    ///     - userId: User ID to deliver push notifications to
+    ///     - notificationUrl: Webhook URL used to push notifications to mobile client
+    init(userId: String, notificationUrl: URL)
+
     /// Starts WalletLink connection with the server if a stored session exists. Otherwise, this is a noop. This method
     /// should be called immediately on app launch.
     ///
@@ -20,12 +30,22 @@ public protocol WalletLinkProtocol: class {
     ///
     /// - Parameters:
     ///     - sessionId: WalletLink host generated session ID
+    ///     - name: Host name
     ///     - secret: WalletLink host/guest shared secret
     ///     - rpcUrl: WalletLink server websocket URL
     ///     - metadata: client metadata forwarded to host once link is established
     ///
     /// - Returns: A single wrapping `Void` if connection was successful. Otherwise, an exception is thrown
-    func link(sessionId: String, secret: String, rpcUrl: URL, metadata: [ClientMetadataKey: String]) -> Single<Void>
+    func link(
+        sessionId: String,
+        name: String,
+        secret: String,
+        rpcUrl: URL,
+        metadata: [ClientMetadataKey: String]
+    ) -> Single<Void>
+
+    /// Disconnect from given WalletLink session
+    func unlink(session: Session)
 
     /// Set metadata in all active sessions. This metadata will be forwarded to all the hosts
     ///

@@ -41,7 +41,7 @@ class OperationQueue(private val maxConcurrentThreads: Int) {
                 when {
                     result != null -> emitter.onSuccess(result)
                     error != null -> emitter.onError(error)
-                    else -> emitter.onError(OperationException.NoResult())
+                    else -> emitter.onError(OperationException.NoResult)
                 }
             }
         }
