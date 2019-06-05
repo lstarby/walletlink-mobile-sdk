@@ -80,10 +80,6 @@ public class WalletLink: WalletLinkProtocol {
             }
     }
 
-    /// Disconnect from given WalletLink session
-    ///
-    /// - Parameters:
-    ///     - session: Session to unlink
     public func unlink(session: Session) {
         sessionStore.delete(rpcURL: session.rpcUrl, sessionId: session.id)
     }
@@ -96,14 +92,22 @@ public class WalletLink: WalletLinkProtocol {
     }
 
     public func approve(requestId: HostRequestId, signedData: Data) -> Single<Void> {
-        guard let connection = connections[requestId.rpcUrl] else {
-            return .error(WalletLinkError.noConnectionFound)
-        }
+        guard let connection = connections[requestId.rpcUrl] else { return .error(WalletLinkError.noConnectionFound) }
 
         return connection.approve(
             sessionId: requestId.sessionId,
             requestId: requestId.id,
             signedData: signedData
+        )
+    }
+
+    public func approveDappPermission(requestId: HostRequestId, ethAddress: String) -> Single<Void> {
+        guard let connection = connections[requestId.rpcUrl] else { return .error(WalletLinkError.noConnectionFound) }
+
+        return connection.approveDappPermission(
+            sessionId: requestId.sessionId,
+            requestId: requestId.id,
+            ethAddress: ethAddress
         )
     }
 

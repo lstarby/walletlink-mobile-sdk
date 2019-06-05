@@ -45,6 +45,9 @@ public protocol WalletLinkProtocol: class {
     ) -> Single<Void>
 
     /// Disconnect from given WalletLink session
+    ///
+    /// - Parameters:
+    ///     - session: Session to unlink
     func unlink(session: Session)
 
     /// Set metadata in all active sessions. This metadata will be forwarded to all the hosts
@@ -55,6 +58,15 @@ public protocol WalletLinkProtocol: class {
     ///
     /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
     func setMetadata(key: ClientMetadataKey, value: String) -> Single<Void>
+
+    /// Approves Dapp permission request EIP-1102
+    ///
+    /// - Parameters:
+    ///     - requestId: WalletLink host generated request ID
+    ///     - ethereumAddress: Current Ethereum Address
+    ///
+    /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
+    func approveDappPermission(requestId: HostRequestId, ethAddress: String) -> Single<Void>
 
     /// Send signature request approval to the requesting host
     ///

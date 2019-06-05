@@ -113,6 +113,24 @@ class WalletLinkConnection {
         return Single.zip(singles).asVoid()
     }
 
+    /// Approves Dapp permission request EIP-1102
+    ///
+    /// - Parameters:
+    ///     - sessionId: WalletLink host generated session ID
+    ///     - requestId: WalletLink request ID
+    ///     - ethereumAddress: Current Ethereum Address
+    ///
+    /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
+    func approveDappPermission(sessionId: String, requestId: String, ethAddress: String) -> Single<Void> {
+        guard let session = sessionStore.getSession(id: sessionId, url: url) else {
+            return .error(WalletLinkError.noConnectionFound)
+        }
+
+        let response = Web3ResponseDTO<[String]>(id: requestId, result: [ethAddress.lowercased()])
+
+        return submitWeb3Response(response, session: session)
+    }
+
     /// Send signature request approval to the requesting host
     ///
     /// - Parameters:
@@ -251,31 +269,6 @@ class WalletLinkConnection {
 
     private func handleIncomingRequest(_ request: ServerRequestDTO) {
         guard let request = parseRequest(request) else { return }
-
-        // FIXME: hish - delete this once UI is available
-        switch request {
-        case .dappPermission:
-            DispatchQueue.main.async {
-                if let eth = self.metadata[.ethereumAddress] {
-                    let response = Web3ResponseDTO<[String]>(
-                        id: request.requestId,
-                        result: [eth.lowercased()]
-                    )
-
-                    if
-                        let json = response.asJSONString,
-                        let session = self.sessionStore.getSession(id: request.sessionId, url: self.url),
-                        let encryptedString = try? json.encryptUsingAES256GCM(secret: session.secret) {
-                        _ = self.socket.publishEvent(.web3Response, data: encryptedString, to: request.sessionId)
-                            .logError()
-                            .subscribe()
-                    }
-                }
-            }
-        default:
-            break
-        }
-
         requestsSubject.onNext(request)
     }
 
