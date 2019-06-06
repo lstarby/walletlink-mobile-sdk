@@ -14,7 +14,6 @@ class WalletLinkConnection {
     private let url: URL
     private let sessionStore: SessionStore
     private let socket: WalletLinkWebSocket
-    private let operationQueue = OperationQueue()
     private let isConnectedObservable: Observable<Bool>
     private let joinSessionEventsSubject = PublishSubject<JoinSessionEvent>()
     private let requestsSubject = PublishSubject<HostRequest>()
@@ -48,7 +47,6 @@ class WalletLinkConnection {
         api = WalletLinkAPI(rpcUrl: url)
 
         socket = WalletLinkWebSocket(url: url)
-        operationQueue.maxConcurrentOperationCount = 1
         requestsObservable = requestsSubject.asObservable()
         isConnectedObservable = socket.connectionStateObservable.map { $0.isConnected }
 
@@ -61,7 +59,6 @@ class WalletLinkConnection {
 
     /// Stop connection when WalletLink instance is deallocated
     deinit {
-        operationQueue.cancelAllOperations()
         disposeBag = DisposeBag()
         _ = stopConnection().subscribe()
     }
@@ -166,7 +163,7 @@ class WalletLinkConnection {
         return submitWeb3Response(response, session: session)
     }
 
-    /// Get a Host initiated request
+    /// Get a host initiated request
     ///
     /// - Parameters:
     ///   - eventId: The request's event ID
@@ -187,24 +184,17 @@ class WalletLinkConnection {
     // MARK: - Connection management
 
     private func startConnection() -> Single<Void> {
-        operationQueue.cancelAllOperations()
-
-        let connectSingle = Internet.statusChanges
+        return Internet.statusChanges
             .filter { $0.isOnline }
             .takeSingle()
             .flatMap { _ in self.socket.connect() }
-
-        return operationQueue.addSingle(connectSingle)
+            .logError()
     }
 
     private func stopConnection() -> Single<Void> {
-        operationQueue.cancelAllOperations()
-
-        let disconnectSingle = socket.disconnect()
+        return socket.disconnect()
             .logError()
             .catchErrorJustReturn(())
-
-        return operationQueue.addSingle(disconnectSingle)
     }
 
     // MARK: - Session management
@@ -410,7 +400,7 @@ class WalletLinkConnection {
         Observable.combineLatest(isConnectedObservable, sessionChangesObservable)
             .debounce(0.3, scheduler: serialScheduler)
             .observeOn(serialScheduler)
-            .flatMap { [weak self] isConnected, sessions -> Observable<Void> in
+            .concatMap { [weak self] isConnected, sessions -> Observable<Void> in
                 guard let self = self else { return .justVoid() }
 
                 if !isConnected {
