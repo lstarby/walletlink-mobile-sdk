@@ -8,14 +8,3 @@ inline fun <reified K, reified V, reified E> List<E>.reduceIntoMap(
 
     return map
 }
-
-/**
- * Safely handles empty list
- */
-fun <E> List<E>.safeFirst(predicate: (E) -> Boolean): E? {
-    if (isEmpty()) {
-        return null
-    }
-
-    return first(predicate)
-}

@@ -1,7 +1,6 @@
 package com.coinbase.walletlink.storage
 
 import com.coinbase.wallet.store.interfaces.StoreInterface
-import com.coinbase.walletlink.extensions.safeFirst
 import com.coinbase.walletlink.models.Session
 import com.coinbase.walletlink.models.StoreKeys
 import io.reactivex.Observable
@@ -37,7 +36,7 @@ class SessionStore(private val store: StoreInterface) {
     * @returns Sessions for given URL
     */
     fun getSession(id: String, url: URL): Session? {
-        return getStoredSessions().safeFirst { it.rpcUrl == url && it.id == id }
+        return getStoredSessions().firstOrNull() { it.rpcUrl == url && it.id == id }
     }
 
     /**
