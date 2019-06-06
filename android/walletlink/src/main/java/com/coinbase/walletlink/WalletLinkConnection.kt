@@ -5,7 +5,6 @@ import com.coinbase.wallet.crypto.extensions.sha256
 import com.coinbase.wallet.store.utils.JSON
 import com.coinbase.walletlink.api.WalletLinkAPI
 import com.coinbase.walletlink.api.WalletLinkWebSocket
-import com.coinbase.walletlink.concurrency.OperationQueue
 import com.coinbase.walletlink.dtos.RequestEthereumAddressesParams
 import com.coinbase.walletlink.dtos.ServerRequestDTO
 import com.coinbase.walletlink.dtos.SignEthereumMessageParams
@@ -59,7 +58,6 @@ internal class WalletLinkConnection(
     private val api = WalletLinkAPI(url)
     private val socket = WalletLinkWebSocket(url)
     private val disposeBag = CompositeDisposable()
-    private val operationQueue = OperationQueue(maxConcurrentThreads = 1)
     private val isConnectedObservable: Observable<Boolean> = socket.connectionStateObservable.map { it.isConnected }
 
     /**
@@ -181,27 +179,19 @@ internal class WalletLinkConnection(
     // MARK: - Connection management
 
     private fun startConnection(): Single<Unit> {
-        // FIXME: hish - operationQueue.cancelAllOperations()
-
-        val connectSingle = Internet.statusChanges
+        return Internet.statusChanges
             .map { println("hish: before $it"); it }
             .filter { it.isOnline }
             .map { println("hish: after $it") }
             .takeSingle()
             .flatMap { socket.connect() }
             .logError()
-
-        return operationQueue.addSingle(connectSingle)
     }
 
     private fun stopConnection(): Single<Unit> {
-        // FIXME: hish - operationQueue.cancelAllOperations()
-
-        val disconnectSingle = socket.disconnect()
+        return socket.disconnect()
             .logError()
             .onErrorReturn { Single.just(Unit) }
-
-        return operationQueue.addSingle(disconnectSingle)
     }
 
     // MARK: - Session management
@@ -399,9 +389,12 @@ internal class WalletLinkConnection(
 
     private fun observeConnection() {
         var joinedSessionIds = HashSet<String>()
-        val serialScheduler = Schedulers.single()
+        val sessionSerialScheduler = Schedulers.single()
+        val connSerialScheduler = Schedulers.single()
+
         val sessionChangesObservable = sessionStore.observeSessions(url)
             .distinctUntilChanged()
+            .observeOn(connSerialScheduler)
             .flatMap { sessions ->
                 // If credentials list is not empty, try connecting to WalletLink server
                 if (sessions.isNotEmpty()) {
@@ -413,8 +406,8 @@ internal class WalletLinkConnection(
             }
 
         Observables.combineLatest(isConnectedObservable, sessionChangesObservable)
+            .observeOn(sessionSerialScheduler)
             .debounce(300, TimeUnit.MILLISECONDS)
-            .observeOn(serialScheduler)
             .flatMap { (isConnected, sessions) ->
                 if (!isConnected) {
                     joinedSessionIds.clear()

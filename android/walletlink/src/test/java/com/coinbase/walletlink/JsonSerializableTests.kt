@@ -1,6 +1,6 @@
 package com.coinbase.walletlink
 
-import com.coinbase.wallet.store.jsonadapters.URLAdapterAdapter
+import com.coinbase.wallet.store.jsonadapters.UrlAdapter
 import com.coinbase.wallet.store.utils.JSON
 import com.coinbase.walletlink.dtos.JoinSessionMessageDTO
 import com.coinbase.walletlink.interfaces.JsonSerializable
@@ -34,7 +34,7 @@ class JsonSerializableTests {
 
 inline fun <reified T> toJsonString(instance: T): String {
     val moshi = Moshi.Builder()
-        .add(URL::class.java, URLAdapterAdapter())
+        .add(URL::class.java, UrlAdapter())
         .build()
 
     val adapter = JSON.moshi.adapter<T>(T::class.java)

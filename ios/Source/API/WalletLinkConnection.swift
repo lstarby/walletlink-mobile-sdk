@@ -382,10 +382,13 @@ class WalletLinkConnection {
 
     private func observeConnection() {
         var joinedSessionIds = Set<String>()
-        let serialScheduler = SerialDispatchQueueScheduler(internalSerialQueueName: "WalletLink.observeConnection")
+        let sessionSerialScheduler = SerialDispatchQueueScheduler(internalSerialQueueName: "serialSession")
+        let connSerialScheduler = SerialDispatchQueueScheduler(internalSerialQueueName: "serialConn")
+
         let sessionChangesObservable = sessionStore.observeSessions(for: url)
             .distinctUntilChanged()
-            .flatMap { [weak self] sessions -> Single<[Session]> in
+            .observeOn(connSerialScheduler)
+            .concatMap { [weak self] sessions -> Single<[Session]> in
                 guard let self = self else { return .just(sessions) }
 
                 // If credentials list is not empty, try connecting to WalletLink server
@@ -398,8 +401,8 @@ class WalletLinkConnection {
             }
 
         Observable.combineLatest(isConnectedObservable, sessionChangesObservable)
-            .debounce(0.3, scheduler: serialScheduler)
-            .observeOn(serialScheduler)
+            .debounce(0.3, scheduler: sessionSerialScheduler)
+            .observeOn(sessionSerialScheduler)
             .concatMap { [weak self] isConnected, sessions -> Observable<Void> in
                 guard let self = self else { return .justVoid() }
 
