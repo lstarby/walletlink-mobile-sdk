@@ -24,6 +24,7 @@ import com.coinbase.walletlink.extensions.encryptUsingAES256GCM
 import com.coinbase.walletlink.extensions.logError
 import com.coinbase.walletlink.extensions.takeSingle
 import com.coinbase.walletlink.extensions.toPrefixedHexString
+import com.coinbase.walletlink.extensions.zipOrEmpty
 import com.coinbase.walletlink.models.ClientMetadataKey
 import com.coinbase.walletlink.models.HostRequest
 import com.coinbase.walletlink.models.HostRequestId
@@ -31,7 +32,7 @@ import com.coinbase.walletlink.models.RequestEventType
 import com.coinbase.walletlink.models.RequestMethod
 import com.coinbase.walletlink.models.ResponseEventType
 import com.coinbase.walletlink.models.Session
-import com.coinbase.walletlink.rx.Singles
+import io.reactivex.rxkotlin.Singles
 import com.coinbase.walletlink.storage.SessionStore
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -128,7 +129,7 @@ internal class WalletLinkConnection(
             }
         }
 
-        return Singles.zip(singles).asUnit()
+        return Singles.zipOrEmpty(singles).asUnit()
     }
 
     /**
@@ -199,7 +200,7 @@ internal class WalletLinkConnection(
     private fun joinSessions(sessions: List<Session>): Single<Unit> {
         val joinSessionSingles = sessions.map { joinSession(it).asUnit().onErrorReturn { Unit } }
 
-        return Singles.zip(joinSessionSingles).asUnit()
+        return Singles.zipOrEmpty(joinSessionSingles).asUnit()
     }
 
     private fun joinSession(session: Session): Single<Boolean> {
