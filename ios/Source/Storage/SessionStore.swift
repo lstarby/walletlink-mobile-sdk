@@ -82,6 +82,24 @@ final class SessionStore {
             .distinctUntilChanged()
     }
 
+    /// Set the date when the session was last refreshed
+    ///
+    /// - Parameters:
+    ///   - sessionId: The session ID
+    ///   - date: The date when the session was last refreshed
+    func setRefreshDate(_ date: Date, sessionId: String) {
+        store.set(.sessionLastRefreshed(sessionId: sessionId), value: date)
+    }
+
+    /// Get the date when the session was last refreshed.
+    ///
+    /// - Parameter sessiondId: The session ID
+    /// - Returns: The date when the session was last refreshed. Nil will be returned
+    /// if the session has never been refreshed
+    func getRefreshDate(for sessiondId: String) -> Date? {
+        return store.get(.sessionLastRefreshed(sessionId: sessiondId))
+    }
+
     // MARK: - Private helpers
 
     private func getStoredSessions() -> [Session] {

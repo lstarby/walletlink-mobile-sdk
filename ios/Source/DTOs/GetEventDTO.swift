@@ -2,6 +2,12 @@
 
 import Foundation
 
+struct GetEventsDTO: Codable {
+    let events: [EventDTO]
+    let timestamp: Int
+    let error: String?
+}
+
 struct GetEventDTO: Codable {
     let event: EventDTO?
     let error: String?

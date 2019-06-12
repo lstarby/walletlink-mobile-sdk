@@ -3,6 +3,7 @@
 import BigInt
 import CBCrypto
 import CBHTTP
+import CBStore
 import os.log
 import RxSwift
 
@@ -37,7 +38,8 @@ class WalletLinkConnection {
         userId: String,
         notificationUrl: URL,
         sessionStore: SessionStore,
-        metadata: [ClientMetadataKey: String]
+        metadata: [ClientMetadataKey: String],
+        store: StoreProtocol = Store()
     ) {
         self.url = url
         self.sessionStore = sessionStore
@@ -171,7 +173,11 @@ class WalletLinkConnection {
     ///
     /// - Returns: A Single wrapping the HostRequest
     func getRequest(eventId: String, sessionId: String) -> Single<HostRequest> {
-        return api.getEvent(eventId: eventId, sessionId: sessionId)
+        guard let session = sessionStore.getSession(id: sessionId, url: url) else {
+            return .error(WalletLinkError.sessionNotFound)
+        }
+
+        return api.getEvent(eventId: eventId, sessionId: sessionId, secret: session.secret)
             .map { request in
                 guard let signatureRequest = self.parseRequest(request) else {
                     throw WalletLinkError.unableToParseEvent
@@ -202,7 +208,9 @@ class WalletLinkConnection {
     private func joinSessions(sessions: [Session]) -> Single<Void> {
         let joinSessionSingles = sessions.map { self.joinSession($0).asVoid().catchErrorJustReturn(()) }
 
-        return Single.zip(joinSessionSingles).asVoid()
+        return Single.zip(joinSessionSingles)
+            .flatMap { _ in return self.getPendingRequests() }
+            .map { requests in requests.forEach { self.requestsSubject.onNext($0) } }
     }
 
     private func joinSession(_ session: Session) -> Single<Bool> {
@@ -253,6 +261,27 @@ class WalletLinkConnection {
             metadata: encryptedMetadata,
             for: session.id
         )
+    }
+
+    private func getPendingRequests() -> Single<[HostRequest]> {
+        let requestsSingles = sessionStore.getSessions(for: url).map { session in
+            getPendingRequests(
+                since: sessionStore.getRefreshDate(for: session.id),
+                sessionId: session.id,
+                secret: session.secret
+            )
+        }
+
+        return Single.zip(requestsSingles).map { requests in requests.flatMap { $0 } }
+    }
+
+    private func getPendingRequests(since date: Date?, sessionId: String, secret: String) -> Single<[HostRequest]> {
+        return api.getEvents(since: date, sessionId: sessionId, secret: secret)
+            .map { date, requests -> [HostRequest] in
+                self.sessionStore.setRefreshDate(date, sessionId: sessionId)
+
+                return requests.compactMap { self.parseRequest($0) }
+            }
     }
 
     // MARK: Request Handlers
