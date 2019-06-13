@@ -282,7 +282,7 @@ class WalletLinkConnection {
             .map { requests in requests.flatMap { $0 } }
             .logError()
             .subscribe(onSuccess: { requests in
-                requests.forEach { self.requestsSubject.onNext($0) }
+                requests.forEach { print("hish: api sessionid=\($0.sessionId) requestid=\($0.requestId)"); self.requestsSubject.onNext($0) }
             })
     }
 
@@ -306,6 +306,7 @@ class WalletLinkConnection {
 
     private func handleIncomingRequest(_ request: ServerRequestDTO) {
         guard let request = parseRequest(request) else { return }
+        print("hish: ws sessionid=\(request.sessionId) requestid=\(request.requestId)")
         requestsSubject.onNext(request)
     }
 

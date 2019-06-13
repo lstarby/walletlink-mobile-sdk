@@ -88,6 +88,7 @@ final class SessionStore {
     ///   - timestamp: The most recent requests timestamp for a given session
     ///   - sessionId: The session ID
     func setTimestamp(_ timestamp: UInt64, for sessionId: String) {
+        print("hish: set ts \(timestamp) sessionid=\(sessionId)")
         store.set(.requestsFetchToken(sessionId: sessionId), value: timestamp)
     }
 
@@ -98,6 +99,7 @@ final class SessionStore {
     /// - Returns: The date when the session was last refreshed. Nil will be returned if the session has never
     ///            been refreshed
     func getTimestamp(for sessionId: String) -> UInt64? {
+        print("hish: get ts \(store.get(.requestsFetchToken(sessionId: sessionId))) sessionid=\(sessionId)")
         return store.get(.requestsFetchToken(sessionId: sessionId))
     }
 

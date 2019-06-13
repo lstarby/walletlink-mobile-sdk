@@ -69,4 +69,15 @@ public enum HostRequest {
             return hostRequestId.sessionId
         }
     }
+
+    /// WalletLink Host request ID
+    var hostRequestId: HostRequestId {
+        switch self {
+        case let .signMessage(hostRequestId, _, _, _),
+             let .signAndSubmitTx(hostRequestId, _, _, _, _, _, _, _, _, _),
+             let .dappPermission(hostRequestId),
+             let .submitSignedTx(hostRequestId, _, _):
+            return hostRequestId
+        }
+    }
 }

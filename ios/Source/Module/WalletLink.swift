@@ -11,6 +11,7 @@ public class WalletLink: WalletLinkProtocol {
     private let requestsSubject = PublishSubject<HostRequest>()
     private let sessionStore = SessionStore()
     private let requestsScheduler = SerialDispatchQueueScheduler(internalSerialQueueName: "WalletLink.request")
+    private let processedRequestIds = BoundedSet<HostRequestId>(maxSize: 3000)
 
     public let requestsObservable: Observable<HostRequest>
 
@@ -135,7 +136,15 @@ public class WalletLink: WalletLinkProtocol {
             .map { request -> HostRequest? in request }
             .catchErrorJustReturn(nil)
             .unwrap()
-            .subscribe(onNext: { [weak self] in self?.requestsSubject.onNext($0) })
+            .subscribe(onNext: { [weak self] request in
+                let hostRequestId = request.hostRequestId
+
+                guard let self = self, !self.processedRequestIds.has(hostRequestId) else { return }
+
+                self.processedRequestIds.add(hostRequestId)
+                self.requestsSubject.onNext(request)
+
+            })
             .disposed(by: disposeBag)
     }
 }
