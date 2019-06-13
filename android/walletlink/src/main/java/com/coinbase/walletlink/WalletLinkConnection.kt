@@ -107,6 +107,10 @@ internal class WalletLinkConnection(
             .map { if (!it.joined) throw WalletLinkException.InvalidSession }
             .timeout(1500, TimeUnit.SECONDS) // FIXME: hish - back to 15
             .logError()
+            .onErrorResumeNext { exception ->
+                sessionStore.delete(url, sessionId)
+                throw exception
+            }
     }
 
     /**
@@ -273,7 +277,11 @@ internal class WalletLinkConnection(
                 ) ?: return@scheduleDirect
 
                 val encryptedData = json.encryptUsingAES256GCM(session.secret)
-                socket.publishEvent(ResponseEventType.WEB3_RESPONSE, encryptedData, signatureRequest.requestId.sessionId)
+                socket.publishEvent(
+                    ResponseEventType.WEB3_RESPONSE,
+                    encryptedData,
+                    signatureRequest.requestId.sessionId
+                )
                     .logError()
                     .subscribe()
             }

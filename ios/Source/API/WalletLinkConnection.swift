@@ -29,6 +29,7 @@ class WalletLinkConnection {
     ///
     /// - Parameters:
     ///     -  url: WalletLink server URL
+    ///     - websocketUrl: WalletLink websocket endpoint
     ///     - userId: User ID to deliver push notifications to
     ///     - notificationUrl: Webhook URL used to push notifications to mobile client
     ///     - sessionStore: WalletLink session data store
@@ -38,17 +39,16 @@ class WalletLinkConnection {
         userId: String,
         notificationUrl: URL,
         sessionStore: SessionStore,
-        metadata: [ClientMetadataKey: String],
-        store: StoreProtocol = Store()
+        metadata: [ClientMetadataKey: String]
     ) {
         self.url = url
         self.sessionStore = sessionStore
         self.notificationUrl = notificationUrl
         self.userId = userId
         self.metadata = metadata
-        api = WalletLinkAPI(rpcUrl: url)
 
-        socket = WalletLinkWebSocket(url: url)
+        api = WalletLinkAPI(url: url)
+        socket = WalletLinkWebSocket(url: url.appendingPathComponent("rpc"))
         requestsObservable = requestsSubject.asObservable()
         isConnectedObservable = socket.connectionStateObservable.map { $0.isConnected }
 
@@ -80,7 +80,7 @@ class WalletLinkConnection {
 
         return isConnectedObservable
             .do(onSubscribe: {
-                self.sessionStore.save(rpcUrl: self.url, sessionId: sessionId, name: name, secret: secret)
+                self.sessionStore.save(url: self.url, sessionId: sessionId, name: name, secret: secret)
             })
             .filter { $0 }
             .takeSingle()
@@ -88,6 +88,10 @@ class WalletLinkConnection {
             .map { guard $0.joined else { throw WalletLinkError.invalidSession } }
             .timeout(15, scheduler: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
             .logError()
+            .catchError { err in
+                self.sessionStore.delete(url: self.url, sessionId: sessionId)
+                throw err
+            }
     }
 
     /// Set metadata in all active sessions. This metadata will be forwarded to all the hosts
@@ -205,16 +209,18 @@ class WalletLinkConnection {
 
     // MARK: - Session management
 
+    private func createSessionKey(sessionId: String, secret: String) -> String {
+        return "\(sessionId), \(secret) WalletLink".sha256()
+    }
+
     private func joinSessions(sessions: [Session]) -> Single<Void> {
         let joinSessionSingles = sessions.map { self.joinSession($0).asVoid().catchErrorJustReturn(()) }
 
-        return Single.zip(joinSessionSingles)
-            .flatMap { _ in return self.getPendingRequests() }
-            .map { requests in requests.forEach { self.requestsSubject.onNext($0) } }
+        return Single.zip(joinSessionSingles).map { _ in self.fetchPendingRequests() }
     }
 
     private func joinSession(_ session: Session) -> Single<Bool> {
-        let sessionKey = "\(session.id), \(session.secret) WalletLink".sha256()
+        let sessionKey = createSessionKey(sessionId: session.id, secret: session.secret)
 
         return socket.joinSession(using: sessionKey, for: session.id)
             .flatMap { success -> Single<Bool> in
@@ -236,7 +242,7 @@ class WalletLinkConnection {
                 } else {
                     os_log("[walletlink] Invalid session %@. Removing...", type: .error, session.id)
 
-                    self.sessionStore.delete(rpcURL: self.url, sessionId: session.id)
+                    self.sessionStore.delete(url: self.url, sessionId: session.id)
                     self.joinSessionEventsSubject.onNext(JoinSessionEvent(sessionId: session.id, joined: false))
 
                     return false
@@ -263,25 +269,37 @@ class WalletLinkConnection {
         )
     }
 
-    private func getPendingRequests() -> Single<[HostRequest]> {
+    private func fetchPendingRequests() {
         let requestsSingles = sessionStore.getSessions(for: url).map { session in
             getPendingRequests(
-                since: sessionStore.getRefreshDate(for: session.id),
+                since: sessionStore.getTimestamp(for: session.id),
                 sessionId: session.id,
                 secret: session.secret
             )
         }
 
-        return Single.zip(requestsSingles).map { requests in requests.flatMap { $0 } }
+        _ = Single.zip(requestsSingles)
+            .map { requests in requests.flatMap { $0 } }
+            .logError()
+            .subscribe(onSuccess: { requests in
+                requests.forEach { self.requestsSubject.onNext($0) }
+            })
     }
 
-    private func getPendingRequests(since date: Date?, sessionId: String, secret: String) -> Single<[HostRequest]> {
-        return api.getEvents(since: date, sessionId: sessionId, secret: secret)
-            .map { date, requests -> [HostRequest] in
-                self.sessionStore.setRefreshDate(date, sessionId: sessionId)
+    private func getPendingRequests(
+        since timestamp: UInt64?,
+        sessionId: String,
+        secret: String
+    ) -> Single<[HostRequest]> {
+        let sessionKey = createSessionKey(sessionId: sessionId, secret: secret)
+
+        return api.getEvents(since: timestamp, sessionId: sessionId, sessionKey: sessionKey)
+            .map { timestamp, requests -> [HostRequest] in
+                self.sessionStore.setTimestamp(timestamp, for: sessionId)
 
                 return requests.compactMap { self.parseRequest($0) }
             }
+            .catchErrorJustReturn([])
     }
 
     // MARK: Request Handlers
@@ -314,6 +332,9 @@ class WalletLinkConnection {
             }
 
             return web3Request
+        case .web3Response:
+            print("[walletlink] ignore pending response")
+            return nil
         }
     }
 
@@ -401,7 +422,7 @@ class WalletLinkConnection {
             id: web3Request.id,
             sessionId: serverRequest.sessionId,
             eventId: serverRequest.eventId,
-            rpcUrl: url,
+            url: url,
             dappUrl: web3Request.origin,
             dappName: nil
         )

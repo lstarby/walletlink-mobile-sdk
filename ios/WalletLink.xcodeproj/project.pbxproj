@@ -27,9 +27,10 @@
 		518388022297D28100CCB8D1 /* SessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518388012297D28100CCB8D1 /* SessionStore.swift */; };
 		51AFBD29229B5D0E006EBF0E /* Web3RequestDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51AFBD28229B5D0E006EBF0E /* Web3RequestDTO.swift */; };
 		51AFBD2B229B5D24006EBF0E /* Web3ResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51AFBD2A229B5D24006EBF0E /* Web3ResponseDTO.swift */; };
-		51AFBD2D229B63C1006EBF0E /* ResponseEventType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51AFBD2C229B63C1006EBF0E /* ResponseEventType.swift */; };
 		51AFBD31229B7405006EBF0E /* ConcurrentCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51AFBD30229B7405006EBF0E /* ConcurrentCache.swift */; };
 		51AFBD33229B7556006EBF0E /* DispatchQueue+WalletLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51AFBD32229B7556006EBF0E /* DispatchQueue+WalletLink.swift */; };
+		51B8533622B1D89F004589BD /* EventType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B8533522B1D89F004589BD /* EventType.swift */; };
+		51B8533822B1E5ED004589BD /* UInt+WalletLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B8533722B1E5ED004589BD /* UInt+WalletLink.swift */; };
 		51D42E0C228FF89600048066 /* ConcurrencyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E0B228FF89600048066 /* ConcurrencyError.swift */; };
 		51D42E0E228FF96200048066 /* Observable+WalletLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E0D228FF96200048066 /* Observable+WalletLink.swift */; };
 		51D42E13228FFB6B00048066 /* AtomicInt32.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E12228FFB6B00048066 /* AtomicInt32.swift */; };
@@ -41,7 +42,6 @@
 		51D42E202290029500048066 /* ClientMessageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E1F2290029500048066 /* ClientMessageType.swift */; };
 		51D42E22229002D500048066 /* ServerMessageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E21229002D500048066 /* ServerMessageType.swift */; };
 		51EC62C622998FE200B55164 /* RequestMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EC62C522998FE200B55164 /* RequestMethod.swift */; };
-		51EC62C8229996D000B55164 /* RequestEventType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EC62C7229996D000B55164 /* RequestEventType.swift */; };
 		51FC1C0E2299CADE008CFFC2 /* Optional+WalletLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FC1C0D2299CADE008CFFC2 /* Optional+WalletLink.swift */; };
 		51FC1C10229B4ABD008CFFC2 /* HostRequestId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FC1C0F229B4ABD008CFFC2 /* HostRequestId.swift */; };
 		D2F8587596E5F85365F724E1 /* libPods-WalletLink.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A312883E9B5BA9BF15F24C /* libPods-WalletLink.a */; };
@@ -78,6 +78,9 @@
 		51AFBD2C229B63C1006EBF0E /* ResponseEventType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseEventType.swift; sourceTree = "<group>"; };
 		51AFBD30229B7405006EBF0E /* ConcurrentCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConcurrentCache.swift; sourceTree = "<group>"; };
 		51AFBD32229B7556006EBF0E /* DispatchQueue+WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+WalletLink.swift"; sourceTree = "<group>"; };
+		51B8533322B1D021004589BD /* Session+WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+WalletLink.swift"; sourceTree = "<group>"; };
+		51B8533522B1D89F004589BD /* EventType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventType.swift; sourceTree = "<group>"; };
+		51B8533722B1E5ED004589BD /* UInt+WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UInt+WalletLink.swift"; sourceTree = "<group>"; };
 		51D42E0B228FF89600048066 /* ConcurrencyError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcurrencyError.swift; sourceTree = "<group>"; };
 		51D42E0D228FF96200048066 /* Observable+WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Observable+WalletLink.swift"; sourceTree = "<group>"; };
 		51D42E12228FFB6B00048066 /* AtomicInt32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicInt32.swift; sourceTree = "<group>"; };
@@ -169,6 +172,7 @@
 		5159CC97228FE40200A257C0 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				51B8533522B1D89F004589BD /* EventType.swift */,
 				51D42E1F2290029500048066 /* ClientMessageType.swift */,
 				5108610D22900EAF0060C12F /* ClientMetadataKey.swift */,
 				5159CCA2228FE65D00A257C0 /* HostRequest.swift */,
@@ -201,6 +205,8 @@
 				51D42E16228FFE9A00048066 /* PrimitiveSequence+WalletLink.swift */,
 				5159CCA7228FF21400A257C0 /* StoreKeys+WalletLink.swift */,
 				510861072290039C0060C12F /* String+WalletLink.swift */,
+				51B8533322B1D021004589BD /* Session+WalletLink.swift */,
+				51B8533722B1E5ED004589BD /* UInt+WalletLink.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -407,6 +413,7 @@
 				51D42E1C2290020300048066 /* BoundedCache.swift in Sources */,
 				51D42E22229002D500048066 /* ServerMessageType.swift in Sources */,
 				5159CCA8228FF21400A257C0 /* StoreKeys+WalletLink.swift in Sources */,
+				51B8533822B1E5ED004589BD /* UInt+WalletLink.swift in Sources */,
 				51D42E1E2290027A00048066 /* JoinSessionMessageDTO.swift in Sources */,
 				512BC9692299AAE3008D9589 /* PublishEventDTO.swift in Sources */,
 				51AFBD33229B7556006EBF0E /* DispatchQueue+WalletLink.swift in Sources */,
@@ -423,17 +430,16 @@
 				5159CC9E228FE47500A257C0 /* JSONSerializable.swift in Sources */,
 				51D42E0E228FF96200048066 /* Observable+WalletLink.swift in Sources */,
 				518388022297D28100CCB8D1 /* SessionStore.swift in Sources */,
-				51EC62C8229996D000B55164 /* RequestEventType.swift in Sources */,
 				51D42E15228FFBCD00048066 /* Session.swift in Sources */,
 				51695C8C2292389E003B974E /* WalletLinkProtocol.swift in Sources */,
 				5159CCA3228FE65D00A257C0 /* HostRequest.swift in Sources */,
 				5108610A229008E30060C12F /* SetSessionConfigMessageDTO.swift in Sources */,
 				5159CC9C228FE45E00A257C0 /* JSONDeserializable.swift in Sources */,
-				51AFBD2D229B63C1006EBF0E /* ResponseEventType.swift in Sources */,
 				51D42E202290029500048066 /* ClientMessageType.swift in Sources */,
 				5101344D229BC49300ABE97F /* WalletLinkWebSocket.swift in Sources */,
 				510861082290039C0060C12F /* String+WalletLink.swift in Sources */,
 				5138B7B922979630007D6DB5 /* WalletLink.swift in Sources */,
+				51B8533622B1D89F004589BD /* EventType.swift in Sources */,
 				51EC62C622998FE200B55164 /* RequestMethod.swift in Sources */,
 				51D42E17228FFE9A00048066 /* PrimitiveSequence+WalletLink.swift in Sources */,
 				5108610E22900EAF0060C12F /* ClientMetadataKey.swift in Sources */,

@@ -13,7 +13,7 @@ struct PublishEventDTO: Codable, JSONDeserializable, JSONSerializable {
     let sessionId: String
 
     /// Event response type
-    let event: ResponseEventType
+    let event: EventType
 
     /// AES256 GCM encrypted data
     let data: String

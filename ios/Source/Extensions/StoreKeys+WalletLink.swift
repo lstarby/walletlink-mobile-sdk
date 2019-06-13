@@ -7,7 +7,7 @@ extension StoreKeys {
     static let sessions = KeychainStoreKey<SessionList>("walletlink_sessions", accessible: .whenUnlocked)
 
     /// Store key to track when pending requests were last fetched for a session
-    static func sessionLastRefreshed(sessionId: String) -> StoreKey<Date> {
-        return UserDefaultsStoreKey<Date>("sessionLastRefreshed", uuid: sessionId, syncNow: true)
+    static func requestsFetchToken(sessionId: String) -> StoreKey<UInt64> {
+        return UserDefaultsStoreKey<UInt64>("requestsFetchToken", uuid: sessionId, syncNow: true)
     }
 }

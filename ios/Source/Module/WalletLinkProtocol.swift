@@ -32,7 +32,7 @@ public protocol WalletLinkProtocol: class {
     ///     - sessionId: WalletLink host generated session ID
     ///     - name: Host name
     ///     - secret: WalletLink host/guest shared secret
-    ///     - rpcUrl: WalletLink server websocket URL
+    ///     - url: WalletLink base URL
     ///     - metadata: client metadata forwarded to host once link is established
     ///
     /// - Returns: A single wrapping `Void` if connection was successful. Otherwise, an exception is thrown
@@ -40,7 +40,7 @@ public protocol WalletLinkProtocol: class {
         sessionId: String,
         name: String,
         secret: String,
-        rpcUrl: URL,
+        url: URL,
         metadata: [ClientMetadataKey: String]
     ) -> Single<Void>
 
@@ -90,8 +90,8 @@ public protocol WalletLinkProtocol: class {
     /// - Parameters:
     ///   - eventId: The event ID
     ///   - sessionId: The session ID
-    ///   - rpcUrl: The RPC URL
+    ///   - url: WalletLink base URL
     ///
     /// - Returns: A Single wrapping the HostRequest
-    func getRequest(eventId: String, sessionId: String, rpcUrl: URL) -> Single<HostRequest>
+    func getRequest(eventId: String, sessionId: String, url: URL) -> Single<HostRequest>
 }

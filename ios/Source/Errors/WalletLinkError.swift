@@ -25,9 +25,6 @@ enum WalletLinkError: Error {
     /// server error
     case unableToSendSignatureRequestConfirmation
 
-    /// The RPC URL given is not valid
-    case invalidRPCURL
-
     /// A session with the given ID was not found
     case sessionNotFound
 
@@ -36,4 +33,7 @@ enum WalletLinkError: Error {
 
     /// The event data could not be parsed
     case unableToParseEvent
+
+    /// Thrown when an invalid server URL is provided
+    case invalidServerUrl
 }

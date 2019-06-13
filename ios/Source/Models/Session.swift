@@ -14,7 +14,7 @@ public struct Session: Hashable, Equatable, Codable {
     public let secret: String
 
     /// WalletLink server websocket URL
-    public let rpcUrl: URL
+    public let url: URL
 }
 
 // Used to encode/decode array of `Session`s

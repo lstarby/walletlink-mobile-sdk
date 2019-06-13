@@ -4,7 +4,7 @@ import Foundation
 
 struct GetEventsDTO: Codable {
     let events: [EventDTO]
-    let timestamp: Int
+    let timestamp: UInt64
     let error: String?
 }
 
@@ -15,6 +15,6 @@ struct GetEventDTO: Codable {
 
 struct EventDTO: Codable {
     let id: String
-    let event: RequestEventType
+    let event: EventType
     let data: String
 }

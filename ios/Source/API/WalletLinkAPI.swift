@@ -4,16 +4,10 @@ import CBHTTP
 import RxSwift
 
 class WalletLinkAPI {
-    private let rpcUrl: URL
+    private let url: URL
 
-    private var restUrl: URL? {
-        guard let host = rpcUrl.host, let url = URL(string: "http://\(host).com") else { return nil }
-
-        return url
-    }
-
-    init(rpcUrl: URL) {
-        self.rpcUrl = rpcUrl
+    init(url: URL) {
+        self.url = url
     }
 
     /// Fetch an event with a given ID
@@ -25,8 +19,6 @@ class WalletLinkAPI {
     ///
     /// - Returns: A Single wrapping a ServerRequestDTO
     func getEvent(eventId: String, sessionId: String, secret: String) -> Single<ServerRequestDTO> {
-        guard let url = restUrl else { return .error(WalletLinkError.invalidRPCURL) }
-
         let credentials = Credentials(username: sessionId, password: secret)
 
         return HTTP.get(
@@ -51,19 +43,21 @@ class WalletLinkAPI {
     /// Fetch all events since the given date
     ///
     /// - Parameters:
-    ///   - date: The date to fetch events from
+    ///   - timestamp: timestamp in seconds since last fetch
     ///   - sessionId: The session ID
-    ///   - secret: The session secret
+    ///   - sessionKey: Generated session key
     ///
     /// - Returns: A Single wrapping a list of ServerRequestDTO
-    func getEvents(since date: Date?, sessionId: String, secret: String) -> Single<(Date, [ServerRequestDTO])> {
-        guard let url = restUrl else { return .error(WalletLinkError.invalidRPCURL) }
-
-        let credentials = Credentials(username: sessionId, password: secret)
+    func getEvents(
+        since timestamp: UInt64?,
+        sessionId: String,
+        sessionKey: String
+    ) -> Single<(UInt64, [ServerRequestDTO])> {
+        let credentials = Credentials(username: sessionId, password: sessionKey)
 
         var parameters: [String: String]?
-        if let date = date {
-            parameters = ["timestamp": "\(date.timeIntervalSince1970)"]
+        if let timestamp = timestamp {
+            parameters = ["timestamp": "\(timestamp)"]
         }
 
         return HTTP.get(
@@ -84,7 +78,7 @@ class WalletLinkAPI {
                 )
             }
 
-            return (Date(timeIntervalSince1970: TimeInterval(response.body.timestamp)), requests)
+            return (response.body.timestamp, requests)
         }
     }
 }

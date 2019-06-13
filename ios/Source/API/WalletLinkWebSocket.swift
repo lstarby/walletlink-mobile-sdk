@@ -112,7 +112,7 @@ final class WalletLinkWebSocket {
     ///   - sessionId: Session ID scanned offline (QR code, NFC, etc)
     ///
     /// - Returns: A single wrapping `Boolean` to indicate operation was successful
-    func publishEvent(_ event: ResponseEventType, data: String, to sessionId: String) -> Single<Bool> {
+    func publishEvent(_ event: EventType, data: String, to sessionId: String) -> Single<Bool> {
         let callback = createCallback()
         let message = PublishEventDTO(id: callback.requestId, sessionId: sessionId, event: event, data: data)
 

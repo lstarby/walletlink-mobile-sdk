@@ -2,7 +2,10 @@
 
 import Foundation
 
-enum ResponseEventType: String, Codable {
+enum EventType: String, Codable {
+    /// Web3 related requests
+    case web3Request = "Web3Request"
+
     /// Web3 related responses
     case web3Response = "Web3Response"
 }
