@@ -4,7 +4,6 @@ import CBHTTP
 import RxSwift
 
 public class WalletLink: WalletLinkProtocol {
-    private let userId: String
     private let notificationUrl: URL
     private var disposeBag = DisposeBag()
     private var connections = ConcurrentCache<URL, WalletLinkConnection>()
@@ -19,14 +18,13 @@ public class WalletLink: WalletLinkProtocol {
         return sessionStore.sessions
     }
 
-    public required init(userId: String, notificationUrl: URL) {
-        self.userId = userId
+    public required init(notificationUrl: URL) {
         self.notificationUrl = notificationUrl
 
         requestsObservable = requestsSubject.asObservable()
     }
 
-    public func connect(metadata: [ClientMetadataKey: String]) {
+    public func connect(userId: String, metadata: [ClientMetadataKey: String]) {
         let connections = ConcurrentCache<URL, WalletLinkConnection>()
         let sessionsByUrl: [URL: [Session]] = sessionStore.sessions
             .reduce(into: [:]) { $0[$1.url, default: []].append($1) }
@@ -57,6 +55,7 @@ public class WalletLink: WalletLinkProtocol {
         name: String,
         secret: String,
         url: URL,
+        userId: String,
         metadata: [ClientMetadataKey: String]
     ) -> Single<Void> {
         if let connection = connections[url] {
