@@ -37,6 +37,17 @@ public enum HostRequest {
         }
     }
 
+    /// The url of the dapp making the request
+    public var dappUrl: URL {
+        switch self {
+        case let .signMessage(hostRequestId, _, _, _),
+             let .signAndSubmitTx(hostRequestId, _, _, _, _, _, _, _, _, _),
+             let .dappPermission(hostRequestId),
+             let .submitSignedTx(hostRequestId, _, _):
+            return hostRequestId.dappUrl
+        }
+    }
+
     /// WalletLink event ID
     var eventId: String {
         switch self {

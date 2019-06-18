@@ -169,28 +169,6 @@ class WalletLinkConnection {
         return submitWeb3Response(response, session: session)
     }
 
-    /// Get a host initiated request
-    ///
-    /// - Parameters:
-    ///   - eventId: The request's event ID
-    ///   - sessionId: The request's session ID
-    ///
-    /// - Returns: A Single wrapping the HostRequest
-    func getRequest(eventId: String, sessionId: String) -> Single<HostRequest> {
-        guard let session = sessionStore.getSession(id: sessionId, url: url) else {
-            return .error(WalletLinkError.sessionNotFound)
-        }
-
-        return api.getEvent(eventId: eventId, sessionId: sessionId, secret: session.secret)
-            .map { request in
-                guard let signatureRequest = self.parseRequest(request) else {
-                    throw WalletLinkError.unableToParseEvent
-                }
-
-                return signatureRequest
-            }
-    }
-
     // MARK: - Connection management
 
     private func startConnection() -> Single<Void> {
@@ -209,10 +187,6 @@ class WalletLinkConnection {
 
     // MARK: - Session management
 
-    private func createSessionKey(sessionId: String, secret: String) -> String {
-        return "\(sessionId), \(secret) WalletLink".sha256()
-    }
-
     private func joinSessions(sessions: [Session]) -> Single<Void> {
         let joinSessionSingles = sessions.map { self.joinSession($0).asVoid().catchErrorJustReturn(()) }
 
@@ -220,9 +194,9 @@ class WalletLinkConnection {
     }
 
     private func joinSession(_ session: Session) -> Single<Bool> {
-        let sessionKey = createSessionKey(sessionId: session.id, secret: session.secret)
+        let credentials = Credentials(sessionId: session.id, secret: session.secret)
 
-        return socket.joinSession(using: sessionKey, for: session.id)
+        return socket.joinSession(using: credentials.password, for: session.id)
             .flatMap { success -> Single<Bool> in
                 guard success else {
                     self.joinSessionEventsSubject.onNext(JoinSessionEvent(sessionId: session.id, joined: false))
@@ -281,9 +255,7 @@ class WalletLinkConnection {
         _ = Single.zip(requestsSingles)
             .map { requests in requests.flatMap { $0 } }
             .logError()
-            .subscribe(onSuccess: { requests in
-                requests.forEach { print("hish: api sessionid=\($0.sessionId) requestid=\($0.requestId)"); self.requestsSubject.onNext($0) }
-            })
+            .subscribe(onSuccess: { requests in requests.forEach { self.requestsSubject.onNext($0) } })
     }
 
     private func getPendingRequests(
@@ -291,13 +263,11 @@ class WalletLinkConnection {
         sessionId: String,
         secret: String
     ) -> Single<[HostRequest]> {
-        let sessionKey = createSessionKey(sessionId: sessionId, secret: secret)
-
-        return api.getEvents(since: timestamp, sessionId: sessionId, sessionKey: sessionKey)
+        return api.getEvents(since: timestamp, sessionId: sessionId, secret: secret)
             .map { timestamp, requests -> [HostRequest] in
                 self.sessionStore.setTimestamp(timestamp, for: sessionId)
 
-                return requests.compactMap { self.parseRequest($0) }
+                return requests.compactMap { $0.asHostRequest(secret: secret, url: self.url) }
             }
             .catchErrorJustReturn([])
     }
@@ -305,38 +275,12 @@ class WalletLinkConnection {
     // MARK: Request Handlers
 
     private func handleIncomingRequest(_ request: ServerRequestDTO) {
-        guard let request = parseRequest(request) else { return }
-        print("hish: ws sessionid=\(request.sessionId) requestid=\(request.requestId)")
-        requestsSubject.onNext(request)
-    }
-
-    private func parseRequest(_ request: ServerRequestDTO) -> HostRequest? {
         guard
             let session = sessionStore.getSession(id: request.sessionId, url: url),
-            let decrypted = try? request.data.decryptUsingAES256GCM(secret: session.secret),
-            let json = try? JSONSerialization.jsonObject(with: decrypted, options: []) as? [String: Any]
-        else {
-            assertionFailure("Invalid request \(request)")
-            return nil
-        }
+            let request = request.asHostRequest(secret: session.secret, url: url)
+        else { return }
 
-        switch request.event {
-        case .web3Request:
-            guard
-                let requestObject = json?["request"] as? [String: Any],
-                let requestMethodString = requestObject["method"] as? String,
-                let method = RequestMethod(rawValue: requestMethodString),
-                let web3Request = parseWeb3Request(request, method: method, data: decrypted)
-            else {
-                assertionFailure("Invalid web3Request \(request)")
-                return nil
-            }
-
-            return web3Request
-        case .web3Response:
-            print("[walletlink] ignore pending response")
-            return nil
-        }
+        requestsSubject.onNext(request)
     }
 
     private func submitWeb3Response<T: Codable>(_ response: Web3ResponseDTO<T>, session: Session) -> Single<Void> {
@@ -350,83 +294,6 @@ class WalletLinkConnection {
             .takeSingle()
             .flatMap { _ in self.socket.publishEvent(.web3Response, data: encryptedString, to: session.id) }
             .map { guard $0 else { throw WalletLinkError.unableToSendSignatureRequestConfirmation } }
-    }
-
-    private func parseWeb3Request(_ request: ServerRequestDTO, method: RequestMethod, data: Data) -> HostRequest? {
-        switch method {
-        case .requestEthereumAddresses:
-            guard let dto = Web3RequestDTO<RequestEthereumAddressesParams>.fromJSON(data) else {
-                assertionFailure("Invalid requestEthereumAddresses \(request)")
-                return nil
-            }
-
-            let requestId = hostRequestId(web3Request: dto, serverRequest: request)
-
-            return .dappPermission(requestId: requestId)
-        case .signEthereumMessage:
-            guard let dto = Web3RequestDTO<SignEthereumMessageParams>.fromJSON(data) else {
-                assertionFailure("Invalid signEthereumMessage \(request)")
-                return nil
-            }
-
-            let params = dto.request.params
-            let requestId = hostRequestId(web3Request: dto, serverRequest: request)
-
-            return .signMessage(
-                requestId: requestId,
-                address: params.address,
-                message: params.message,
-                isPrefixed: params.addPrefix
-            )
-        case .signEthereumTransaction:
-            guard
-                let dto = Web3RequestDTO<SignEthereumTransactionParams>.fromJSON(data),
-                let weiValue = BigInt(dto.request.params.weiValue)
-            else {
-                assertionFailure("Invalid signEthereumTransaction \(request)")
-                return nil
-            }
-
-            let params = dto.request.params
-            let requestId = hostRequestId(web3Request: dto, serverRequest: request)
-
-            return .signAndSubmitTx(
-                requestId: requestId,
-                fromAddress: params.fromAddress,
-                toAddress: params.toAddress,
-                weiValue: weiValue,
-                data: params.data.dataUsingHexEncoding() ?? Data(),
-                nonce: params.nonce,
-                gasPrice: params.gasPriceInWei.asBigInt,
-                gasLimit: params.gasLimit.asBigInt,
-                chainId: params.chainId,
-                shouldSubmit: params.shouldSubmit
-            )
-        case .submitEthereumTransaction:
-            guard
-                let dto = Web3RequestDTO<SubmitEthereumTransactionParams>.fromJSON(data),
-                let signedTx = dto.request.params.signedTransaction.dataUsingHexEncoding()
-            else {
-                assertionFailure("Invalid SubmitEthereumTransactionParams \(request)")
-                return nil
-            }
-
-            let params = dto.request.params
-            let requestId = hostRequestId(web3Request: dto, serverRequest: request)
-
-            return .submitSignedTx(requestId: requestId, signedTx: signedTx, chainId: params.chainId)
-        }
-    }
-
-    private func hostRequestId<T>(web3Request: Web3RequestDTO<T>, serverRequest: ServerRequestDTO) -> HostRequestId {
-        return HostRequestId(
-            id: web3Request.id,
-            sessionId: serverRequest.sessionId,
-            eventId: serverRequest.eventId,
-            url: url,
-            dappUrl: web3Request.origin,
-            dappName: nil
-        )
     }
 
     // MARK: - Observer(s)

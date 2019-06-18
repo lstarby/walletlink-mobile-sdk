@@ -19,7 +19,7 @@ class WalletLinkAPI {
     ///
     /// - Returns: A Single wrapping a ServerRequestDTO
     func getEvent(eventId: String, sessionId: String, secret: String) -> Single<ServerRequestDTO> {
-        let credentials = Credentials(username: sessionId, password: secret)
+        let credentials = Credentials(sessionId: sessionId, secret: secret)
 
         return HTTP.get(
             service: HTTPService(url: url),
@@ -38,6 +38,7 @@ class WalletLinkAPI {
                 data: event.data
             )
         }
+        .logError()
     }
 
     /// Fetch all events since the given date
@@ -51,9 +52,9 @@ class WalletLinkAPI {
     func getEvents(
         since timestamp: UInt64?,
         sessionId: String,
-        sessionKey: String
+        secret: String
     ) -> Single<(UInt64, [ServerRequestDTO])> {
-        let credentials = Credentials(username: sessionId, password: sessionKey)
+        let credentials = Credentials(sessionId: sessionId, secret: secret)
 
         var parameters: [String: String]?
         if let timestamp = timestamp {

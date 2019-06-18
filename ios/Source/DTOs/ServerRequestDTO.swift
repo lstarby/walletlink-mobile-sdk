@@ -13,7 +13,7 @@ struct ServerRequestDTO: Codable, JSONDeserializable, JSONSerializable {
     let event: EventType
 
     /// Server random generated eventId. Used to find a pending event from WalletLink server
-    let eventId: String // FIXME: hish - change to requestId
+    let eventId: String
 
     /// Encrypted event data
     let data: String

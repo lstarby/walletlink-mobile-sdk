@@ -47,6 +47,8 @@
 		D2F8587596E5F85365F724E1 /* libPods-WalletLink.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A312883E9B5BA9BF15F24C /* libPods-WalletLink.a */; };
 		D34578A922A0712A0063286E /* WalletLinkAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34578A822A0712A0063286E /* WalletLinkAPI.swift */; };
 		D34578AB22A071B90063286E /* GetEventDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34578AA22A071B90063286E /* GetEventDTO.swift */; };
+		D3EAC5FC22B95E8A0036DD4F /* ServerRequestDTO+WalletLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3EAC5FB22B95E8A0036DD4F /* ServerRequestDTO+WalletLink.swift */; };
+		D3EAC5FE22B9663E0036DD4F /* Credentials+WalletLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3EAC5FD22B9663E0036DD4F /* Credentials+WalletLink.swift */; };
 		E793156722B2C596006ED5EB /* BoundedSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E793156622B2C596006ED5EB /* BoundedSet.swift */; };
 		E793156922B2CE05006ED5EB /* NSOrderedSet+WalletLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = E793156822B2CE05006ED5EB /* NSOrderedSet+WalletLink.swift */; };
 /* End PBXBuildFile section */
@@ -101,6 +103,8 @@
 		CCDD4A9DB87B3F4D4FC9E9A4 /* Pods-WalletLinkTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WalletLinkTests.release.xcconfig"; path = "Target Support Files/Pods-WalletLinkTests/Pods-WalletLinkTests.release.xcconfig"; sourceTree = "<group>"; };
 		D34578A822A0712A0063286E /* WalletLinkAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletLinkAPI.swift; sourceTree = "<group>"; };
 		D34578AA22A071B90063286E /* GetEventDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetEventDTO.swift; sourceTree = "<group>"; };
+		D3EAC5FB22B95E8A0036DD4F /* ServerRequestDTO+WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerRequestDTO+WalletLink.swift"; sourceTree = "<group>"; };
+		D3EAC5FD22B9663E0036DD4F /* Credentials+WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Credentials+WalletLink.swift"; sourceTree = "<group>"; };
 		E793156622B2C596006ED5EB /* BoundedSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundedSet.swift; sourceTree = "<group>"; };
 		E793156822B2CE05006ED5EB /* NSOrderedSet+WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSOrderedSet+WalletLink.swift"; sourceTree = "<group>"; };
 		EE45CAE36C51E9570D753F6A /* Pods_WalletLinkTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WalletLinkTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -212,6 +216,8 @@
 				51B8533322B1D021004589BD /* Session+WalletLink.swift */,
 				51B8533722B1E5ED004589BD /* UInt+WalletLink.swift */,
 				E793156822B2CE05006ED5EB /* NSOrderedSet+WalletLink.swift */,
+				D3EAC5FB22B95E8A0036DD4F /* ServerRequestDTO+WalletLink.swift */,
+				D3EAC5FD22B9663E0036DD4F /* Credentials+WalletLink.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -438,6 +444,7 @@
 				51D42E0E228FF96200048066 /* Observable+WalletLink.swift in Sources */,
 				518388022297D28100CCB8D1 /* SessionStore.swift in Sources */,
 				51D42E15228FFBCD00048066 /* Session.swift in Sources */,
+				D3EAC5FE22B9663E0036DD4F /* Credentials+WalletLink.swift in Sources */,
 				E793156722B2C596006ED5EB /* BoundedSet.swift in Sources */,
 				51695C8C2292389E003B974E /* WalletLinkProtocol.swift in Sources */,
 				5159CCA3228FE65D00A257C0 /* HostRequest.swift in Sources */,
@@ -445,6 +452,7 @@
 				5159CC9C228FE45E00A257C0 /* JSONDeserializable.swift in Sources */,
 				51D42E202290029500048066 /* ClientMessageType.swift in Sources */,
 				5101344D229BC49300ABE97F /* WalletLinkWebSocket.swift in Sources */,
+				D3EAC5FC22B95E8A0036DD4F /* ServerRequestDTO+WalletLink.swift in Sources */,
 				510861082290039C0060C12F /* String+WalletLink.swift in Sources */,
 				5138B7B922979630007D6DB5 /* WalletLink.swift in Sources */,
 				51B8533622B1D89F004589BD /* EventType.swift in Sources */,

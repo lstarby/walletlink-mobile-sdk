@@ -120,11 +120,18 @@ public class WalletLink: WalletLinkProtocol {
     }
 
     public func getRequest(eventId: String, sessionId: String, url: URL) -> Single<HostRequest> {
-        guard let connection = connections[url] else {
-            return .error(WalletLinkError.noConnectionFound)
+        guard let session = sessionStore.getSession(id: sessionId, url: url) else {
+            return .error(WalletLinkError.sessionNotFound)
         }
 
-        return connection.getRequest(eventId: eventId, sessionId: sessionId)
+        return WalletLinkAPI(url: url).getEvent(eventId: eventId, sessionId: sessionId, secret: session.secret)
+            .map { request in
+                guard let signatureRequest = request.asHostRequest(secret: session.secret, url: url) else {
+                    throw WalletLinkError.unableToParseEvent
+                }
+
+                return signatureRequest
+            }
     }
 
     // MARK: - Helpers
