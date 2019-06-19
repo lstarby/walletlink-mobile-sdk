@@ -94,11 +94,7 @@ public class WalletLink: WalletLinkProtocol {
     public func approve(requestId: HostRequestId, signedData: Data) -> Single<Void> {
         guard let connection = connections[requestId.url] else { return .error(WalletLinkError.noConnectionFound) }
 
-        return connection.approve(
-            sessionId: requestId.sessionId,
-            requestId: requestId.id,
-            signedData: signedData
-        )
+        return connection.approve(requestId: requestId, signedData: signedData)
     }
 
     public func approveDappPermission(requestId: HostRequestId, ethAddress: String) -> Single<Void> {
@@ -116,7 +112,7 @@ public class WalletLink: WalletLinkProtocol {
             return .error(WalletLinkError.noConnectionFound)
         }
 
-        return connection.reject(sessionId: requestId.sessionId, requestId: requestId.id)
+        return connection.reject(requestId: requestId)
     }
 
     public func getRequest(eventId: String, sessionId: String, url: URL) -> Single<HostRequest> {

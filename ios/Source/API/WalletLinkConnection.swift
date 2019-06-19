@@ -137,36 +137,36 @@ class WalletLinkConnection {
     /// Send signature request approval to the requesting host
     ///
     /// - Parameters:
-    ///     - sessionId: WalletLink host generated session ID
-    ///     - requestId: WalletLink request ID
+    ///     - requestId: WalletLink host generated request ID
     ///     - signedData: User signed data
     ///
     /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
-    func approve(sessionId: String, requestId: String, signedData: Data) -> Single<Void> {
-        guard let session = sessionStore.getSession(id: sessionId, url: url) else {
+    func approve(requestId: HostRequestId, signedData: Data) -> Single<Void> {
+        guard let session = sessionStore.getSession(id: requestId.sessionId, url: url) else {
             return .error(WalletLinkError.noConnectionFound)
         }
 
-        let response = Web3ResponseDTO<String>(id: requestId, result: signedData.toPrefixedHexString())
+        let response = Web3ResponseDTO<String>(id: requestId.id, result: signedData.toPrefixedHexString())
 
-        return submitWeb3Response(response, session: session)
+        return api.markEventAsSeen(eventId: requestId.eventId, sessionId: requestId.sessionId, secret: session.secret)
+            .flatMap { _ in self.submitWeb3Response(response, session: session) }
     }
 
     /// Send signature request rejection to the requesting host
     ///
     /// - Parameters:
-    ///     - sessionId: WalletLink host generated session ID
-    ///     - requestId: WalletLink request ID
+    ///     - requestId: WalletLink host generated request ID
     ///
     /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
-    func reject(sessionId: String, requestId: String) -> Single<Void> {
-        guard let session = sessionStore.getSession(id: sessionId, url: url) else {
+    func reject(requestId: HostRequestId) -> Single<Void> {
+        guard let session = sessionStore.getSession(id: requestId.sessionId, url: url) else {
             return .error(WalletLinkError.noConnectionFound)
         }
 
-        let response = Web3ResponseDTO<String>(id: requestId, errorMessage: "User rejected signature request")
+        let response = Web3ResponseDTO<String>(id: requestId.id, errorMessage: "User rejected signature request")
 
-        return submitWeb3Response(response, session: session)
+        return api.markEventAsSeen(eventId: requestId.eventId, sessionId: requestId.sessionId, secret: session.secret)
+            .flatMap { _ in self.submitWeb3Response(response, session: session) }
     }
 
     // MARK: - Connection management

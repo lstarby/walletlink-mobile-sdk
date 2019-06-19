@@ -10,6 +10,27 @@ class WalletLinkAPI {
         self.url = url
     }
 
+    /// Mark a given event as seen
+    ///
+    /// - Parameters:
+    ///   - eventId: The event ID
+    ///   - sessionId: The session ID
+    ///   - secret: The session secret
+    ///
+    /// - Returns: A Single wrapping a ServerRequestDTO
+    func markEventAsSeen(eventId: String, sessionId: String, secret: String) -> Single<Void> {
+        let credentials = Credentials(sessionId: sessionId, secret: secret)
+
+        return HTTP.post(
+            service: HTTPService(url: url),
+            path: "/events/\(eventId)/seen",
+            credentials: credentials
+        )
+        .asVoid()
+        .logError()
+        .catchErrorJustReturn(())
+    }
+
     /// Fetch an event with a given ID
     ///
     /// - Parameters:
@@ -46,19 +67,21 @@ class WalletLinkAPI {
     /// - Parameters:
     ///   - timestamp: timestamp in seconds since last fetch
     ///   - sessionId: The session ID
+    ///   - unseen: If true, returns only unseen requests
     ///   - sessionKey: Generated session key
     ///
     /// - Returns: A Single wrapping a list of ServerRequestDTO
     func getEvents(
         since timestamp: UInt64?,
         sessionId: String,
+        unseen: Bool = true,
         secret: String
     ) -> Single<(UInt64, [ServerRequestDTO])> {
         let credentials = Credentials(sessionId: sessionId, secret: secret)
 
         var parameters: [String: String]?
         if let timestamp = timestamp {
-            parameters = ["timestamp": "\(timestamp)"]
+            parameters = ["timestamp": "\(timestamp)", "unseen": "\(unseen)"]
         }
 
         return HTTP.get(
