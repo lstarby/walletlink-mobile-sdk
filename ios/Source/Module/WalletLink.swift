@@ -100,11 +100,7 @@ public class WalletLink: WalletLinkProtocol {
     public func approveDappPermission(requestId: HostRequestId, ethAddress: String) -> Single<Void> {
         guard let connection = connections[requestId.url] else { return .error(WalletLinkError.noConnectionFound) }
 
-        return connection.approveDappPermission(
-            sessionId: requestId.sessionId,
-            requestId: requestId.id,
-            ethAddress: ethAddress
-        )
+        return connection.approveDappPermission(requestId: requestId, ethAddress: ethAddress)
     }
 
     public func reject(requestId: HostRequestId) -> Single<Void> {

@@ -119,19 +119,19 @@ class WalletLinkConnection {
     /// Approves Dapp permission request EIP-1102
     ///
     /// - Parameters:
-    ///     - sessionId: WalletLink host generated session ID
-    ///     - requestId: WalletLink request ID
+    ///     - requestId: WalletLink host generated request ID
     ///     - ethereumAddress: Current Ethereum Address
     ///
     /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
-    func approveDappPermission(sessionId: String, requestId: String, ethAddress: String) -> Single<Void> {
-        guard let session = sessionStore.getSession(id: sessionId, url: url) else {
+    func approveDappPermission(requestId: HostRequestId,  ethAddress: String) -> Single<Void> {
+        guard let session = sessionStore.getSession(id: requestId.sessionId, url: url) else {
             return .error(WalletLinkError.noConnectionFound)
         }
 
-        let response = Web3ResponseDTO<[String]>(id: requestId, result: [ethAddress.lowercased()])
+        let response = Web3ResponseDTO<[String]>(id: requestId.id, result: [ethAddress.lowercased()])
 
-        return submitWeb3Response(response, session: session)
+        return api.markEventAsSeen(eventId: requestId.eventId, sessionId: requestId.sessionId, secret: session.secret)
+            .flatMap { _ in self.submitWeb3Response(response, session: session) }
     }
 
     /// Send signature request approval to the requesting host
