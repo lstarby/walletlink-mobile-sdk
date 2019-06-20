@@ -3,6 +3,13 @@
 import BigInt
 
 extension ServerRequestDTO {
+    /// Coonver a server request to an instance of `HostRequest`
+    ///
+    /// - Parameters:
+    ///     - secret: Session secret. Used to decrypt the message
+    ///     - url: WalletLink URL
+    ///
+    /// - Returns: an instance of HostRequest or null
     func asHostRequest(secret: String, url: URL) -> HostRequest? {
         guard
             let decrypted = try? data.decryptUsingAES256GCM(secret: secret),
@@ -30,6 +37,8 @@ extension ServerRequestDTO {
             return nil
         }
     }
+
+    // MARK: - Private helpers
 
     private func parseWeb3Request(method: RequestMethod, data: Data, url: URL) -> HostRequest? {
         switch method {

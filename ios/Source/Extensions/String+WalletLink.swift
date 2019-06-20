@@ -14,7 +14,7 @@ extension String {
             guard let data = self.data(using: .utf8) else { return nil }
             return try JSONSerialization.jsonObject(with: data, options: [])
         } catch let e {
-            os_log("exception: %@", type: .error, e.localizedDescription)
+            print("exception: \(e)")
             return nil
         }
     }

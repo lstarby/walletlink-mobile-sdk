@@ -19,7 +19,7 @@ extension PrimitiveSequence {
     /// Log error if caught then rethrow
     func logError() -> PrimitiveSequence<Trait, Element> {
         return catchError { err in
-            os_log("[walletlink] %@:%d Error %@", type: .error)
+            print("[walletlink] caught error \(err)")
 
             throw err
         }

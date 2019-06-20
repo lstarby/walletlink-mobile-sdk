@@ -208,13 +208,13 @@ class WalletLinkConnection {
             }
             .map { success in
                 if success {
-                    os_log("[walletlink] successfully joined session %@", type: .debug, session.id)
+                    print("[walletlink] successfully joined session \(session.id)")
 
                     self.joinSessionEventsSubject.onNext(JoinSessionEvent(sessionId: session.id, joined: true))
 
                     return true
                 } else {
-                    os_log("[walletlink] Invalid session %@. Removing...", type: .error, session.id)
+                    print("[walletlink] Invalid session \(session.id). Removing...")
 
                     self.sessionStore.delete(url: self.url, sessionId: session.id)
                     self.joinSessionEventsSubject.onNext(JoinSessionEvent(sessionId: session.id, joined: false))

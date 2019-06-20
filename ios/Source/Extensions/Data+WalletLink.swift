@@ -31,7 +31,7 @@ extension Data {
         do {
             return try JSONSerialization.jsonObject(with: self, options: [])
         } catch {
-            os_log("exception: %@", type: .error, error.localizedDescription)
+            print("exception: \(error)")
             return nil
         }
     }
