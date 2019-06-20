@@ -62,37 +62,26 @@ class WalletLinkAPI {
         .logError()
     }
 
-    /// Fetch all events since the given date
+    /// Fetch all unseen events
     ///
     /// - Parameters:
-    ///   - timestamp: timestamp in seconds since last fetch
     ///   - sessionId: The session ID
     ///   - unseen: If true, returns only unseen requests
     ///   - sessionKey: Generated session key
     ///
-    /// - Returns: A Single wrapping a list of ServerRequestDTO
-    func getEvents(
-        since timestamp: UInt64?,
-        sessionId: String,
-        unseen: Bool = true,
-        secret: String
-    ) -> Single<(UInt64, [ServerRequestDTO])> {
+    /// - Returns: A Single wrapping a list of encrypted host requests
+    func getUnseenEvents(sessionId: String, secret: String) -> Single<[ServerRequestDTO]> {
         let credentials = Credentials(sessionId: sessionId, secret: secret)
-
-        var parameters: [String: String]?
-        if let timestamp = timestamp {
-            parameters = ["timestamp": "\(timestamp)", "unseen": "\(unseen)"]
-        }
 
         return HTTP.get(
             service: HTTPService(url: url),
             path: "/events",
             credentials: credentials,
-            parameters: parameters,
+            parameters: ["unseen": "true"],
             for: GetEventsDTO.self
         )
         .map { response in
-            let requests = response.body.events.map { event in
+            response.body.events.map { event in
                 ServerRequestDTO(
                     sessionId: sessionId,
                     type: .event,
@@ -101,8 +90,6 @@ class WalletLinkAPI {
                     data: event.data
                 )
             }
-
-            return (response.body.timestamp, requests)
         }
     }
 }

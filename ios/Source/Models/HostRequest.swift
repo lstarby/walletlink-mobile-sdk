@@ -82,7 +82,7 @@ public enum HostRequest {
     }
 
     /// WalletLink Host request ID
-    var hostRequestId: HostRequestId {
+    public var hostRequestId: HostRequestId {
         switch self {
         case let .signMessage(hostRequestId, _, _, _),
              let .signAndSubmitTx(hostRequestId, _, _, _, _, _, _, _, _, _),

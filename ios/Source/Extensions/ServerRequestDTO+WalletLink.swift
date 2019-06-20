@@ -24,9 +24,9 @@ extension ServerRequestDTO {
                 return nil
             }
 
+            print("[walletlink] web3Request \(web3Request)")
             return web3Request
         case .web3Response:
-            print("[walletlink] ignore pending response")
             return nil
         }
     }

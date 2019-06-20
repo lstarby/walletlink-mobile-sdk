@@ -245,11 +245,7 @@ class WalletLinkConnection {
 
     private func fetchPendingRequests() {
         let requestsSingles = sessionStore.getSessions(for: url).map { session in
-            getPendingRequests(
-                since: sessionStore.getTimestamp(for: session.id),
-                sessionId: session.id,
-                secret: session.secret
-            )
+            getPendingRequests(sessionId: session.id, secret: session.secret)
         }
 
         _ = Single.zip(requestsSingles)
@@ -258,17 +254,9 @@ class WalletLinkConnection {
             .subscribe(onSuccess: { requests in requests.forEach { self.requestsSubject.onNext($0) } })
     }
 
-    private func getPendingRequests(
-        since timestamp: UInt64?,
-        sessionId: String,
-        secret: String
-    ) -> Single<[HostRequest]> {
-        return api.getEvents(since: timestamp, sessionId: sessionId, secret: secret)
-            .map { timestamp, requests -> [HostRequest] in
-                self.sessionStore.setTimestamp(timestamp, for: sessionId)
-
-                return requests.compactMap { $0.asHostRequest(secret: secret, url: self.url) }
-            }
+    private func getPendingRequests(sessionId: String, secret: String) -> Single<[HostRequest]> {
+        return api.getUnseenEvents(sessionId: sessionId, secret: secret)
+            .map { requests in requests.compactMap { $0.asHostRequest(secret: secret, url: self.url) } }
             .catchErrorJustReturn([])
     }
 
