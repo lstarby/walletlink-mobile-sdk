@@ -28,7 +28,7 @@ class WalletLinkConnection {
     /// Constructor
     ///
     /// - Parameters:
-    ///     -  url: WalletLink server URL
+    ///     - url: WalletLink server URL
     ///     - websocketUrl: WalletLink websocket endpoint
     ///     - userId: User ID to deliver push notifications to
     ///     - notificationUrl: Webhook URL used to push notifications to mobile client
@@ -123,7 +123,7 @@ class WalletLinkConnection {
     ///     - ethereumAddress: Current Ethereum Address
     ///
     /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
-    func approveDappPermission(requestId: HostRequestId,  ethAddress: String) -> Single<Void> {
+    func approveDappPermission(requestId: HostRequestId, ethAddress: String) -> Single<Void> {
         guard let session = sessionStore.getSession(id: requestId.sessionId, url: url) else {
             return .error(WalletLinkError.noConnectionFound)
         }

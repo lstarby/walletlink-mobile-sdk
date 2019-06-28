@@ -3,6 +3,7 @@
 import Foundation
 
 struct Web3RequestDTO<T: Codable>: Codable, JSONDeserializable {
+    let type: String = "WEB3_REQUEST"
     let id: String
     let origin: URL
     let request: Web3Request<T>

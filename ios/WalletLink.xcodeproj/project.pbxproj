@@ -79,7 +79,6 @@
 		518388012297D28100CCB8D1 /* SessionStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
 		51AFBD28229B5D0E006EBF0E /* Web3RequestDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3RequestDTO.swift; sourceTree = "<group>"; };
 		51AFBD2A229B5D24006EBF0E /* Web3ResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3ResponseDTO.swift; sourceTree = "<group>"; };
-		51AFBD2C229B63C1006EBF0E /* ResponseEventType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseEventType.swift; sourceTree = "<group>"; };
 		51AFBD30229B7405006EBF0E /* ConcurrentCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConcurrentCache.swift; sourceTree = "<group>"; };
 		51AFBD32229B7556006EBF0E /* DispatchQueue+WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+WalletLink.swift"; sourceTree = "<group>"; };
 		51B8533322B1D021004589BD /* Session+WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+WalletLink.swift"; sourceTree = "<group>"; };
@@ -96,7 +95,6 @@
 		51D42E1F2290029500048066 /* ClientMessageType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientMessageType.swift; sourceTree = "<group>"; };
 		51D42E21229002D500048066 /* ServerMessageType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerMessageType.swift; sourceTree = "<group>"; };
 		51EC62C522998FE200B55164 /* RequestMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestMethod.swift; sourceTree = "<group>"; };
-		51EC62C7229996D000B55164 /* RequestEventType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestEventType.swift; sourceTree = "<group>"; };
 		51FC1C0D2299CADE008CFFC2 /* Optional+WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+WalletLink.swift"; sourceTree = "<group>"; };
 		51FC1C0F229B4ABD008CFFC2 /* HostRequestId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostRequestId.swift; sourceTree = "<group>"; };
 		67A312883E9B5BA9BF15F24C /* libPods-WalletLink.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WalletLink.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -185,9 +183,7 @@
 				5108610D22900EAF0060C12F /* ClientMetadataKey.swift */,
 				5159CCA2228FE65D00A257C0 /* HostRequest.swift */,
 				51FC1C0F229B4ABD008CFFC2 /* HostRequestId.swift */,
-				51EC62C7229996D000B55164 /* RequestEventType.swift */,
 				51EC62C522998FE200B55164 /* RequestMethod.swift */,
-				51AFBD2C229B63C1006EBF0E /* ResponseEventType.swift */,
 				51D42E21229002D500048066 /* ServerMessageType.swift */,
 				51D42E14228FFBCD00048066 /* Session.swift */,
 			);

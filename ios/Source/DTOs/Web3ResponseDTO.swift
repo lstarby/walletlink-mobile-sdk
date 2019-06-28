@@ -3,6 +3,7 @@
 import Foundation
 
 struct Web3ResponseDTO<T: Codable>: Codable, JSONSerializable {
+    let type: String = "WEB3_RESPONSE"
     let id: String
     let response: Web3Response<T>
 
