@@ -42,8 +42,8 @@ extension ServerRequestDTO {
 
     private func parseWeb3Request(method: RequestMethod, data: Data, url: URL) -> HostRequest? {
         switch method {
-        case .requestEthereumAddresses:
-            guard let dto = Web3RequestDTO<RequestEthereumAddressesParams>.fromJSON(data) else {
+        case .requestEthereumAccounts:
+            guard let dto = Web3RequestDTO<RequestEthereumAccountsParams>.fromJSON(data) else {
                 assertionFailure("Invalid requestEthereumAddresses \(self)")
                 return nil
             }
@@ -107,13 +107,26 @@ extension ServerRequestDTO {
     }
 
     private func hostRequestId<T>(web3Request: Web3RequestDTO<T>, url: URL) -> HostRequestId {
+        let dappImageURL: URL?
+        let dappName: String?
+
+        if let web3Request = web3Request as? Web3RequestDTO<RequestEthereumAccountsParams> {
+            dappName = web3Request.request.params.appName
+            dappImageURL = web3Request.request.params.appLogoUrl
+        } else {
+            dappName = nil
+            dappImageURL = nil
+        }
+
         return HostRequestId(
             id: web3Request.id,
             sessionId: sessionId,
             eventId: eventId,
             url: url,
-            dappUrl: web3Request.origin,
-            dappName: nil
+            dappURL: web3Request.origin,
+            dappImageURL: dappImageURL,
+            dappName: dappName,
+            method: web3Request.request.method
         )
     }
 }

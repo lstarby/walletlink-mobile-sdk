@@ -4,8 +4,8 @@ import Foundation
 
 /// Host request method
 enum RequestMethod: String, Codable {
-    /// Request ethereum address from the user
-    case requestEthereumAddresses
+    /// Request ethereum address from user
+    case requestEthereumAccounts
 
     /// Ask user to sign a message using ethereum private key
     case signEthereumMessage

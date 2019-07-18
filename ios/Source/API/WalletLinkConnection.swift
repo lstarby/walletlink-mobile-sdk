@@ -116,40 +116,47 @@ class WalletLinkConnection {
         return Single.zip(singles).asVoid()
     }
 
-    /// Approves Dapp permission request EIP-1102
-    ///
-    /// - Parameters:
-    ///     - requestId: WalletLink host generated request ID
-    ///     - ethereumAddress: Current Ethereum Address
-    ///
-    /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
-    func approveDappPermission(requestId: HostRequestId, ethAddress: String) -> Single<Void> {
-        guard let session = sessionStore.getSession(id: requestId.sessionId, url: url) else {
-            return .error(WalletLinkError.noConnectionFound)
-        }
-
-        let response = Web3ResponseDTO<[String]>(id: requestId.id, result: [ethAddress.lowercased()])
-
-        return api.markEventAsSeen(eventId: requestId.eventId, sessionId: requestId.sessionId, secret: session.secret)
-            .flatMap { _ in self.submitWeb3Response(response, session: session) }
-    }
-
     /// Send signature request approval to the requesting host
     ///
     /// - Parameters:
     ///     - requestId: WalletLink host generated request ID
-    ///     - signedData: User signed data
+    ///     - responseData: User signed data
     ///
     /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
-    func approve(requestId: HostRequestId, signedData: Data) -> Single<Void> {
+    func approve(requestId: HostRequestId, responseData: Data) -> Single<Void> {
         guard let session = sessionStore.getSession(id: requestId.sessionId, url: url) else {
             return .error(WalletLinkError.noConnectionFound)
         }
 
-        let response = Web3ResponseDTO<String>(id: requestId.id, result: signedData.toPrefixedHexString())
+        let margEventAsSeen = api.markEventAsSeen(
+            eventId: requestId.eventId,
+            sessionId: requestId.sessionId,
+            secret: session.secret
+        )
 
-        return api.markEventAsSeen(eventId: requestId.eventId, sessionId: requestId.sessionId, secret: session.secret)
-            .flatMap { _ in self.submitWeb3Response(response, session: session) }
+        switch requestId.method {
+        case .requestEthereumAccounts:
+            guard let address = String(data: responseData, encoding: .utf8) else {
+                return Single.error(WalletLinkError.missingResponseData)
+            }
+
+            let response = Web3ResponseDTO<[String]>(
+                id: requestId.id,
+                method: requestId.method,
+                result: [address]
+            )
+
+            return margEventAsSeen.flatMap { _ in self.submitWeb3Response(response, session: session) }
+
+        case .signEthereumMessage, .signEthereumTransaction, .submitEthereumTransaction:
+            let response = Web3ResponseDTO<String>(
+                id: requestId.id,
+                method: requestId.method,
+                result: responseData.toPrefixedHexString()
+            )
+
+            return margEventAsSeen.flatMap { _ in self.submitWeb3Response(response, session: session) }
+        }
     }
 
     /// Send signature request rejection to the requesting host
@@ -163,7 +170,11 @@ class WalletLinkConnection {
             return .error(WalletLinkError.noConnectionFound)
         }
 
-        let response = Web3ResponseDTO<String>(id: requestId.id, errorMessage: "User rejected signature request")
+        let response = Web3ResponseDTO<String>(
+            id: requestId.id,
+            method: requestId.method,
+            errorMessage: "User rejected signature request"
+        )
 
         return api.markEventAsSeen(eventId: requestId.eventId, sessionId: requestId.sessionId, secret: session.secret)
             .flatMap { _ in self.submitWeb3Response(response, session: session) }

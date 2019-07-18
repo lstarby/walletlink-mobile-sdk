@@ -14,8 +14,9 @@ struct Web3Request<T: Codable>: Codable {
     let params: T
 }
 
-struct RequestEthereumAddressesParams: Codable {
-    let appName: String
+struct RequestEthereumAccountsParams: Codable {
+    let appName: String?
+    let appLogoUrl: URL?
 }
 
 struct SignEthereumMessageParams: Codable {

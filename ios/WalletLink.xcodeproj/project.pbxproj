@@ -31,7 +31,6 @@
 		51AFBD33229B7556006EBF0E /* DispatchQueue+WalletLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51AFBD32229B7556006EBF0E /* DispatchQueue+WalletLink.swift */; };
 		51B8533622B1D89F004589BD /* EventType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B8533522B1D89F004589BD /* EventType.swift */; };
 		51B8533822B1E5ED004589BD /* UInt+WalletLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B8533722B1E5ED004589BD /* UInt+WalletLink.swift */; };
-		51D42E0C228FF89600048066 /* ConcurrencyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E0B228FF89600048066 /* ConcurrencyError.swift */; };
 		51D42E0E228FF96200048066 /* Observable+WalletLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E0D228FF96200048066 /* Observable+WalletLink.swift */; };
 		51D42E13228FFB6B00048066 /* AtomicInt32.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E12228FFB6B00048066 /* AtomicInt32.swift */; };
 		51D42E15228FFBCD00048066 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D42E14228FFBCD00048066 /* Session.swift */; };
@@ -84,7 +83,6 @@
 		51B8533322B1D021004589BD /* Session+WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+WalletLink.swift"; sourceTree = "<group>"; };
 		51B8533522B1D89F004589BD /* EventType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventType.swift; sourceTree = "<group>"; };
 		51B8533722B1E5ED004589BD /* UInt+WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UInt+WalletLink.swift"; sourceTree = "<group>"; };
-		51D42E0B228FF89600048066 /* ConcurrencyError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcurrencyError.swift; sourceTree = "<group>"; };
 		51D42E0D228FF96200048066 /* Observable+WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Observable+WalletLink.swift"; sourceTree = "<group>"; };
 		51D42E12228FFB6B00048066 /* AtomicInt32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicInt32.swift; sourceTree = "<group>"; };
 		51D42E14228FFBCD00048066 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
@@ -237,7 +235,6 @@
 		51D42E0A228FF86900048066 /* Errors */ = {
 			isa = PBXGroup;
 			children = (
-				51D42E0B228FF89600048066 /* ConcurrencyError.swift */,
 				51695C8922901555003B974E /* WalletLinkError.swift */,
 			);
 			path = Errors;
@@ -433,7 +430,6 @@
 				5108610C229009B60060C12F /* SetMetadataMessageDTO.swift in Sources */,
 				5159CC96228FE2A200A257C0 /* WalletLinkConnection.swift in Sources */,
 				5159CCA1228FE4DF00A257C0 /* Data+WalletLink.swift in Sources */,
-				51D42E0C228FF89600048066 /* ConcurrencyError.swift in Sources */,
 				D34578AB22A071B90063286E /* GetEventDTO.swift in Sources */,
 				51695C8A22901555003B974E /* WalletLinkError.swift in Sources */,
 				5159CC9E228FE47500A257C0 /* JSONSerializable.swift in Sources */,

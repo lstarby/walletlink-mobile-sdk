@@ -9,10 +9,10 @@ public class WalletLink: WalletLinkProtocol {
     private var connections = ConcurrentCache<URL, WalletLinkConnection>()
     private let requestsSubject = PublishSubject<HostRequest>()
     private let sessionStore = SessionStore()
-    private let requestsScheduler = SerialDispatchQueueScheduler(internalSerialQueueName: "WalletLink.request")
+    private let requestsScheduler = SerialDispatchQueueScheduler(internalSerialQueueName: "WalletLink.requests")
     private let processedRequestIds = BoundedSet<HostRequestId>(maxSize: 3000)
 
-    public let requestsObservable: Observable<HostRequest>
+    public let requests: Observable<HostRequest>
 
     public var sessions: [Session] {
         return sessionStore.sessions
@@ -21,7 +21,7 @@ public class WalletLink: WalletLinkProtocol {
     public required init(notificationUrl: URL) {
         self.notificationUrl = notificationUrl
 
-        requestsObservable = requestsSubject.asObservable()
+        requests = requestsSubject.asObservable()
     }
 
     public func connect(userId: String, metadata: [ClientMetadataKey: String]) {
@@ -91,16 +91,10 @@ public class WalletLink: WalletLinkProtocol {
         return Single.zip(setMetadataSingles).asVoid()
     }
 
-    public func approve(requestId: HostRequestId, signedData: Data) -> Single<Void> {
+    public func approve(requestId: HostRequestId, responseData: Data) -> Single<Void> {
         guard let connection = connections[requestId.url] else { return .error(WalletLinkError.noConnectionFound) }
 
-        return connection.approve(requestId: requestId, signedData: signedData)
-    }
-
-    public func approveDappPermission(requestId: HostRequestId, ethAddress: String) -> Single<Void> {
-        guard let connection = connections[requestId.url] else { return .error(WalletLinkError.noConnectionFound) }
-
-        return connection.approveDappPermission(requestId: requestId, ethAddress: ethAddress)
+        return connection.approve(requestId: requestId, responseData: responseData)
     }
 
     public func reject(requestId: HostRequestId) -> Single<Void> {

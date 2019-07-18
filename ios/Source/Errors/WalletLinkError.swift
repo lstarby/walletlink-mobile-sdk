@@ -2,7 +2,7 @@
 
 import Foundation
 
-enum WalletLinkError: Error {
+public enum WalletLinkError: Error {
     /// Unable to encrypt data using shared secret
     case unableToEncryptData
 
@@ -36,4 +36,7 @@ enum WalletLinkError: Error {
 
     /// Thrown when an invalid server URL is provided
     case invalidServerUrl
+
+    /// Thrown when trying to respond with data that's missing or invalid
+    case missingResponseData
 }

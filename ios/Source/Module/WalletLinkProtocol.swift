@@ -4,7 +4,7 @@ import RxSwift
 
 public protocol WalletLinkProtocol: class {
     /// Incoming host requests
-    var requestsObservable: Observable<HostRequest> { get }
+    var requests: Observable<HostRequest> { get }
 
     /// Get list of session
     var sessions: [Session] { get }
@@ -55,23 +55,14 @@ public protocol WalletLinkProtocol: class {
     /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
     func setMetadata(key: ClientMetadataKey, value: String) -> Single<Void>
 
-    /// Approves Dapp permission request EIP-1102
-    ///
-    /// - Parameters:
-    ///     - requestId: WalletLink host generated request ID
-    ///     - ethereumAddress: Current Ethereum Address
-    ///
-    /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
-    func approveDappPermission(requestId: HostRequestId, ethAddress: String) -> Single<Void>
-
     /// Send signature request approval to the requesting host
     ///
     /// - Parameters:
     ///     - requestId: WalletLink host generated request ID
-    ///     - signedData: User signed data
+    ///     - responseData: User signed data or any other response to the host
     ///
     /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
-    func approve(requestId: HostRequestId, signedData: Data) -> Single<Void>
+    func approve(requestId: HostRequestId, responseData: Data) -> Single<Void>
 
     /// Send signature request rejection to the requesting host
     ///

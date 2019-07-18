@@ -17,8 +17,14 @@ public struct HostRequestId: Hashable {
     public let url: URL
 
     /// The dapp URL
-    public let dappUrl: URL
+    public let dappURL: URL
+
+    /// The dapp image URL
+    public let dappImageURL: URL?
 
     /// The dapp name
     public let dappName: String?
+
+    /// The request method type
+    let method: RequestMethod
 }

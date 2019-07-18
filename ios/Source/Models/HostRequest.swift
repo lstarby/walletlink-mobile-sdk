@@ -44,7 +44,7 @@ public enum HostRequest {
              let .signAndSubmitTx(hostRequestId, _, _, _, _, _, _, _, _, _),
              let .dappPermission(hostRequestId),
              let .submitSignedTx(hostRequestId, _, _):
-            return hostRequestId.dappUrl
+            return hostRequestId.dappURL
         }
     }
 
