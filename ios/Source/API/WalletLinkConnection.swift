@@ -143,7 +143,7 @@ class WalletLinkConnection {
             let response = Web3ResponseDTO<[String]>(
                 id: requestId.id,
                 method: requestId.method,
-                result: [address]
+                result: [address.lowercased()]
             )
 
             return margEventAsSeen.flatMap { _ in self.submitWeb3Response(response, session: session) }
