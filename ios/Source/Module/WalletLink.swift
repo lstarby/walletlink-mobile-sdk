@@ -98,25 +98,31 @@ public class WalletLink: WalletLinkProtocol {
     }
 
     public func reject(requestId: HostRequestId) -> Single<Void> {
-        guard let connection = connections[requestId.url] else {
-            return .error(WalletLinkError.noConnectionFound)
-        }
+        guard let connection = connections[requestId.url] else { return .error(WalletLinkError.noConnectionFound) }
 
         return connection.reject(requestId: requestId)
     }
 
-    public func getRequest(eventId: String, sessionId: String, url: URL) -> Single<HostRequest> {
-        guard let session = sessionStore.getSession(id: sessionId, url: url) else {
-            return .error(WalletLinkError.sessionNotFound)
+    public func markAsSeen(requestIds: [HostRequestId]) -> Single<Void> {
+        let markAsSeenSingles = requestIds.compactMap { requestId -> Single<Void>? in
+            guard let connection = connections[requestId.url] else { return nil }
+
+            return connection.markAsSeen(requestId: requestId).catchErrorJustReturn(())
         }
 
-        return WalletLinkAPI(url: url).getEvent(eventId: eventId, sessionId: sessionId, secret: session.secret)
-            .map { request in
-                guard let signatureRequest = request.asHostRequest(secret: session.secret, url: url) else {
-                    throw WalletLinkError.unableToParseEvent
+        return Single.zip(markAsSeenSingles).asVoid()
+    }
+
+    public func getRequest(eventId: String, sessionId: String, url: URL) -> Single<HostRequest> {
+        guard let connection = connections[url] else { return .error(WalletLinkError.noConnectionFound) }
+
+        return connection.getPendingRequests(sessionId: sessionId)
+            .map { requests -> HostRequest in
+                guard let request = requests.first(where: { eventId == $0.hostRequestId.eventId }) else {
+                    throw WalletLinkError.eventNotFound
                 }
 
-                return signatureRequest
+                return request
             }
     }
 

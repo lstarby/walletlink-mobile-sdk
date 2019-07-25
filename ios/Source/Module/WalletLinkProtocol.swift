@@ -72,6 +72,14 @@ public protocol WalletLinkProtocol: class {
     /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
     func reject(requestId: HostRequestId) -> Single<Void>
 
+    /// Mark requests as seen to prevent future presentation
+    ///
+    /// - Parameters:
+    ///     - requestIds: List of alletLink host generated request ID
+    ///
+    /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
+    func markAsSeen(requestIds: [HostRequestId]) -> Single<Void>
+
     /// Get an event
     ///
     /// - Parameters:

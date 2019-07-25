@@ -125,10 +125,10 @@ class WalletLinkConnection {
     /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
     func approve(requestId: HostRequestId, responseData: Data) -> Single<Void> {
         guard let session = sessionStore.getSession(id: requestId.sessionId, url: url) else {
-            return .error(WalletLinkError.noConnectionFound)
+            return .error(WalletLinkError.sessionNotFound)
         }
 
-        let margEventAsSeen = api.markEventAsSeen(
+        let markEventAsSeen = api.markEventAsSeen(
             eventId: requestId.eventId,
             sessionId: requestId.sessionId,
             secret: session.secret
@@ -146,7 +146,7 @@ class WalletLinkConnection {
                 result: [address.lowercased()]
             )
 
-            return margEventAsSeen.flatMap { _ in self.submitWeb3Response(response, session: session) }
+            return markEventAsSeen.flatMap { _ in self.submitWeb3Response(response, session: session) }
 
         case .signEthereumMessage, .signEthereumTransaction, .submitEthereumTransaction:
             let response = Web3ResponseDTO<String>(
@@ -155,7 +155,7 @@ class WalletLinkConnection {
                 result: responseData.toPrefixedHexString()
             )
 
-            return margEventAsSeen.flatMap { _ in self.submitWeb3Response(response, session: session) }
+            return markEventAsSeen.flatMap { _ in self.submitWeb3Response(response, session: session) }
         case .requestCanceled:
             return Single.error(WalletLinkError.unsupportedRequestMethodApproval)
         }
@@ -169,7 +169,7 @@ class WalletLinkConnection {
     /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
     func reject(requestId: HostRequestId) -> Single<Void> {
         guard let session = sessionStore.getSession(id: requestId.sessionId, url: url) else {
-            return .error(WalletLinkError.noConnectionFound)
+            return .error(WalletLinkError.sessionNotFound)
         }
 
         let response = Web3ResponseDTO<String>(
@@ -180,6 +180,34 @@ class WalletLinkConnection {
 
         return api.markEventAsSeen(eventId: requestId.eventId, sessionId: requestId.sessionId, secret: session.secret)
             .flatMap { _ in self.submitWeb3Response(response, session: session) }
+    }
+
+    /// Mark requests as seen to prevent future presentation
+    ///
+    /// - Parameters:
+    ///     - requestId: WalletLink host generated request ID
+    ///
+    /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
+    func markAsSeen(requestId: HostRequestId) -> Single<Void> {
+        guard let session = self.sessionStore.getSession(id: requestId.sessionId, url: self.url) else {
+            return .justVoid()
+        }
+
+        return api.markEventAsSeen(eventId: requestId.eventId, sessionId: session.id, secret: session.secret)
+    }
+
+    /// Get pending requests for given sessionID. Canceled requests will be filtered out
+    ///
+    /// - Parameters:
+    ///     - sessionId: Session ID
+    ///
+    /// - Returns: List of pending requests
+    func getPendingRequests(sessionId: String) -> Single<[HostRequest]> {
+        guard let session = sessionStore.getSession(id: sessionId, url: url) else {
+            return .error(WalletLinkError.sessionNotFound)
+        }
+
+        return getPendingRequests(sessionId: sessionId, secret: session.secret)
     }
 
     // MARK: - Connection management
@@ -270,6 +298,29 @@ class WalletLinkConnection {
     private func getPendingRequests(sessionId: String, secret: String) -> Single<[HostRequest]> {
         return api.getUnseenEvents(sessionId: sessionId, secret: secret)
             .map { requests in requests.compactMap { $0.asHostRequest(secret: secret, url: self.url) } }
+            .map { requests in
+                // build list of cancelation requests
+                let cancelationRequests = requests.filter { $0.hostRequestId.isCancelation }
+
+                // build list of pending requests by filtering out canceled requests
+                let pendingRequests = requests.filter { request in
+                    guard
+                        let cancelationRequest = cancelationRequests.first(where: {
+                            $0.hostRequestId.canCancel(request.hostRequestId)
+                        })
+                    else {
+                        return true
+                    }
+
+                    _ = self.markAsSeen(requestId: request.hostRequestId)
+                        .flatMap { _ in self.markAsSeen(requestId: cancelationRequest.hostRequestId) }
+                        .subscribe()
+
+                    return false
+                }
+
+                return pendingRequests
+            }
             .catchErrorJustReturn([])
     }
 

@@ -44,6 +44,7 @@ public struct HostRequestId: Hashable {
 
         return dappURL == cancellableRequestId.dappURL &&
             id == cancellableRequestId.id &&
-            url == cancellableRequestId.url
+            url == cancellableRequestId.url &&
+            sessionId == cancellableRequestId.sessionId
     }
 }
