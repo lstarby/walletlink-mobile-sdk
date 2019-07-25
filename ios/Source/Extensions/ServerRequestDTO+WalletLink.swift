@@ -3,7 +3,7 @@
 import BigInt
 
 extension ServerRequestDTO {
-    /// Coonver a server request to an instance of `HostRequest`
+    /// Convert a server request to an instance of `HostRequest`
     ///
     /// - Parameters:
     ///     - secret: Session secret. Used to decrypt the message
@@ -35,10 +35,33 @@ extension ServerRequestDTO {
             return web3Request
         case .web3Response:
             return nil
+        case .web3RequestCanceled:
+            return parseWeb3RequestCancelation(data: decrypted, url: url)
         }
     }
 
     // MARK: - Private helpers
+
+    private func parseWeb3RequestCancelation(data: Data, url: URL) -> HostRequest? {
+        guard let dto = Web3RequestCanceledDTO.fromJSON(data) else {
+            assertionFailure("Invalid Web3RequestCanceled \(self)")
+            return nil
+        }
+
+        let requestId = HostRequestId(
+            id: dto.id,
+            sessionId: sessionId,
+            eventId: eventId,
+            url: url,
+            dappURL: dto.origin,
+            dappImageURL: nil,
+            dappName: nil,
+            method: .requestCanceled
+        )
+
+        print("[walletlink] web3RequestCancelation \(dto)")
+        return .requestCanceled(requestId: requestId)
+    }
 
     private func parseWeb3Request(method: RequestMethod, data: Data, url: URL) -> HostRequest? {
         switch method {
@@ -103,6 +126,9 @@ extension ServerRequestDTO {
             let requestId = hostRequestId(web3Request: dto, url: url)
 
             return .submitSignedTx(requestId: requestId, signedTx: signedTx, chainId: params.chainId)
+        case .requestCanceled:
+            assertionFailure("Invalid requestCanceled \(self)")
+            return nil
         }
     }
 

@@ -15,4 +15,7 @@ enum RequestMethod: String, Codable {
 
     /// Ask the user to submit a transaction
     case submitEthereumTransaction
+
+    /// Request was canceled on host side
+    case requestCanceled
 }

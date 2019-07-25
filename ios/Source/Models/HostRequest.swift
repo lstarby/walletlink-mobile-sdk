@@ -26,13 +26,17 @@ public enum HostRequest {
     /// EIP 1102. Permission to allow message/transaction signature requests
     case dappPermission(requestId: HostRequestId)
 
+    /// Request was canceled on host side
+    case requestCanceled(requestId: HostRequestId)
+
     /// The name of the dapp making the request
     public var dappName: String? {
         switch self {
         case let .signMessage(hostRequestId, _, _, _),
              let .signAndSubmitTx(hostRequestId, _, _, _, _, _, _, _, _, _),
              let .dappPermission(hostRequestId),
-             let .submitSignedTx(hostRequestId, _, _):
+             let .submitSignedTx(hostRequestId, _, _),
+             let .requestCanceled(hostRequestId):
             return hostRequestId.dappName
         }
     }
@@ -43,7 +47,8 @@ public enum HostRequest {
         case let .signMessage(hostRequestId, _, _, _),
              let .signAndSubmitTx(hostRequestId, _, _, _, _, _, _, _, _, _),
              let .dappPermission(hostRequestId),
-             let .submitSignedTx(hostRequestId, _, _):
+             let .submitSignedTx(hostRequestId, _, _),
+             let .requestCanceled(hostRequestId):
             return hostRequestId.dappURL
         }
     }
@@ -54,7 +59,8 @@ public enum HostRequest {
         case let .signMessage(hostRequestId, _, _, _),
              let .signAndSubmitTx(hostRequestId, _, _, _, _, _, _, _, _, _),
              let .dappPermission(hostRequestId),
-             let .submitSignedTx(hostRequestId, _, _):
+             let .submitSignedTx(hostRequestId, _, _),
+             let .requestCanceled(hostRequestId):
             return hostRequestId.eventId
         }
     }
@@ -65,7 +71,8 @@ public enum HostRequest {
         case let .signMessage(hostRequestId, _, _, _),
              let .signAndSubmitTx(hostRequestId, _, _, _, _, _, _, _, _, _),
              let .dappPermission(hostRequestId),
-             let .submitSignedTx(hostRequestId, _, _):
+             let .submitSignedTx(hostRequestId, _, _),
+             let .requestCanceled(hostRequestId):
             return hostRequestId.id
         }
     }
@@ -76,7 +83,8 @@ public enum HostRequest {
         case let .signMessage(hostRequestId, _, _, _),
              let .signAndSubmitTx(hostRequestId, _, _, _, _, _, _, _, _, _),
              let .dappPermission(hostRequestId),
-             let .submitSignedTx(hostRequestId, _, _):
+             let .submitSignedTx(hostRequestId, _, _),
+             let .requestCanceled(hostRequestId):
             return hostRequestId.sessionId
         }
     }
@@ -87,7 +95,8 @@ public enum HostRequest {
         case let .signMessage(hostRequestId, _, _, _),
              let .signAndSubmitTx(hostRequestId, _, _, _, _, _, _, _, _, _),
              let .dappPermission(hostRequestId),
-             let .submitSignedTx(hostRequestId, _, _):
+             let .submitSignedTx(hostRequestId, _, _),
+             let .requestCanceled(hostRequestId):
             return hostRequestId
         }
     }

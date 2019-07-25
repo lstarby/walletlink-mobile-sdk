@@ -39,4 +39,7 @@ public enum WalletLinkError: Error {
 
     /// Thrown when trying to respond with data that's missing or invalid
     case missingResponseData
+
+    /// Thrown when attempted to approve a host request that doesn't support it
+    case unsupportedRequestMethodApproval
 }

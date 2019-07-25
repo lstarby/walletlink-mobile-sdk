@@ -27,4 +27,23 @@ public struct HostRequestId: Hashable {
 
     /// The request method type
     let method: RequestMethod
+
+    /// Determine whether this is a cancelation to an existing request
+    public var isCancelation: Bool {
+        return method == .requestCanceled
+    }
+
+    /// Determine if current host request ID can cancel the provided host request ID
+    ///
+    /// - Parameters:
+    ///     - cancellableRequestId: Request to be canceled
+    ///
+    /// - Returns: True if current host request ID can cancel the provided host request ID
+    public func canCancel(_ cancellableRequestId: HostRequestId) -> Bool {
+        guard isCancelation, !cancellableRequestId.isCancelation else { return false }
+
+        return dappURL == cancellableRequestId.dappURL &&
+            id == cancellableRequestId.id &&
+            url == cancellableRequestId.url
+    }
 }

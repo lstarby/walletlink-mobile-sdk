@@ -50,6 +50,7 @@
 		D3EAC5FE22B9663E0036DD4F /* Credentials+WalletLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3EAC5FD22B9663E0036DD4F /* Credentials+WalletLink.swift */; };
 		E793156722B2C596006ED5EB /* BoundedSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E793156622B2C596006ED5EB /* BoundedSet.swift */; };
 		E793156922B2CE05006ED5EB /* NSOrderedSet+WalletLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = E793156822B2CE05006ED5EB /* NSOrderedSet+WalletLink.swift */; };
+		E7FF908922E8D72000C4201D /* Web3RequestCanceledDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7FF908822E8D72000C4201D /* Web3RequestCanceledDTO.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -103,6 +104,7 @@
 		D3EAC5FD22B9663E0036DD4F /* Credentials+WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Credentials+WalletLink.swift"; sourceTree = "<group>"; };
 		E793156622B2C596006ED5EB /* BoundedSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundedSet.swift; sourceTree = "<group>"; };
 		E793156822B2CE05006ED5EB /* NSOrderedSet+WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSOrderedSet+WalletLink.swift"; sourceTree = "<group>"; };
+		E7FF908822E8D72000C4201D /* Web3RequestCanceledDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3RequestCanceledDTO.swift; sourceTree = "<group>"; };
 		EE45CAE36C51E9570D753F6A /* Pods_WalletLinkTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WalletLinkTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -262,6 +264,7 @@
 				51086109229008E30060C12F /* SetSessionConfigMessageDTO.swift */,
 				51AFBD28229B5D0E006EBF0E /* Web3RequestDTO.swift */,
 				51AFBD2A229B5D24006EBF0E /* Web3ResponseDTO.swift */,
+				E7FF908822E8D72000C4201D /* Web3RequestCanceledDTO.swift */,
 			);
 			path = DTOs;
 			sourceTree = "<group>";
@@ -435,6 +438,7 @@
 				5159CC9E228FE47500A257C0 /* JSONSerializable.swift in Sources */,
 				51D42E0E228FF96200048066 /* Observable+WalletLink.swift in Sources */,
 				518388022297D28100CCB8D1 /* SessionStore.swift in Sources */,
+				E7FF908922E8D72000C4201D /* Web3RequestCanceledDTO.swift in Sources */,
 				51D42E15228FFBCD00048066 /* Session.swift in Sources */,
 				D3EAC5FE22B9663E0036DD4F /* Credentials+WalletLink.swift in Sources */,
 				E793156722B2C596006ED5EB /* BoundedSet.swift in Sources */,

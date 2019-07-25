@@ -156,6 +156,8 @@ class WalletLinkConnection {
             )
 
             return margEventAsSeen.flatMap { _ in self.submitWeb3Response(response, session: session) }
+        case .requestCanceled:
+            return Single.error(WalletLinkError.unsupportedRequestMethodApproval)
         }
     }
 
