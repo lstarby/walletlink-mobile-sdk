@@ -3,23 +3,23 @@
 import Foundation
 
 /// A size bounded cache. Oldest keys will be evicted.
-final class BoundedCache<K: Hashable, V> {
+public final class BoundedCache<K: Hashable, V> {
     private var cache = ConcurrentCache<K, V>()
     private var keys = NSMutableOrderedSet()
     private let maxSize: Int
 
     /// Number of entries in cache
-    var count: Int {
+    public var count: Int {
         return cache.count
     }
 
     /// Default Constructor
-    required init(maxSize: Int) {
+    public required init(maxSize: Int) {
         self.maxSize = maxSize
     }
 
     /// Subscript setter/getter
-    subscript(_ key: K) -> V? {
+    public subscript(_ key: K) -> V? {
         get { return cache[key] }
         set {
             if let value = newValue {

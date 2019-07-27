@@ -3,16 +3,16 @@
 import Foundation
 
 /// Thread safe atomic integer
-struct AtomicInt32 {
+public struct AtomicInt32 {
     private var value: Int32
     private let accessQueue = DispatchQueue(label: "AtomicInt32.accessQueue")
 
-    init(_ value: Int32 = 0) {
+    public init(_ value: Int32 = 0) {
         self.value = value
     }
 
     /// Safe concurrent get
-    func get() -> Int32 {
+    public func get() -> Int32 {
         var val: Int32!
 
         accessQueue.sync {
@@ -23,7 +23,7 @@ struct AtomicInt32 {
     }
 
     /// Atomically increment the backed integer and return the value
-    mutating func incrementAndGet() -> Int32 {
+    public mutating func incrementAndGet() -> Int32 {
         var val: Int32!
 
         accessQueue.sync(flags: .barrier) {
@@ -35,7 +35,7 @@ struct AtomicInt32 {
     }
 
     /// Atomically increment the backed integer
-    mutating func increment() {
+    public mutating func increment() {
         accessQueue.sync(flags: .barrier) {
             self.value += 1
         }

@@ -18,4 +18,5 @@ Pod::Spec.new do |s|
   s.dependency 'CBCrypto'
   s.dependency 'CBHTTP'
   s.dependency 'BigInt'
+  s.dependency 'CBCore'
 end

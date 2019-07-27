@@ -1,6 +1,7 @@
 // Copyright (c) 2017-2019 Coinbase Inc. See LICENSE
 
 import BigInt
+import CBCore
 
 extension ServerRequestDTO {
     /// Convert a server request to an instance of `HostRequest`
@@ -106,7 +107,7 @@ extension ServerRequestDTO {
                 fromAddress: params.fromAddress,
                 toAddress: params.toAddress,
                 weiValue: weiValue,
-                data: params.data.dataUsingHexEncoding() ?? Data(),
+                data: params.data.asHexEncodingData ?? Data(),
                 nonce: params.nonce,
                 gasPrice: params.gasPriceInWei.asBigInt,
                 gasLimit: params.gasLimit.asBigInt,
@@ -116,7 +117,7 @@ extension ServerRequestDTO {
         case .submitEthereumTransaction:
             guard
                 let dto = Web3RequestDTO<SubmitEthereumTransactionParams>.fromJSON(data),
-                let signedTx = dto.request.params.signedTransaction.dataUsingHexEncoding()
+                let signedTx = dto.request.params.signedTransaction.asHexEncodingData
             else {
                 assertionFailure("Invalid SubmitEthereumTransactionParams \(self)")
                 return nil

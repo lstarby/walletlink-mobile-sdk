@@ -4,13 +4,13 @@ import Foundation
 
 extension NSOrderedSet {
     /// Determine whether set is empty
-    var isEmpty: Bool {
+    public var isEmpty: Bool {
         let currentCount = count
         return currentCount == 0
     }
 
     /// Determine whether set is not empty
-    var isNotEmpty: Bool {
+    public var isNotEmpty: Bool {
         let currentCount = count
         return currentCount > 0
     }

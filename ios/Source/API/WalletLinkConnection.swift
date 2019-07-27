@@ -1,6 +1,7 @@
 // Copyright (c) 2017-2019 Coinbase Inc. See LICENSE
 
 import BigInt
+import CBCore
 import CBCrypto
 import CBHTTP
 import CBStore

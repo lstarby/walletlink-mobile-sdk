@@ -1,11 +1,12 @@
 // Copyright (c) 2017-2019 Coinbase Inc. See LICENSE
 
+import CBCore
 import CBHTTP
 import RxSwift
 
 private typealias WalletLinkCallback = (requestId: Int32, subject: ReplaySubject<ClientResponseDTO>)
 
-/// Represents a WalletLink WebSocket connection
+/// Represents a WalletLink WebSocket
 final class WalletLinkWebSocket {
     private let serialScheduler = SerialDispatchQueueScheduler(internalSerialQueueName: "WalletLinkWebSocket.serial")
     private let disposeBag = DisposeBag()

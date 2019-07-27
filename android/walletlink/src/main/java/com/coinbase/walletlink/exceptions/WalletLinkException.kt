@@ -2,7 +2,7 @@ package com.coinbase.walletlink.exceptions
 
 import java.net.URL
 
-sealed class WalletLinkException(msg: String): Exception(msg) {
+sealed class WalletLinkException(msg: String) : Exception(msg) {
     /**
      * Unable to encrypt message to send to host
      */

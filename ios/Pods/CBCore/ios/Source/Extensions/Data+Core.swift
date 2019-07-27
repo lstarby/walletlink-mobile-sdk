@@ -12,7 +12,7 @@ extension Data {
     ///     - numberOfBytes: Size of random `Data` object to generate
     ///
     /// - Returns: Randomized bytes with given size encapsulated in a `Data` object
-    static func randomBytes(_ numberOfBytes: Int) -> Data? {
+    public static func randomBytes(_ numberOfBytes: Int) -> Data? {
         var randomBytes = [UInt8](repeating: 0, count: numberOfBytes)
         let status = SecRandomCopyBytes(kSecRandomDefault, randomBytes.count, &randomBytes)
 
@@ -22,12 +22,12 @@ extension Data {
     }
 
     /// Convert to JSON dictionary if possible
-    var jsonDictionary: [String: Any]? {
+    public var jsonDictionary: [String: Any]? {
         return jsonObject as? [String: Any]
     }
 
     /// Convert to JSON object if possible
-    var jsonObject: Any? {
+    public var jsonObject: Any? {
         do {
             return try JSONSerialization.jsonObject(with: self, options: [])
         } catch {
@@ -37,7 +37,7 @@ extension Data {
     }
 
     /// Convert to prefixed hex string
-    func toPrefixedHexString() -> String {
+    public func toPrefixedHexString() -> String {
         if isEmpty {
             return "0x"
         }
@@ -68,7 +68,7 @@ extension Data {
     /// - Parameter range: Range of sub data
     ///
     /// - Returns: Sub-data
-    func subdata(in range: ClosedRange<Index>) -> Data {
+    public func subdata(in range: ClosedRange<Index>) -> Data {
         return subdata(in: range.lowerBound ..< range.upperBound + 1)
     }
 }

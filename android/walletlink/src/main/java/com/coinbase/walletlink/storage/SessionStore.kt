@@ -64,7 +64,6 @@ class SessionStore(private val store: StoreInterface) {
         store.set(StoreKeys.sessions, sessionIds.toTypedArray())
     }
 
-
     /**
      * Observe for distinct stored sessionIds update
      *
@@ -81,5 +80,4 @@ class SessionStore(private val store: StoreInterface) {
     private fun getStoredSessions(): List<Session> = accessLock
         .withLock { store.get(StoreKeys.sessions)?.toList() ?: listOf() }
         .sortedBy { it.id }
-
 }

@@ -1,5 +1,6 @@
 // Copyright (c) 2017-2019 Coinbase Inc. See LICENSE
 
+import CBCore
 import CBStore
 import RxSwift
 
