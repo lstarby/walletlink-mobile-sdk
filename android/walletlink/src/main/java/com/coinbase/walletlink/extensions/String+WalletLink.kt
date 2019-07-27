@@ -1,9 +1,10 @@
 package com.coinbase.walletlink.extensions
 
+import com.coinbase.wallet.core.extensions.toPrefixedHexString
+import com.coinbase.wallet.core.util.ByteArrays
 import com.coinbase.wallet.crypto.algorithms.AES256GCM
 import com.coinbase.wallet.store.utils.JSON
 import com.coinbase.walletlink.exceptions.WalletLinkException
-import com.coinbase.walletlink.utils.ByteArrayUtils
 import com.squareup.moshi.Types
 import java.math.BigInteger
 
@@ -47,7 +48,7 @@ fun String.encryptUsingAES256GCM(secret: String, iv: ByteArray): String {
  */
 @Throws(WalletLinkException.UnableToEncryptData::class)
 fun String.encryptUsingAES256GCM(secret: String): String {
-    return encryptUsingAES256GCM(secret, ByteArrayUtils.randomBytes(kAES256GCMIVSize))
+    return encryptUsingAES256GCM(secret, ByteArrays.randomBytes(kAES256GCMIVSize))
 }
 
 /**

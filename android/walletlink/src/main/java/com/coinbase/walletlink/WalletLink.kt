@@ -1,11 +1,11 @@
 package com.coinbase.walletlink
 
 import android.content.Context
+import com.coinbase.wallet.core.extensions.asUnit
+import com.coinbase.wallet.core.extensions.reduceIntoMap
 import com.coinbase.wallet.store.Store
 import com.coinbase.wallet.store.models.Optional
 import com.coinbase.walletlink.exceptions.WalletLinkException
-import com.coinbase.walletlink.extensions.asUnit
-import com.coinbase.walletlink.extensions.reduceIntoMap
 import com.coinbase.walletlink.interfaces.WalletLinkInterface
 import com.coinbase.walletlink.models.HostRequest
 import com.coinbase.walletlink.models.HostRequestId

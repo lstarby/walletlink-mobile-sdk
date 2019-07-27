@@ -1,6 +1,11 @@
 package com.coinbase.walletlink
 
 import com.coinbase.networking.connectivity.Internet
+import com.coinbase.wallet.core.extensions.asUnit
+import com.coinbase.wallet.core.extensions.logError
+import com.coinbase.wallet.core.extensions.takeSingle
+import com.coinbase.wallet.core.extensions.toPrefixedHexString
+import com.coinbase.wallet.core.extensions.zipOrEmpty
 import com.coinbase.wallet.crypto.extensions.sha256
 import com.coinbase.wallet.store.utils.JSON
 import com.coinbase.walletlink.api.WalletLinkAPI
@@ -17,14 +22,9 @@ import com.coinbase.walletlink.dtos.fromJsonString
 import com.coinbase.walletlink.exceptions.WalletLinkException
 import com.coinbase.walletlink.extensions.asBigInteger
 import com.coinbase.walletlink.extensions.asJsonMap
-import com.coinbase.walletlink.extensions.asUnit
 import com.coinbase.walletlink.extensions.byteArrayUsingHexEncoding
 import com.coinbase.walletlink.extensions.decryptUsingAES256GCM
 import com.coinbase.walletlink.extensions.encryptUsingAES256GCM
-import com.coinbase.walletlink.extensions.logError
-import com.coinbase.walletlink.extensions.takeSingle
-import com.coinbase.walletlink.extensions.toPrefixedHexString
-import com.coinbase.walletlink.extensions.zipOrEmpty
 import com.coinbase.walletlink.models.ClientMetadataKey
 import com.coinbase.walletlink.models.HostRequest
 import com.coinbase.walletlink.models.HostRequestId
@@ -105,7 +105,7 @@ internal class WalletLinkConnection(
             .takeSingle()
             .flatMap { joinSessionEventsSubject.filter { it.sessionId == sessionId }.takeSingle() }
             .map { if (!it.joined) throw WalletLinkException.InvalidSession }
-            .timeout(1500, TimeUnit.SECONDS) // FIXME: hish - back to 15
+            .timeout(15, TimeUnit.SECONDS)
             .logError()
             .onErrorResumeNext { exception ->
                 sessionStore.delete(url, sessionId)

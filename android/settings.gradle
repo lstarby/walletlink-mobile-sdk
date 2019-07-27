@@ -1,5 +1,6 @@
-include ':walletlink'
-
-include ':libraries:store'
+include ':walletlink',
+        ':libraries:store',
+        ':libraries:core'
 
 project(':libraries:store').projectDir = new File('libraries/store/android/store')
+project(':libraries:core').projectDir = new File('libraries/core/android/core')

@@ -9,6 +9,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/libraries" />
+            <option value="$PROJECT_DIR$/libraries/core/android/core" />
             <option value="$PROJECT_DIR$/libraries/store/android/store" />
             <option value="$PROJECT_DIR$/walletlink" />
           </set>

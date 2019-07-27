@@ -4,9 +4,9 @@ import com.coinbase.networking.models.WebConnectionState
 import com.coinbase.networking.models.WebIncomingData
 import com.coinbase.networking.models.WebIncomingDataType
 import com.coinbase.networking.models.WebIncomingText
+import com.coinbase.wallet.core.extensions.asUnit
+import com.coinbase.wallet.core.extensions.takeSingle
 import com.coinbase.walletlink.exceptions.WebSocketException
-import com.coinbase.walletlink.extensions.asUnit
-import com.coinbase.walletlink.extensions.takeSingle
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject

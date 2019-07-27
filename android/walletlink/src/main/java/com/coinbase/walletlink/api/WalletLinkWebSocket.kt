@@ -4,6 +4,9 @@ import com.coinbase.networking.connectivity.Internet
 import com.coinbase.networking.models.WebIncomingDataType
 import com.coinbase.networking.models.WebIncomingText
 import com.coinbase.networking.websocket.WebSocket
+import com.coinbase.wallet.core.extensions.logError
+import com.coinbase.wallet.core.extensions.takeSingle
+import com.coinbase.wallet.core.util.ConcurrentLruCache
 import com.coinbase.walletlink.dtos.ClientResponseDTO
 import com.coinbase.walletlink.dtos.JoinSessionMessageDTO
 import com.coinbase.walletlink.dtos.PublishEventDTO
@@ -11,13 +14,10 @@ import com.coinbase.walletlink.dtos.ServerRequestDTO
 import com.coinbase.walletlink.dtos.SetMetadataMessageDTO
 import com.coinbase.walletlink.dtos.SetSessionConfigMessageDTO
 import com.coinbase.walletlink.extensions.asJsonMap
-import com.coinbase.walletlink.extensions.logError
-import com.coinbase.walletlink.extensions.takeSingle
 import com.coinbase.walletlink.interfaces.JsonSerializable
 import com.coinbase.walletlink.models.ClientMetadataKey
 import com.coinbase.walletlink.models.ResponseEventType
 import com.coinbase.walletlink.models.ServerMessageType
-import com.coinbase.walletlink.structures.ConcurrentLruCache
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
