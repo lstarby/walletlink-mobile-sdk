@@ -4,5 +4,5 @@ import CBStore
 
 extension StoreKeys {
     /// Store key to keeping track of WalletLink sessions
-    static let sessions = KeychainStoreKey<SessionList>("walletlink_sessions", accessible: .whenUnlocked)
+    static let sessions = KeychainStoreKey<SessionList>("walletlink_sessions", accessible: .afterFirstUnlockThisDeviceOnly)
 }
