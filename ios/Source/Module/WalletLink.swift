@@ -12,6 +12,7 @@ public class WalletLink: WalletLinkProtocol {
     private let sessionStore = SessionStore()
     private let requestsScheduler = SerialDispatchQueueScheduler(internalSerialQueueName: "WalletLink.requests")
     private let processedRequestIds = BoundedSet<HostRequestId>(maxSize: 3000)
+    private lazy var requestRepository = RequestRepository(sessionStore: sessionStore)
 
     public let requests: Observable<HostRequest>
 
@@ -36,7 +37,8 @@ public class WalletLink: WalletLinkProtocol {
                 userId: userId,
                 notificationUrl: notificationUrl,
                 sessionStore: sessionStore,
-                metadata: metadata
+                metadata: metadata,
+                requestRepository: requestRepository
             )
 
             self.observeConnection(conn)
@@ -68,7 +70,8 @@ public class WalletLink: WalletLinkProtocol {
             userId: userId,
             notificationUrl: notificationUrl,
             sessionStore: sessionStore,
-            metadata: metadata
+            metadata: metadata,
+            requestRepository: requestRepository
         )
 
         connections[url] = connection
@@ -106,18 +109,18 @@ public class WalletLink: WalletLinkProtocol {
 
     public func markAsSeen(requestIds: [HostRequestId]) -> Single<Void> {
         let markAsSeenSingles = requestIds.compactMap { requestId -> Single<Void>? in
-            guard let connection = connections[requestId.url] else { return nil }
-
-            return connection.markAsSeen(requestId: requestId).catchErrorJustReturn(())
+            return requestRepository.markAsSeen(requestId: requestId, url: requestId.url).catchErrorJustReturn(())
         }
 
         return Single.zip(markAsSeenSingles).asVoid()
     }
 
     public func getRequest(eventId: String, sessionId: String, url: URL) -> Single<HostRequest> {
-        guard let connection = connections[url] else { return .error(WalletLinkError.noConnectionFound) }
+        guard let session = sessionStore.getSession(id: sessionId, url: url) else {
+            return .error(WalletLinkError.sessionNotFound)
+        }
 
-        return connection.getPendingRequests(sessionId: sessionId)
+        return requestRepository.getPendingRequests(session: session, url: url)
             .map { requests -> HostRequest in
                 guard let request = requests.first(where: { eventId == $0.hostRequestId.eventId }) else {
                     throw WalletLinkError.eventNotFound
