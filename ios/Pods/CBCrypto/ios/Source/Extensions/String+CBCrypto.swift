@@ -1,11 +1,10 @@
 // Copyright (c) 2017-2019 Coinbase Inc. See LICENSE
 
 import CBCore
-import CBCrypto
 import os.log
 
-private let kAES256GCMIVSize = 12
-private let kAES256GCMAuthTagSize = 16
+let kAES256GCMIVSize = 12
+let kAES256GCMAuthTagSize = 16
 
 extension String {
     /// Encrypt string using AES256 algorithm for given secret and iv
@@ -14,9 +13,9 @@ extension String {
     ///
     /// - Returns: The encrypted data
     /// - Throws: `WalletLinkError.unableToEncryptData` if unable to encrypt data
-    func encryptUsingAES256GCM(secret: String) throws -> String {
+    public func encryptUsingAES256GCM(secret: String) throws -> String {
         guard
-            let secretData = secret.asHexEncodingData,
+            let secretData = secret.asHexEncodedData,
             let dataToEncrypt = self.data(using: .utf8),
             let iv = Data.randomBytes(kAES256GCMIVSize),
             let (encryptedData, authTag) = try? AES256GCM.encrypt(
@@ -25,7 +24,7 @@ extension String {
                 initializationVector: iv
             )
         else {
-            throw WalletLinkError.unableToEncryptData
+            throw EncryptionError.unableToEncryptData
         }
 
         var mutableData = Data()
@@ -37,13 +36,13 @@ extension String {
     }
 
     /// Decrypt string with AES256 GCM using provided secret
-    func decryptUsingAES256GCM(secret: String) throws -> Data {
+    public func decryptUsingAES256GCM(secret: String) throws -> Data {
         guard
-            let data = self.asHexEncodingData,
-            let secretData = secret.asHexEncodingData,
+            let data = self.asHexEncodedData,
+            let secretData = secret.asHexEncodedData,
             data.count > (kAES256GCMAuthTagSize + kAES256GCMIVSize)
         else {
-            throw WalletLinkError.unableToDecryptData
+            throw EncryptionError.unableToDecryptData
         }
 
         let iv = data.subdata(in: 0 ..< kAES256GCMIVSize)
@@ -58,7 +57,7 @@ extension String {
                 authenticationTag: authTag
             )
         else {
-            throw WalletLinkError.unableToDecryptData
+            throw EncryptionError.unableToDecryptData
         }
 
         return decryptedData

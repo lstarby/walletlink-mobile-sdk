@@ -17,13 +17,16 @@
   },
   "social_media_url": "https://twitter.com/coinbase",
   "platforms": {
-    "ios": "10.0"
+    "ios": "11.0"
   },
   "swift_version": "4.2",
-  "source_files": "Source/**/*.swift",
+  "source_files": "ios/Source/**/*.swift",
   "dependencies": {
     "CryptoSwift": [
       "~> 1.0.0"
+    ],
+    "CBCore": [
+
     ]
   }
 }

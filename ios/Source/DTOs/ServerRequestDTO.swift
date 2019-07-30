@@ -1,6 +1,6 @@
 // Copyright (c) 2017-2019 Coinbase Inc. See LICENSE
 
-import Foundation
+import CBCore
 
 struct ServerRequestDTO: Codable, JSONDeserializable, JSONSerializable {
     /// Server generated session ID

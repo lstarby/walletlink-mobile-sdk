@@ -1,6 +1,6 @@
 // Copyright (c) 2017-2019 Coinbase Inc. See LICENSE
 
-import Foundation
+import CBCore
 
 /// Client message to join currently active WalletLink session
 struct JoinSessionMessageDTO: Codable, JSONDeserializable, JSONSerializable {

@@ -1,6 +1,6 @@
 // Copyright (c) 2017-2019 Coinbase Inc. See LICENSE
 
-import Foundation
+import CBCore
 
 struct Web3RequestCanceledDTO: Codable, JSONDeserializable {
     let type: String = "WEB3_REQUEST_CANCELED"

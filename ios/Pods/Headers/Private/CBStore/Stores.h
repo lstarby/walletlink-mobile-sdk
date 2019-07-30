@@ -1,1 +1,1 @@
-../../../CBStore/CBStore/Module/Stores.h
+../../../CBStore/ios/CBStore/Module/Stores.h

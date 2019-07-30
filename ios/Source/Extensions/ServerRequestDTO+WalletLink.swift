@@ -107,7 +107,7 @@ extension ServerRequestDTO {
                 fromAddress: params.fromAddress,
                 toAddress: params.toAddress,
                 weiValue: weiValue,
-                data: params.data.asHexEncodingData ?? Data(),
+                data: params.data.asHexEncodedData ?? Data(),
                 nonce: params.nonce,
                 gasPrice: params.gasPriceInWei.asBigInt,
                 gasLimit: params.gasLimit.asBigInt,
@@ -117,7 +117,7 @@ extension ServerRequestDTO {
         case .submitEthereumTransaction:
             guard
                 let dto = Web3RequestDTO<SubmitEthereumTransactionParams>.fromJSON(data),
-                let signedTx = dto.request.params.signedTransaction.asHexEncodingData
+                let signedTx = dto.request.params.signedTransaction.asHexEncodedData
             else {
                 assertionFailure("Invalid SubmitEthereumTransactionParams \(self)")
                 return nil

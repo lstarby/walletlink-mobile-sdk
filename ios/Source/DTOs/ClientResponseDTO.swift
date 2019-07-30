@@ -1,6 +1,6 @@
 // Copyright (c) 2017-2019 Coinbase Inc. See LICENSE
 
-import Foundation
+import CBCore
 
 /// The response triggered by a client request
 struct ClientResponseDTO: Codable, JSONDeserializable, JSONSerializable {

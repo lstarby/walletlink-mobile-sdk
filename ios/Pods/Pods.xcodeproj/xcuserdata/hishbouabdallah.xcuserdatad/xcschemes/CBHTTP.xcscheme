@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EFBAB4D78166774514A23BCD52F6DD2B"
+               BlueprintIdentifier = "4B7F2F05E21573DF1E08837F062D38A5"
                BuildableName = "libCBHTTP.a"
                BlueprintName = "CBHTTP"
                ReferencedContainer = "container:Pods.xcodeproj">

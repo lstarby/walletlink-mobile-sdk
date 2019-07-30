@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "38DC2B4DC7B22E553F92AB398EDED5B0"
+               BlueprintIdentifier = "8EDEC7ECE4C23E891222838A50654225"
                BuildableName = "SwiftLint"
                BlueprintName = "SwiftLint"
                ReferencedContainer = "container:Pods.xcodeproj">

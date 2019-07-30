@@ -23,7 +23,7 @@ extension String {
 
     /// Convert string to BigInt if possible
     public var asBigInt: BigInt? {
-        return BigInt(string: self)
+        return BigInt.fromScientificNotation(string: self)
     }
 
     /// Convert string to hex representation
@@ -80,7 +80,7 @@ extension String {
     }
 
     /// Convert to hex Data if possible
-    public var asHexEncodingData: Data? {
+    public var asHexEncodedData: Data? {
         let strippedLowerStr = strip0x().lowercased()
         let str = strippedLowerStr.count % 2 == 0 ? strippedLowerStr : "0" + strippedLowerStr
 
@@ -222,7 +222,7 @@ extension Optional where Wrapped == String {
     public var asBigInt: BigInt? {
         guard let value = self else { return nil }
 
-        return BigInt(value)
+        return value.asBigInt
     }
 
     /// Convert optional string to URL if possible

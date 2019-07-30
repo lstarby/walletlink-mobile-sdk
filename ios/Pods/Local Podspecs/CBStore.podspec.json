@@ -20,7 +20,7 @@
     "ios": "11.0"
   },
   "swift_version": "4.2",
-  "source_files": "CBStore/**/*",
+  "source_files": "ios/CBStore/**/*",
   "dependencies": {
     "RxSwift": [
       "~> 4.4.0"

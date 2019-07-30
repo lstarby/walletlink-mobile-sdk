@@ -1,6 +1,6 @@
 // Copyright (c) 2017-2019 Coinbase Inc. See LICENSE
 
-import Foundation
+import CBCore
 
 struct Web3ResponseDTO<T: Codable>: Codable, JSONSerializable {
     let type: String = "WEB3_RESPONSE"
