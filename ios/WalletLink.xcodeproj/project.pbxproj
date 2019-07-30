@@ -133,13 +133,13 @@
 		5159CC7C228FDE2800A257C0 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				5113463622F0062D008D47EA /* Repositories */,
 				D34578A722A0711C0063286E /* API */,
 				51EC62C422998FD700B55164 /* DTOs */,
 				51D42E0A228FF86900048066 /* Errors */,
 				5159CC9F228FE4D200A257C0 /* Extensions */,
 				5159CC97228FE40200A257C0 /* Models */,
 				5159CC94228FE24400A257C0 /* Module */,
+				5113463622F0062D008D47EA /* Repositories */,
 				5159CCA4228FF1BC00A257C0 /* Storage */,
 			);
 			path = Source;
@@ -159,9 +159,9 @@
 		5159CC97228FE40200A257C0 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				51B8533522B1D89F004589BD /* EventType.swift */,
 				51D42E1F2290029500048066 /* ClientMessageType.swift */,
 				5108610D22900EAF0060C12F /* ClientMetadataKey.swift */,
+				51B8533522B1D89F004589BD /* EventType.swift */,
 				5159CCA2228FE65D00A257C0 /* HostRequest.swift */,
 				51FC1C0F229B4ABD008CFFC2 /* HostRequestId.swift */,
 				51EC62C522998FE200B55164 /* RequestMethod.swift */,
@@ -174,10 +174,10 @@
 		5159CC9F228FE4D200A257C0 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				51D42E16228FFE9A00048066 /* PrimitiveSequence+WalletLink.swift */,
-				5159CCA7228FF21400A257C0 /* StoreKeys+WalletLink.swift */,
-				D3EAC5FB22B95E8A0036DD4F /* ServerRequestDTO+WalletLink.swift */,
 				D3EAC5FD22B9663E0036DD4F /* Credentials+WalletLink.swift */,
+				51D42E16228FFE9A00048066 /* PrimitiveSequence+WalletLink.swift */,
+				D3EAC5FB22B95E8A0036DD4F /* ServerRequestDTO+WalletLink.swift */,
+				5159CCA7228FF21400A257C0 /* StoreKeys+WalletLink.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -208,9 +208,9 @@
 				5159CC98228FE40C00A257C0 /* ServerRequestDTO.swift */,
 				5108610B229009B60060C12F /* SetMetadataMessageDTO.swift */,
 				51086109229008E30060C12F /* SetSessionConfigMessageDTO.swift */,
+				E7FF908822E8D72000C4201D /* Web3RequestCanceledDTO.swift */,
 				51AFBD28229B5D0E006EBF0E /* Web3RequestDTO.swift */,
 				51AFBD2A229B5D24006EBF0E /* Web3ResponseDTO.swift */,
-				E7FF908822E8D72000C4201D /* Web3RequestCanceledDTO.swift */,
 			);
 			path = DTOs;
 			sourceTree = "<group>";
