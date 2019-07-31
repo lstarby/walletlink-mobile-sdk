@@ -83,7 +83,7 @@ class WalletLinkConnection {
 
         return isConnectedObservable
             .do(onSubscribe: {
-                self.linkRepository.save(url: self.url, sessionId: sessionId, secret: secret)
+                self.linkRepository.saveSession(url: self.url, sessionId: sessionId, secret: secret)
             })
             .filter { $0 }
             .takeSingle()
@@ -149,7 +149,7 @@ class WalletLinkConnection {
                 .flatMap { _ in self.submitWeb3Response(response, session: session) }
                 .flatMap { _ in
                     let dapp = Dapp(url: requestId.dappURL, name: requestId.dappName, logoURL: requestId.dappImageURL)
-                    return self.linkRepository.save(dapp: dapp)
+                    return self.linkRepository.saveDapp(dapp)
                 }
 
         case .signEthereumMessage, .signEthereumTransaction, .submitEthereumTransaction:
