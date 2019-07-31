@@ -4,6 +4,7 @@ import BigInt
 import CBCrypto
 import CBDatabase
 import RxSwift
+import CBCore
 
 final class LinkRepository {
     private let sessionDAO = SessionDAO()
@@ -102,8 +103,10 @@ final class LinkRepository {
     func getPendingRequests(session: Session, url: URL) -> Single<[HostRequest]> {
         return api.getUnseenEvents(sessionId: session.id, secret: session.secret, url: url)
             .flatMap { requests -> Single<[HostRequest]> in
-                let singles = requests.map { self.getHostRequest(using: $0, url: url) }
-                return Single.zip(singles).map { requests in requests.compactMap { $0 } }
+                requests
+                    .map { self.getHostRequest(using: $0, url: url) }
+                    .zip()
+                    .map { requests in requests.compactMap { $0 } }
             }
             .map { requests -> [HostRequest] in
                 // build list of cancelation requests
@@ -159,11 +162,11 @@ final class LinkRepository {
                 return Single.just(nil)
             }
 
-            return parseWeb3Request(serverRequest: dto, method: method, data: decrypted, url: url)
+            return parseWeb3Request(serverRequest: dto, method: method, decrypted: decrypted, url: url)
         case .web3Response:
             return Single.just(nil)
         case .web3RequestCanceled:
-            return parseWeb3RequestCancelation(serverRequest: dto, data: decrypted, url: url)
+            return parseWeb3Request(serverRequest: dto, method: .requestCanceled, decrypted: decrypted, url: url)
         }
     }
 
@@ -191,168 +194,139 @@ final class LinkRepository {
             .subscribe()
     }
 
-    private func parseWeb3RequestCancelation(
-        serverRequest: ServerRequestDTO,
-        data: Data,
-        url: URL
-    ) -> Single<HostRequest?> {
-        guard let dto = Web3RequestCanceledDTO.fromJSON(data) else {
-            assertionFailure("Invalid Web3RequestCanceled \(self)")
-            return Single.just(nil)
-        }
-
-        return dappDAO.getDapp(url: dto.origin)
-            .map { dapp in
-                let requestId = HostRequestId(
-                    id: dto.id,
-                    sessionId: serverRequest.sessionId,
-                    eventId: serverRequest.eventId,
-                    url: url,
-                    dappURL: dto.origin,
-                    dappImageURL: dapp?.logoURL,
-                    dappName: dapp?.name,
-                    method: .requestCanceled
-                )
-
-                print("[walletlink] web3RequestCancelation \(dto)")
-                return .requestCanceled(requestId: requestId)
-            }
-    }
-
     private func parseWeb3Request(
         serverRequest: ServerRequestDTO,
         method: RequestMethod,
-        data: Data,
+        decrypted: Data,
         url: URL
     ) -> Single<HostRequest?> {
         switch method {
+        // EIP 1102: Dapp permission
         case .requestEthereumAccounts:
-            guard let dto = Web3RequestDTO<RequestEthereumAccountsParams>.fromJSON(data) else {
-                assertionFailure("Invalid requestEthereumAddresses \(self)")
-                return Single.just(nil)
-            }
+            let paramType = RequestEthereumAccountsParams.self
 
-            return dappDAO.getDapp(url: dto.origin)
-                .map { dapp in
-                    let requestId = self.hostRequestId(
-                        serverRequest: serverRequest,
-                        web3Request: dto,
-                        url: url,
-                        dapp: dapp
-                    )
+            return hostRequestId(from: serverRequest, decrypted: decrypted, paramType: paramType, url: url)
+                .map { requestId in requestId.map { .dappPermission(requestId: $0.1) } }
 
-                    print("[walletlink] dapp permission \(dto)")
-                    return .dappPermission(requestId: requestId)
-                }
         case .signEthereumMessage:
-            guard let dto = Web3RequestDTO<SignEthereumMessageParams>.fromJSON(data) else {
-                assertionFailure("Invalid signEthereumMessage \(self)")
-                return Single.just(nil)
-            }
+            let paramType = SignEthereumMessageParams.self
 
-            let params = dto.request.params
+            return hostRequestId(from: serverRequest, decrypted: decrypted, paramType: paramType, url: url)
+                .map { response in
+                    guard let web3Request = response?.0, let requestId = response?.1 else { return nil }
 
-            return dappDAO.getDapp(url: dto.origin)
-                .map { dapp in
-                    let requestId = self.hostRequestId(
-                        serverRequest: serverRequest,
-                        web3Request: dto,
-                        url: url,
-                        dapp: dapp
-                    )
-
-                    print("[walletlink] sign message \(dto)")
                     return .signMessage(
                         requestId: requestId,
-                        address: params.address,
-                        message: params.message,
-                        isPrefixed: params.addPrefix
+                        address: web3Request.request.params.address,
+                        message: web3Request.request.params.message,
+                        isPrefixed: web3Request.request.params.addPrefix
                     )
                 }
+
+        // Sign/Submit transaction
         case .signEthereumTransaction:
-            guard
-                let dto = Web3RequestDTO<SignEthereumTransactionParams>.fromJSON(data),
-                let weiValue = BigInt(dto.request.params.weiValue)
-            else {
-                assertionFailure("Invalid signEthereumTransaction \(self)")
-                return Single.just(nil)
-            }
+            let paramType = SignEthereumTransactionParams.self
 
-            let params = dto.request.params
-            return dappDAO.getDapp(url: dto.origin)
-                .map { dapp in
-                    let requestId = self.hostRequestId(
-                        serverRequest: serverRequest,
-                        web3Request: dto,
-                        url: url,
-                        dapp: dapp
-                    )
+            return hostRequestId(from: serverRequest, decrypted: decrypted, paramType: paramType, url: url)
+                .map { response in
+                    guard
+                        let web3Request = response?.0,
+                        let requestId = response?.1,
+                        let weiValue = web3Request.request.params.weiValue.asBigInt
+                    else { return nil }
 
-                    print("[walletlink] sign and submit tx \(dto)")
                     return .signAndSubmitTx(
                         requestId: requestId,
-                        fromAddress: params.fromAddress,
-                        toAddress: params.toAddress,
+                        fromAddress: web3Request.request.params.fromAddress,
+                        toAddress: web3Request.request.params.toAddress,
                         weiValue: weiValue,
-                        data: params.data.asHexEncodedData ?? Data(),
-                        nonce: params.nonce,
-                        gasPrice: params.gasPriceInWei.asBigInt,
-                        gasLimit: params.gasLimit.asBigInt,
-                        chainId: params.chainId,
-                        shouldSubmit: params.shouldSubmit
+                        data: web3Request.request.params.data.asHexEncodedData ?? Data(),
+                        nonce: web3Request.request.params.nonce,
+                        gasPrice: web3Request.request.params.gasPriceInWei.asBigInt,
+                        gasLimit: web3Request.request.params.gasLimit.asBigInt,
+                        chainId: web3Request.request.params.chainId,
+                        shouldSubmit: web3Request.request.params.shouldSubmit
                     )
                 }
+
+        // Submit transaction
         case .submitEthereumTransaction:
-            guard
-                let dto = Web3RequestDTO<SubmitEthereumTransactionParams>.fromJSON(data),
-                let signedTx = dto.request.params.signedTransaction.asHexEncodedData
-            else {
-                assertionFailure("Invalid SubmitEthereumTransactionParams \(self)")
+            let paramType = SubmitEthereumTransactionParams.self
+
+            return hostRequestId(from: serverRequest, decrypted: decrypted, paramType: paramType, url: url)
+                .map { response in
+                    guard
+                        let web3Request = response?.0,
+                        let requestId = response?.1,
+                        let signedTx = web3Request.request.params.signedTransaction.asHexEncodedData
+                    else { return nil }
+
+                    return .submitSignedTx(
+                        requestId: requestId,
+                        signedTx: signedTx,
+                        chainId: web3Request.request.params.chainId
+                    )
+                }
+
+        // Cancel existing request
+        case .requestCanceled:
+            guard let dto = Web3RequestCanceledDTO.fromJSON(decrypted) else {
+                assertionFailure("Invalid Web3RequestCanceled \(self)")
                 return Single.just(nil)
             }
 
-            let params = dto.request.params
             return dappDAO.getDapp(url: dto.origin)
                 .map { dapp in
-                    let requestId = self.hostRequestId(
-                        serverRequest: serverRequest,
-                        web3Request: dto,
+                    let requestId = HostRequestId(
+                        id: dto.id,
+                        sessionId: serverRequest.sessionId,
+                        eventId: serverRequest.eventId,
                         url: url,
-                        dapp: dapp
+                        dappURL: dto.origin,
+                        dappImageURL: dapp?.logoURL,
+                        dappName: dapp?.name,
+                        method: .requestCanceled
                     )
 
-                    print("[walletlink] submit signed tx \(dto)")
-                    return .submitSignedTx(requestId: requestId, signedTx: signedTx, chainId: params.chainId)
+                    print("[walletlink] web3RequestCancelation \(dto)")
+                    return .requestCanceled(requestId: requestId)
                 }
-        case .requestCanceled:
-            assertionFailure("Invalid requestCanceled \(self)")
-            return Single.just(nil)
         }
     }
 
-    private func hostRequestId<T>(
-        serverRequest: ServerRequestDTO,
-        web3Request: Web3RequestDTO<T>,
-        url: URL,
-        dapp: Dapp?
-    ) -> HostRequestId {
-        var dappImageURL = dapp?.logoURL
-        var dappName = dapp?.name
-
-        if let web3Request = web3Request as? Web3RequestDTO<RequestEthereumAccountsParams> {
-            dappName = web3Request.request.params.appName
-            dappImageURL = web3Request.request.params.appLogoUrl
+    private func hostRequestId<T: Codable>(
+        from serverRequest: ServerRequestDTO,
+        decrypted: Data,
+        paramType: T.Type,
+        url: URL
+    ) -> Single<(Web3RequestDTO<T>, HostRequestId)?> {
+        guard let web3Request = Web3RequestDTO<T>.fromJSON(decrypted) else {
+            assertionFailure("Invalid web3Request \(paramType)")
+            return Single.just(nil)
         }
 
-        return HostRequestId(
-            id: web3Request.id,
-            sessionId: serverRequest.sessionId,
-            eventId: serverRequest.eventId,
-            url: url,
-            dappURL: web3Request.origin,
-            dappImageURL: dappImageURL,
-            dappName: dappName,
-            method: web3Request.request.method
-        )
+        return dappDAO.getDapp(url: web3Request.origin)
+            .map { dapp in
+                var dappImageURL = dapp?.logoURL
+                var dappName = dapp?.name
+
+                if let web3Request = web3Request as? Web3RequestDTO<RequestEthereumAccountsParams> {
+                    dappName = web3Request.request.params.appName
+                    dappImageURL = web3Request.request.params.appLogoUrl
+                }
+
+                let requestId = HostRequestId(
+                    id: web3Request.id,
+                    sessionId: serverRequest.sessionId,
+                    eventId: serverRequest.eventId,
+                    url: url,
+                    dappURL: web3Request.origin,
+                    dappImageURL: dappImageURL,
+                    dappName: dappName,
+                    method: web3Request.request.method
+                )
+
+                return (web3Request, requestId)
+            }
     }
 }
