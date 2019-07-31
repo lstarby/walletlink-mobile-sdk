@@ -1,0 +1,36 @@
+{
+  "name": "CBDatabase",
+  "version": "0.1.0",
+  "summary": "A simple wrapper around CoreData",
+  "description": "A simple wrapper around CoreData. Developed by Coinbase Wallet team.",
+  "homepage": "https://github.com/CoinbaseWallet/Databases",
+  "license": {
+    "type": "AGPL-3.0-only",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Coinbase": "developer@toshi.org"
+  },
+  "source": {
+    "git": "https://github.com/CoinbaseWallet/Databases.git",
+    "tag": "0.1.0"
+  },
+  "social_media_url": "https://twitter.com/coinbase",
+  "platforms": {
+    "ios": "10.0"
+  },
+  "swift_versions": "4.2",
+  "source_files": "ios/Source/**/*.swift",
+  "dependencies": {
+    "RxSwift": [
+      "~> 4.4.0"
+    ],
+    "RxCocoa": [
+      "~> 4.4.0"
+    ],
+    "BigInt": [
+      "~> 3.1"
+    ]
+  },
+  "swift_version": "4.2"
+}

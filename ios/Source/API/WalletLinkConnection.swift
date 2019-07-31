@@ -14,14 +14,13 @@ class WalletLinkConnection {
     private let userId: String
     private let notificationUrl: URL
     private let url: URL
-    private let sessionStore: SessionStore
     private let socket: WalletLinkWebSocket
     private let isConnectedObservable: Observable<Bool>
     private let joinSessionEventsSubject = PublishSubject<JoinSessionEvent>()
     private let requestsSubject = PublishSubject<HostRequest>()
     private var disposeBag = DisposeBag()
     private var metadata: [ClientMetadataKey: String]
-    private let requestRepository: RequestRepository
+    private let linkRepository: LinkRepository
 
     /// Incoming host requests for action
     let requestsObservable: Observable<HostRequest>
@@ -33,29 +32,32 @@ class WalletLinkConnection {
     ///     - websocketUrl: WalletLink websocket endpoint
     ///     - userId: User ID to deliver push notifications to
     ///     - notificationUrl: Webhook URL used to push notifications to mobile client
-    ///     - sessionStore: WalletLink session data store
     ///     - metadata: client metadata forwarded to host once link is established
+    ///     - linkRepository: manages links and dapps
     required init(
         url: URL,
         userId: String,
         notificationUrl: URL,
-        sessionStore: SessionStore,
         metadata: [ClientMetadataKey: String],
-        requestRepository: RequestRepository
+        linkRepository: LinkRepository
     ) {
         self.url = url
-        self.sessionStore = sessionStore
         self.notificationUrl = notificationUrl
         self.userId = userId
         self.metadata = metadata
-        self.requestRepository = requestRepository
+        self.linkRepository = linkRepository
 
         socket = WalletLinkWebSocket(url: url.appendingPathComponent("rpc"))
         requestsObservable = requestsSubject.asObservable()
         isConnectedObservable = socket.connectionStateObservable.map { $0.isConnected }
 
         socket.incomingRequestsObservable
-            .subscribe(onNext: { [weak self] in self?.handleIncomingRequest($0) })
+            .flatMap { [weak self] dto -> Single<HostRequest?> in
+                guard let self = self else { return Single.just(nil) }
+                return self.linkRepository.getHostRequest(using: dto, url: self.url)
+            }
+            .unwrap()
+            .subscribe(onNext: { [weak self] in self?.requestsSubject.onNext($0) })
             .disposed(by: disposeBag)
 
         observeConnection()
@@ -71,18 +73,17 @@ class WalletLinkConnection {
     ///
     /// - Parameters:
     ///     - sessionId: WalletLink host generated session ID
-    ///     - name: Host name
     ///     - secret: WalletLink host/guest shared secret
     ///
     /// - Returns: A single wrapping `Void` if connection was successful. Otherwise, an exception is thrown
-    func link(sessionId: String, name: String, secret: String) -> Single<Void> {
-        if let session = sessionStore.getSession(id: sessionId, url: url), session.secret == secret {
+    func link(sessionId: String, secret: String) -> Single<Void> {
+        if let session = linkRepository.getSession(id: sessionId, url: url), session.secret == secret {
             return .justVoid()
         }
 
         return isConnectedObservable
             .do(onSubscribe: {
-                self.sessionStore.save(url: self.url, sessionId: sessionId, name: name, secret: secret)
+                self.linkRepository.save(url: self.url, sessionId: sessionId, secret: secret)
             })
             .filter { $0 }
             .takeSingle()
@@ -91,7 +92,7 @@ class WalletLinkConnection {
             .timeout(15, scheduler: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
             .logError()
             .catchError { err in
-                self.sessionStore.delete(url: self.url, sessionId: sessionId)
+                self.linkRepository.delete(url: self.url, sessionId: sessionId)
                 throw err
             }
     }
@@ -106,7 +107,7 @@ class WalletLinkConnection {
     func setMetadata(key: ClientMetadataKey, value: String) -> Single<Void> {
         metadata[key] = value
 
-        let singles = sessionStore.getSessions(for: url).compactMap { session -> Single<Bool>? in
+        let singles = linkRepository.getSessions(for: url).compactMap { session -> Single<Bool>? in
             if let encryptedValue = try? value.encryptUsingAES256GCM(secret: session.secret) {
                 return self.socket.setMetadata(key: key, value: encryptedValue, for: session.id).logError()
             }
@@ -126,11 +127,11 @@ class WalletLinkConnection {
     ///
     /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
     func approve(requestId: HostRequestId, responseData: Data) -> Single<Void> {
-        guard let session = sessionStore.getSession(id: requestId.sessionId, url: url) else {
+        guard let session = linkRepository.getSession(id: requestId.sessionId, url: url) else {
             return .error(WalletLinkError.sessionNotFound)
         }
 
-        let markEventAsSeen = requestRepository.markAsSeen(requestId: requestId, url: url)
+        let markEventAsSeen = linkRepository.markAsSeen(requestId: requestId, url: url)
 
         switch requestId.method {
         case .requestEthereumAccounts:
@@ -144,7 +145,12 @@ class WalletLinkConnection {
                 result: [address.lowercased()]
             )
 
-            return markEventAsSeen.flatMap { _ in self.submitWeb3Response(response, session: session) }
+            return markEventAsSeen
+                .flatMap { _ in self.submitWeb3Response(response, session: session) }
+                .flatMap { _ in
+                    let dapp = Dapp(url: requestId.dappURL, name: requestId.dappName, logoURL: requestId.dappImageURL)
+                    return self.linkRepository.save(dapp: dapp)
+                }
 
         case .signEthereumMessage, .signEthereumTransaction, .submitEthereumTransaction:
             let response = Web3ResponseDTO<String>(
@@ -166,7 +172,7 @@ class WalletLinkConnection {
     ///
     /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
     func reject(requestId: HostRequestId) -> Single<Void> {
-        guard let session = sessionStore.getSession(id: requestId.sessionId, url: url) else {
+        guard let session = linkRepository.getSession(id: requestId.sessionId, url: url) else {
             return .error(WalletLinkError.sessionNotFound)
         }
 
@@ -176,7 +182,7 @@ class WalletLinkConnection {
             errorMessage: "User rejected signature request"
         )
 
-        return requestRepository.markAsSeen(requestId: requestId, url: url)
+        return linkRepository.markAsSeen(requestId: requestId, url: url)
             .flatMap { _ in self.submitWeb3Response(response, session: session) }
     }
 
@@ -227,7 +233,7 @@ class WalletLinkConnection {
                 } else {
                     print("[walletlink] Invalid session \(session.id). Removing...")
 
-                    self.sessionStore.delete(url: self.url, sessionId: session.id)
+                    self.linkRepository.delete(url: self.url, sessionId: session.id)
                     self.joinSessionEventsSubject.onNext(JoinSessionEvent(sessionId: session.id, joined: false))
 
                     return false
@@ -255,8 +261,8 @@ class WalletLinkConnection {
     }
 
     private func fetchPendingRequests() {
-        let requestsSingles = sessionStore.getSessions(for: url).map { session in
-            self.requestRepository.getPendingRequests(session: session, url: self.url)
+        let requestsSingles = linkRepository.getSessions(for: url).map { session in
+            self.linkRepository.getPendingRequests(session: session, url: self.url)
         }
 
         _ = Single.zip(requestsSingles)
@@ -266,15 +272,6 @@ class WalletLinkConnection {
     }
 
     // MARK: Request Handlers
-
-    private func handleIncomingRequest(_ request: ServerRequestDTO) {
-        guard
-            let session = sessionStore.getSession(id: request.sessionId, url: url),
-            let request = request.asHostRequest(secret: session.secret, url: url)
-        else { return }
-
-        requestsSubject.onNext(request)
-    }
 
     private func submitWeb3Response<T: Codable>(_ response: Web3ResponseDTO<T>, session: Session) -> Single<Void> {
         guard
@@ -296,7 +293,7 @@ class WalletLinkConnection {
         let sessionSerialScheduler = SerialDispatchQueueScheduler(internalSerialQueueName: "serialSession")
         let connSerialScheduler = SerialDispatchQueueScheduler(internalSerialQueueName: "serialConn")
 
-        let sessionChangesObservable = sessionStore.observeSessions(for: url)
+        let sessionChangesObservable = linkRepository.observeSessions(for: url)
             .distinctUntilChanged()
             .observeOn(connSerialScheduler)
             .concatMap { [weak self] sessions -> Single<[Session]> in

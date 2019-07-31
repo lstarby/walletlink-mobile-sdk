@@ -1,0 +1,6 @@
+module CBDatabase {
+  umbrella header "CBDatabase-umbrella.h"
+
+  export *
+  module * { export * }
+}

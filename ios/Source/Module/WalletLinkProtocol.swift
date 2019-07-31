@@ -24,7 +24,6 @@ public protocol WalletLinkProtocol: class {
     ///
     /// - Parameters:
     ///     - sessionId: WalletLink host generated session ID
-    ///     - name: Host name
     ///     - secret: WalletLink host/guest shared secret
     ///     - url: WalletLink base URL
     ///     - userId: User ID to deliver push notifications to
@@ -33,7 +32,6 @@ public protocol WalletLinkProtocol: class {
     /// - Returns: A single wrapping `Void` if connection was successful. Otherwise, an exception is thrown
     func link(
         sessionId: String,
-        name: String,
         secret: String,
         url: URL,
         userId: String,

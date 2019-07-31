@@ -13,10 +13,14 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '10.0'
   s.swift_version = '4.2'
   s.source_files = 'ios/Source/**/*.swift'
+  s.resource_bundles = {
+    'CBWalletLink' => ['ios/Source/Databases/*.xcdatamodeld']
+  }
 
   s.dependency 'CBStore'
   s.dependency 'CBCrypto'
   s.dependency 'CBHTTP'
   s.dependency 'BigInt'
   s.dependency 'CBCore'
+  s.dependency 'CBDatabase'
 end

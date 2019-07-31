@@ -5,6 +5,7 @@ target 'WalletLink' do
   pod 'CBStore', git: 'git@github.com:CoinbaseWallet/Stores.git', commit: "444c4d462a91068729f245852fd111be5261f78c"
   pod 'CBCrypto', git: 'git@github.com:CoinbaseWallet/CBCrypto.git', commit: "3c3b3c0b1ea6ba502342f624df758df47ab0a56c"
   pod 'CBCore', git: 'git@github.com:CoinbaseWallet/CBCore.git', commit: "ee30448572da06ad1b060956b782360ea829b425"
+  pod 'CBDatabase', git: 'git@github.com:CoinbaseWallet/CBDatabase.git', commit: "7ee0ac6c73f4a270c0f0fee023953e63ab87ea5a"
   pod 'RxSwift', '~> 4.4.0'
   pod 'RxCocoa', '~> 4.4.0'
   pod 'Starscream', '~> 3.1'
