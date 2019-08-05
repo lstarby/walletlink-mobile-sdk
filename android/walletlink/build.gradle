@@ -43,7 +43,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutineVersion"
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation project(':libraries:core')
-    implementation project(':libraries:store')
+    implementation project(':libraries:stores')
 
     // Test dependencies
     testImplementation 'junit:junit:4.12'

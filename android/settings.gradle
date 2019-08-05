@@ -1,6 +1,6 @@
 include ':walletlink',
-        ':libraries:store',
+        ':libraries:stores',
         ':libraries:core'
 
-project(':libraries:store').projectDir = new File('libraries/store/android/store')
+project(':libraries:stores').projectDir = new File('libraries/store/android/store')
 project(':libraries:core').projectDir = new File('libraries/core/android/core')
