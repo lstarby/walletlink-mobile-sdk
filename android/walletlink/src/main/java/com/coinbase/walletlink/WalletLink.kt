@@ -3,8 +3,8 @@ package com.coinbase.walletlink
 import android.content.Context
 import com.coinbase.wallet.core.extensions.asUnit
 import com.coinbase.wallet.core.extensions.reduceIntoMap
+import com.coinbase.wallet.core.util.Optional
 import com.coinbase.wallet.store.Store
-import com.coinbase.wallet.store.models.Optional
 import com.coinbase.walletlink.exceptions.WalletLinkException
 import com.coinbase.walletlink.interfaces.WalletLinkInterface
 import com.coinbase.walletlink.models.HostRequest
@@ -135,7 +135,7 @@ class WalletLink(private val userId: String, private val notificationUrl: URL, c
             .observeOn(requestsScheduler)
             .map { Optional(it) }
             .onErrorReturn { Optional(null) }
-            .subscribe { request -> request.element?.let { requestsSubject.onNext(it) } }
+            .subscribe { request -> request.toU.let { requestsSubject.onNext(it) } }
             .let { disposeBag.add(it) }
     }
 }
