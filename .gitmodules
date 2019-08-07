@@ -1,6 +1,12 @@
 [submodule "android/libraries/store"]
 	path = android/libraries/store
 	url = git@github.com:CoinbaseWallet/Stores.git
+        branch = master
 [submodule "android/libraries/core"]
 	path = android/libraries/core
 	url = git@github.com:CoinbaseWallet/CBCore.git
+	branch = master
+[submodule "android/libraries/http"]
+	path = android/libraries/http
+	url = git@github.com:CoinbaseWallet/CBHTTP.git
+	branch = hish/android_lib

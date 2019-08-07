@@ -40,3 +40,5 @@ node_modules/
 UserInterfaceState.xcuserstate
 /ios/Pods/Pods.xcodeproj/xcuserdata/**
 /ios/WalletLink.xcodeproj/xcuserdata/**
+android/.idea/*
+android/.idea/**

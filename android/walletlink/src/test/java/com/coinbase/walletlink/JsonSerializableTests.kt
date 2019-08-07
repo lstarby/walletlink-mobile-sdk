@@ -1,6 +1,6 @@
 package com.coinbase.walletlink
 
-import com.coinbase.wallet.store.jsonadapters.UrlAdapter
+import com.coinbase.wallet.core.jsonadapters.UrlAdapter
 import com.coinbase.wallet.store.utils.JSON
 import com.coinbase.walletlink.dtos.JoinSessionMessageDTO
 import com.coinbase.walletlink.interfaces.JsonSerializable
