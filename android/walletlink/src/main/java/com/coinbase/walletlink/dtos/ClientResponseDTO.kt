@@ -1,7 +1,7 @@
 package com.coinbase.walletlink.dtos
 
-import com.coinbase.wallet.store.utils.JSON
-import com.coinbase.walletlink.interfaces.JsonSerializable
+import com.coinbase.wallet.core.interfaces.JsonSerializable
+import com.coinbase.wallet.core.util.JSON
 import com.coinbase.walletlink.models.ServerMessageType
 
 /**
@@ -18,9 +18,11 @@ internal data class ClientResponseDTO(
     val eventId: String?,
     val sessionId: String
 ) : JsonSerializable {
+    @ExperimentalUnsignedTypes
     override fun asJsonString(): String = JSON.toJsonString(this)
 
     companion object {
+        @ExperimentalUnsignedTypes
         fun fromJsonString(jsonString: String): ClientResponseDTO? = JSON.fromJsonString(jsonString)
     }
 }

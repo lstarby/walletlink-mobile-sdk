@@ -1,7 +1,7 @@
 package com.coinbase.walletlink.dtos
 
-import com.coinbase.wallet.store.utils.JSON
-import com.coinbase.walletlink.interfaces.JsonSerializable
+import com.coinbase.wallet.core.interfaces.JsonSerializable
+import com.coinbase.wallet.core.util.JSON
 import com.coinbase.walletlink.models.ClientMessageType
 
 /**
@@ -15,12 +15,13 @@ import com.coinbase.walletlink.models.ClientMessageType
  * @property metadata client metadata forwarded to host once link is established
  */
 internal data class SetSessionConfigMessageDTO(
-    val type: ClientMessageType = ClientMessageType.SET_SESSION_CONFIG,
+    val type: ClientMessageType = ClientMessageType.SetSessionConfig,
     val id: Int,
     val sessionId: String,
     val webhookId: String,
     val webhookUrl: String,
     val metadata: Map<String, String>
 ) : JsonSerializable {
+    @ExperimentalUnsignedTypes
     override fun asJsonString(): String = JSON.toJsonString(this)
 }

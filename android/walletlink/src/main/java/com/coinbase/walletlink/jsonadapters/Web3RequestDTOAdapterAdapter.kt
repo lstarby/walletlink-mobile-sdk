@@ -24,7 +24,7 @@ import com.squareup.moshi.FromJson
 internal class Web3RequestDTOAdapterAdapter {
     @FromJson
     fun fromJson(json: String): Web3RequestDTO<*>? {
-
+        TODO()
         return null
     }
 }
@@ -39,7 +39,7 @@ internal class Web3RequestDTOAdapterAdapter {
 //        item.schedule_item_groups ?: listOf(),
 //        when (item.type) {
 //            ItemType.GAME -> moshi.adapter(GameItem::class.java).fromJson(json)
-//            ItemType.EVENT -> moshi.adapter(EventItem::class.java).fromJson(json)
+//            ItemType.Event -> moshi.adapter(EventItem::class.java).fromJson(json)
 //            ItemType.CHECK_IN, ItemType.CHECK_OUT ->
 //                moshi.adapter(ReservationItem::class.java)
 //                    .fromJson(json).apply { this!!.type = item.type }

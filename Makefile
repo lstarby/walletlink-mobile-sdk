@@ -6,4 +6,4 @@ lint:
 	Pods/SwiftLint/swiftlint
 
 init:
-	git submodule update --force
+	git submodule update --force --recursive

@@ -18,7 +18,7 @@ public enum WalletLinkError: Error {
     /// Thrown when WalletLink is unable to to serialize message json
     case unableToSerializeMessageJSON
 
-    /// Thrown when trying to conenct with an invalid session
+    /// Thrown when trying to connect with an invalid session
     case invalidSession
 
     /// Thrown if unable to approve or reject signature request. This generally happens if no internet or internal

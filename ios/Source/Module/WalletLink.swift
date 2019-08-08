@@ -6,12 +6,12 @@ import RxSwift
 
 public class WalletLink: WalletLinkProtocol {
     private let notificationUrl: URL
-    private var disposeBag = DisposeBag()
-    private var connections = ConcurrentCache<URL, WalletLinkConnection>()
     private let requestsSubject = PublishSubject<HostRequest>()
     private let requestsScheduler = SerialDispatchQueueScheduler(internalSerialQueueName: "WalletLink.requests")
     private let processedRequestIds = BoundedSet<HostRequestId>(maxSize: 3000)
     private let linkRepository = LinkRepository()
+    private var disposeBag = DisposeBag()
+    private var connections = ConcurrentCache<URL, WalletLinkConnection>()
 
     public let requests: Observable<HostRequest>
 
@@ -104,11 +104,10 @@ public class WalletLink: WalletLinkProtocol {
     }
 
     public func markAsSeen(requestIds: [HostRequestId]) -> Single<Void> {
-        let markAsSeenSingles = requestIds.compactMap { requestId -> Single<Void>? in
-            return linkRepository.markAsSeen(requestId: requestId, url: requestId.url).catchErrorJustReturn(())
-        }
-
-        return Single.zip(markAsSeenSingles).asVoid()
+        return requestIds
+            .map { linkRepository.markAsSeen(requestId: $0, url: $0.url).catchErrorJustReturn(()) }
+            .zip()
+            .asVoid()
     }
 
     public func getRequest(eventId: String, sessionId: String, url: URL) -> Single<HostRequest> {
@@ -141,7 +140,6 @@ public class WalletLink: WalletLinkProtocol {
 
                 self.processedRequestIds.add(hostRequestId)
                 self.requestsSubject.onNext(request)
-
             })
             .disposed(by: disposeBag)
     }

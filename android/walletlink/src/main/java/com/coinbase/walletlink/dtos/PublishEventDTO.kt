@@ -1,9 +1,9 @@
 package com.coinbase.walletlink.dtos
 
-import com.coinbase.wallet.store.utils.JSON
-import com.coinbase.walletlink.interfaces.JsonSerializable
-import com.coinbase.walletlink.models.ResponseEventType
+import com.coinbase.wallet.core.interfaces.JsonSerializable
+import com.coinbase.wallet.core.util.JSON
 import com.coinbase.walletlink.models.ClientMessageType
+import com.coinbase.walletlink.models.EventType
 
 /**
  * Client message in response to a server initiated event
@@ -15,11 +15,12 @@ import com.coinbase.walletlink.models.ClientMessageType
  * @property data AES256 GCM encrypted data
  */
 internal data class PublishEventDTO(
-    val type: ClientMessageType = ClientMessageType.PUBLISH_EVENT,
+    val type: ClientMessageType = ClientMessageType.PublishEvent,
     val id: Int,
     val sessionId: String,
-    val event: ResponseEventType,
+    val event: EventType,
     val data: String
 ) : JsonSerializable {
+    @ExperimentalUnsignedTypes
     override fun asJsonString(): String = JSON.toJsonString(this)
 }

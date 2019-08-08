@@ -1,14 +1,30 @@
 package com.coinbase.walletlink.dtos
 
-import com.coinbase.wallet.store.utils.JSON
+import com.coinbase.wallet.core.util.JSON
+import com.coinbase.walletlink.models.RequestMethod
 import com.squareup.moshi.Types
 
-internal class Web3ResponseDTO<T>(
+internal class Web3ResponseDTO<T> private constructor(
     val id: String,
-    result: T? = null,
-    errorMessage: String? = null
+    val response: Web3Response<T>
 ) {
-    val response = Web3Response(result = result, errorMessage = errorMessage)
+    constructor(
+        id: String,
+        method: RequestMethod,
+        result: T
+    ) : this(
+        id = id,
+        response = Web3Response(method, result, null)
+    )
+
+    constructor(
+        id: String,
+        method: RequestMethod,
+        errorMessage: String?
+    ) : this(
+        id = id,
+        response = Web3Response(method, null, errorMessage)
+    )
 }
 
 internal inline fun <reified T> Web3ResponseDTO<T>.asJsonString(): String {
@@ -18,4 +34,4 @@ internal inline fun <reified T> Web3ResponseDTO<T>.asJsonString(): String {
     return adapter.toJson(this)
 }
 
-internal data class Web3Response<T>(val result: T?, val errorMessage: String?)
+internal data class Web3Response<T>(val method: RequestMethod, val result: T?, val errorMessage: String?)

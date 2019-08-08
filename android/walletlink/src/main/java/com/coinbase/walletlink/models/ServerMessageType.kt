@@ -9,7 +9,7 @@ internal enum class ServerMessageType(val rawValue: String) {
     /**
      * New server initiated event
      */
-    @Json(name = "Event") EVENT("Event"),
+    @Json(name = "Event") Event("Event"),
 
     /**
      * A successful response to a client initiated request
@@ -19,19 +19,19 @@ internal enum class ServerMessageType(val rawValue: String) {
     /**
      * A successful response to a client `PublishEvent`
      */
-    @Json(name = "PublishEventOK") PUBLISH_EVENT_OK("PublishEventOK"),
+    @Json(name = "PublishEventOK") PublishEventOK("PublishEventOK"),
 
     /**
      * An error response to a client initiated request
      */
-    @Json(name = "Fail") FAIL("Fail");
+    @Json(name = "Fail") Fail("Fail");
 
     /**
      * Determine whether server message is a successful one
      */
-    val isOk: Boolean get() = when (this) {
+    val isOK: Boolean get() = when (this) {
         OK -> true
-        PUBLISH_EVENT_OK -> true
+        PublishEventOK -> true
         else -> false
     }
 

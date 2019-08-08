@@ -1,10 +1,10 @@
 // Copyright (c) 2017-2019 Coinbase Inc. See LICENSE
 
 import BigInt
+import CBCore
 import CBCrypto
 import CBDatabase
 import RxSwift
-import CBCore
 
 final class LinkRepository {
     private let sessionDAO = SessionDAO()

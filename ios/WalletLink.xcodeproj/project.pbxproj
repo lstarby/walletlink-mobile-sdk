@@ -137,10 +137,10 @@
 		5159CC7C228FDE2800A257C0 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				E70647E022F0AFAB00AC12FF /* Databases */,
-				D34578A722A0711C0063286E /* API */,
+				D34578A722A0711C0063286E /* APIs */,
 				5159CCA4228FF1BC00A257C0 /* DAOs */,
 				51EC62C422998FD700B55164 /* DTOs */,
+				E70647E022F0AFAB00AC12FF /* Databases */,
 				51D42E0A228FF86900048066 /* Errors */,
 				5159CC9F228FE4D200A257C0 /* Extensions */,
 				5159CC97228FE40200A257C0 /* Models */,
@@ -166,13 +166,13 @@
 			children = (
 				51D42E1F2290029500048066 /* ClientMessageType.swift */,
 				5108610D22900EAF0060C12F /* ClientMetadataKey.swift */,
+				E70647E122F0B03800AC12FF /* Dapp.swift */,
 				51B8533522B1D89F004589BD /* EventType.swift */,
 				5159CCA2228FE65D00A257C0 /* HostRequest.swift */,
 				51FC1C0F229B4ABD008CFFC2 /* HostRequestId.swift */,
 				51EC62C522998FE200B55164 /* RequestMethod.swift */,
 				51D42E21229002D500048066 /* ServerMessageType.swift */,
 				51D42E14228FFBCD00048066 /* Session.swift */,
-				E70647E122F0B03800AC12FF /* Dapp.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -190,8 +190,8 @@
 		5159CCA4228FF1BC00A257C0 /* DAOs */ = {
 			isa = PBXGroup;
 			children = (
-				518388012297D28100CCB8D1 /* SessionDAO.swift */,
 				E70647DE22F0ADFD00AC12FF /* DappDAO.swift */,
+				518388012297D28100CCB8D1 /* SessionDAO.swift */,
 			);
 			path = DAOs;
 			sourceTree = "<group>";
@@ -221,14 +221,14 @@
 			path = DTOs;
 			sourceTree = "<group>";
 		};
-		D34578A722A0711C0063286E /* API */ = {
+		D34578A722A0711C0063286E /* APIs */ = {
 			isa = PBXGroup;
 			children = (
 				D34578A822A0712A0063286E /* WalletLinkAPI.swift */,
 				5159CC95228FE2A200A257C0 /* WalletLinkConnection.swift */,
 				5101344C229BC49300ABE97F /* WalletLinkWebSocket.swift */,
 			);
-			path = API;
+			path = APIs;
 			sourceTree = "<group>";
 		};
 		D3D20C12EB57C0AE031483E8 /* Pods */ = {

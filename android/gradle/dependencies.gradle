@@ -1,0 +1,48 @@
+ext {
+    versions = [
+        gradle           : '3.4.2',
+
+        kotlin           : "1.3.41",
+
+        dagger2          : "2.22.1",
+
+        moshi            : "1.8.0",
+
+        okhttp3          : "3.12.0",
+        okHttpInterceptor: "3.12.0",
+        retrofit         : "2.5.0",
+
+        // ReactiveX 2
+        rxJava           : "2.2.9",
+        rxAndroid        : "2.1.0",
+        rxKotlin         : "2.3.0",
+
+        lifecycle        : "2.0.0",
+
+        // logging
+        timber           : "4.7.1",
+
+        room             : "2.1.0-alpha04",
+    ]
+
+    testVersions = [
+        junit5                 : "5.5.1",
+        espresso               : "3.0.2",
+        jsonAssert             : "1.5.0",
+
+        assertJ                : "3.11.1",
+        hamcrest               : "1.3",
+
+        mockK                  : "1.8.13.kotlin13",
+        mockito                : "2.19.0",
+
+        androidXTestCore       : "1.1.0",
+        androidXArchCoreTesting: "2.0.0",
+        androidXTestExtJUnit   : "1.0.0",
+        androidXTestRunner     : "1.1.1",
+    ]
+
+    otherVersions = [
+        ktlint: "0.32.0"
+    ]
+}

@@ -1,22 +1,22 @@
-package com.coinbase.walletlink.api
+package com.coinbase.walletlink.apis
 
-import com.coinbase.networking.connectivity.Internet
-import com.coinbase.networking.models.WebIncomingDataType
-import com.coinbase.networking.models.WebIncomingText
-import com.coinbase.networking.websocket.WebSocket
+import com.coinbase.wallet.core.extensions.asJsonMap
 import com.coinbase.wallet.core.extensions.logError
 import com.coinbase.wallet.core.extensions.takeSingle
 import com.coinbase.wallet.core.util.ConcurrentLruCache
+import com.coinbase.wallet.http.connectivity.Internet
+import com.coinbase.wallet.http.models.WebIncomingDataType
+import com.coinbase.wallet.http.models.WebIncomingText
+import com.coinbase.wallet.http.websocket.WebSocket
 import com.coinbase.walletlink.dtos.ClientResponseDTO
 import com.coinbase.walletlink.dtos.JoinSessionMessageDTO
 import com.coinbase.walletlink.dtos.PublishEventDTO
 import com.coinbase.walletlink.dtos.ServerRequestDTO
 import com.coinbase.walletlink.dtos.SetMetadataMessageDTO
 import com.coinbase.walletlink.dtos.SetSessionConfigMessageDTO
-import com.coinbase.walletlink.extensions.asJsonMap
-import com.coinbase.walletlink.interfaces.JsonSerializable
+import com.coinbase.wallet.core.interfaces.JsonSerializable
 import com.coinbase.walletlink.models.ClientMetadataKey
-import com.coinbase.walletlink.models.ResponseEventType
+import com.coinbase.walletlink.models.EventType
 import com.coinbase.walletlink.models.ServerMessageType
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
@@ -140,7 +140,7 @@ internal class WalletLinkWebSocket(val url: URL) {
      *
      * @return A single wrapping `Boolean` to indicate operation was successful
      */
-    fun publishEvent(event: ResponseEventType, data: String, sessionId: String): Single<Boolean> {
+    fun publishEvent(event: EventType, data: String, sessionId: String): Single<Boolean> {
         val callback = createCallback()
         val message = PublishEventDTO(id = callback.requestId, sessionId = sessionId, event = event, data = data)
 
@@ -157,7 +157,7 @@ internal class WalletLinkWebSocket(val url: URL) {
             .takeSingle()
             .flatMap { connection.sendString(jsonString) }
             .flatMap { callback.subject.takeSingle() }
-            .map { it.type.isOk }
+            .map { it.type.isOK }
             // FIXME: hish - add back .retry(3, delay: 1)
             .timeout(15, TimeUnit.SECONDS)
             .logError()
@@ -209,11 +209,11 @@ internal class WalletLinkWebSocket(val url: URL) {
         val messageType: ServerMessageType = ServerMessageType.fromRawValue(typeString) ?: return
 
         when (messageType) {
-            ServerMessageType.OK, ServerMessageType.FAIL, ServerMessageType.PUBLISH_EVENT_OK -> {
+            ServerMessageType.OK, ServerMessageType.Fail, ServerMessageType.PublishEventOK -> {
                 val response = ClientResponseDTO.fromJsonString(jsonString) ?: return
                 receivedClientResponse(response)
             }
-            ServerMessageType.EVENT -> {
+            ServerMessageType.Event -> {
                 val request = ServerRequestDTO.fromJsonString(jsonString) ?: return
                 receivedServerRequest(request)
             }

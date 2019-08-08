@@ -1,6 +1,6 @@
 package com.coinbase.walletlink.dtos
 
-import com.coinbase.wallet.store.utils.JSON
+import com.coinbase.wallet.core.util.JSON
 import com.coinbase.walletlink.models.RequestMethod
 import com.squareup.moshi.Types
 import java.net.URL
@@ -20,9 +20,14 @@ internal inline fun <reified T> Web3RequestDTO.Companion.fromJsonString(json: St
     return adapter.fromJson(json)
 }
 
+internal inline fun <reified T> Web3RequestDTO.Companion.fromJson(json: ByteArray): Web3RequestDTO<T>? {
+    val jsonString = String(json, Charsets.UTF_8)
+    return fromJsonString(jsonString)
+}
+
 internal data class Web3Request<T>(val method: RequestMethod, val params: T)
 
-internal data class RequestEthereumAddressesParams(val appName: String)
+internal data class RequestEthereumAccountsParams(val appName: String)
 
 internal data class SignEthereumMessageParams(val message: String, val address: String, val addPrefix: Boolean)
 

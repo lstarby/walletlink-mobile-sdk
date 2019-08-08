@@ -1,12 +1,11 @@
 package com.coinbase.walletlink.dtos
 
-import com.coinbase.wallet.store.utils.JSON
-import com.coinbase.walletlink.interfaces.JsonSerializable
-import com.coinbase.walletlink.models.RequestEventType
+import com.coinbase.wallet.core.interfaces.JsonSerializable
+import com.coinbase.wallet.core.util.JSON
+import com.coinbase.walletlink.models.EventType
 import com.coinbase.walletlink.models.ServerMessageType
 
 /**
- *
  * @param sessionId Server generated session ID
  * @param type Server message type
  * @param event Server message event
@@ -16,13 +15,15 @@ import com.coinbase.walletlink.models.ServerMessageType
 internal data class ServerRequestDTO(
     val sessionId: String,
     val type: ServerMessageType,
-    val event: RequestEventType,
+    val event: EventType,
     val eventId: String,
     val data: String
 ) : JsonSerializable {
+    @ExperimentalUnsignedTypes
     override fun asJsonString(): String = JSON.toJsonString(this)
 
     companion object {
+        @ExperimentalUnsignedTypes
         fun fromJsonString(jsonString: String): ServerRequestDTO? = JSON.fromJsonString(jsonString)
     }
 }

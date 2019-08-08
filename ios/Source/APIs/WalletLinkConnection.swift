@@ -123,7 +123,7 @@ class WalletLinkConnection {
     ///
     /// - Parameters:
     ///     - requestId: WalletLink host generated request ID
-    ///     - responseData: User signed data
+    ///     - responseData: Response data
     ///
     /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
     func approve(requestId: HostRequestId, responseData: Data) -> Single<Void> {
@@ -205,9 +205,9 @@ class WalletLinkConnection {
     // MARK: - Session management
 
     private func joinSessions(sessions: [Session]) -> Single<Void> {
-        let joinSessionSingles = sessions.map { self.joinSession($0).asVoid().catchErrorJustReturn(()) }
-
-        return Single.zip(joinSessionSingles).map { _ in self.fetchPendingRequests() }
+        return sessions.map { self.joinSession($0).asVoid().catchErrorJustReturn(()) }
+            .zip()
+            .map { _ in self.fetchPendingRequests() }
     }
 
     private func joinSession(_ session: Session) -> Single<Bool> {
@@ -261,11 +261,9 @@ class WalletLinkConnection {
     }
 
     private func fetchPendingRequests() {
-        let requestsSingles = linkRepository.getSessions(for: url).map { session in
-            self.linkRepository.getPendingRequests(session: session, url: self.url)
-        }
-
-        _ = Single.zip(requestsSingles)
+        _ = linkRepository.getSessions(for: url)
+            .map { session in self.linkRepository.getPendingRequests(session: session, url: self.url) }
+            .zip()
             .map { requests in requests.flatMap { $0 } }
             .logError()
             .subscribe(onSuccess: { requests in requests.forEach { self.requestsSubject.onNext($0) } })

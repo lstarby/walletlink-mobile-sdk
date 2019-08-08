@@ -39,7 +39,7 @@ class WalletLinkTests {
         GlobalScope.launch {
             // FIXME: hish - pass regular map and internally have kotlin convert it to ConcurrentHashMap
             val metadata = ConcurrentHashMap<ClientMetadataKey, String>()
-            metadata[ClientMetadataKey.ETHEREUM_ADDRESS] = "0x03F6f282373900C2F6CE53B5A9f595b92aC5f5E5"
+            metadata[ClientMetadataKey.EthereumAddress] = "0x03F6f282373900C2F6CE53B5A9f595b92aC5f5E5"
 
             walletLink.link(
                 sessionId = "54075a65ae1ee3f29b1c562bd4688c94",

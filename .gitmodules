@@ -10,3 +10,11 @@
 	path = android/libraries/http
 	url = git@github.com:CoinbaseWallet/CBHTTP.git
 	branch = hish/android_lib
+[submodule "android/libraries/database"]
+	path = android/libraries/database
+	url = git@github.com:CoinbaseWallet/CBDatabase.git
+	branch = master
+[submodule "android/libraries/crypto"]
+	path = android/libraries/crypto
+	url = git@github.com:CoinbaseWallet/CBCrypto.git
+	branch = master

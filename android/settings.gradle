@@ -1,6 +1,12 @@
 include ':walletlink',
-        ':libraries:store',
-        ':libraries:core'
+        ':libraries:stores',
+        ':libraries:core',
+        ':libraries:http',
+        ':libraries:databases',
+        ':libraries:crypto'
 
-project(':libraries:store').projectDir = new File('libraries/store/android/store')
+project(':libraries:stores').projectDir = new File('libraries/store/android/store')
 project(':libraries:core').projectDir = new File('libraries/core/android/core')
+project(':libraries:http').projectDir = new File('libraries/http/android/http')
+project(':libraries:databases').projectDir = new File('libraries/database/android/databases')
+project(':libraries:crypto').projectDir = new File('libraries/crypto/android/crypto')

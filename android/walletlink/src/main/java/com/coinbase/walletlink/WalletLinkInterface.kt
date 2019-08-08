@@ -1,8 +1,9 @@
-package com.coinbase.walletlink.interfaces
+package com.coinbase.walletlink
 
 import com.coinbase.walletlink.models.HostRequest
 import com.coinbase.walletlink.models.HostRequestId
 import com.coinbase.walletlink.models.ClientMetadataKey
+import com.coinbase.walletlink.models.Session
 import io.reactivex.Observable
 import io.reactivex.Single
 import java.net.URL
@@ -18,12 +19,13 @@ interface WalletLinkInterface {
     val requestsObservable: Observable<HostRequest>
 
     /**
-    * Starts WalletLink connection with the server if a stored session exists. Otherwise, this is a noop. This method
-    * should be called immediately on app launch.
-    *
-    * @param metadata client metadata forwarded to host once link is established
-    */
-    fun connect(metadata: ConcurrentHashMap<ClientMetadataKey, String>)
+     * Starts WalletLink connection with the server if a stored session exists. Otherwise, this is a noop. This method
+     * should be called immediately on app launch.
+     *
+     * @param userId User ID to deliver push notifications to
+     * @param metadata client metadata forwarded to host once link is established
+     */
+    fun connect(userId: String, metadata: ConcurrentHashMap<ClientMetadataKey, String>)
 
     /**
      * Disconnect from WalletLink server and stop observing session ID updates to prevent reconnection.
@@ -34,8 +36,8 @@ interface WalletLinkInterface {
      * Connect to WalletLink server using parameters extracted from QR code scan
      *
      * @param sessionId WalletLink host generated session ID
-     * @param name Host name
      * @param secret WalletLink host/guest shared secret
+     * @param userId User ID to deliver push notifications to
      * @param rpcUrl WalletLink server websocket URL
      * @param metadata client metadata forwarded to host once link is established
      *
@@ -43,11 +45,18 @@ interface WalletLinkInterface {
      */
     fun link(
         sessionId: String,
-        name: String,
         secret: String,
-        rpcUrl: URL,
+        url: URL,
+        userId: String,
         metadata: ConcurrentHashMap<ClientMetadataKey, String>
     ): Single<Unit>
+
+    /**
+     * Disconnect from given WalletLink session
+     *
+     * @param session Session to unlink
+     */
+    fun unlink(session: Session)
 
     /**
      * Set metadata in all active sessions. This metadata will be forwarded to all the hosts
@@ -82,9 +91,18 @@ interface WalletLinkInterface {
      *
      * @param eventId The event ID
      * @param sessionId The session ID
-     * @param rpcUrl The RPC URL
+     * @param url The RPC URL
      *
      * @return A Single wrapping the HostRequest
      */
-    fun getRequest(eventId: String, sessionId: String, rpcUrl: URL): Single<HostRequest>
+    fun getRequest(eventId: String, sessionId: String, url: URL): Single<HostRequest>
+
+    /**
+     * Mark requests as seen to prevent future presentation
+     *
+     * @param requestIds List of alletLink host generated request ID
+     *
+     * @return A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
+     */
+    fun markAsSeen(requestIds: List<HostRequestId>): Single<Unit>
 }
