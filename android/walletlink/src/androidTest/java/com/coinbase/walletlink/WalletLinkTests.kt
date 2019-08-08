@@ -1,13 +1,15 @@
 package com.coinbase.walletlink
 
+import android.content.Context
 import android.content.IntentFilter
 import android.net.ConnectivityManager
-import android.support.test.InstrumentationRegistry
-import android.support.test.runner.AndroidJUnit4
 import android.util.Base64
-import com.coinbase.networking.connectivity.Internet
-import com.coinbase.wallet.crypto.algorithms.AES256GCM
-import com.coinbase.walletlink.extensions.base64EncodedString
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import com.coinbase.wallet.core.extensions.base64EncodedString
+import com.coinbase.wallet.crypto.ciphers.AES256GCM
+import com.coinbase.wallet.http.connectivity.Internet
 import com.coinbase.walletlink.models.ClientMetadataKey
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -22,14 +24,13 @@ import java.util.concurrent.CountDownLatch
 class WalletLinkTests {
     @Test
     fun testWalletLinkConnect() {
-        val appContext = InstrumentationRegistry.getTargetContext()
+        val appContext = ApplicationProvider.getApplicationContext<Context>()
         val intentFilter = IntentFilter().apply { addAction(ConnectivityManager.CONNECTIVITY_ACTION) }
 
         appContext.registerReceiver(Internet, intentFilter)
         Internet.startMonitoring()
 
         val walletLink = WalletLink(
-            userId = "1",
             notificationUrl = URL("https://walletlink.herokuapp.com"),
             context = appContext
         )
@@ -43,9 +44,9 @@ class WalletLinkTests {
 
             walletLink.link(
                 sessionId = "54075a65ae1ee3f29b1c562bd4688c94",
-                name = "useragent",
+                userId = "1",
                 secret = "051b4d61a7cf0258e736f47624d118e3807282a7730aa02be480aa4a4ab444b0",
-                rpcUrl = URL("https://walletlink.herokuapp.com/rpc"),
+                url = URL("https://walletlink.herokuapp.com/rpc"),
                 metadata = metadata
             )
             .subscribe(
