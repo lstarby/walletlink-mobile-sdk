@@ -8,6 +8,7 @@ import com.coinbase.wallet.core.extensions.unwrap
 import com.coinbase.wallet.core.extensions.zipOrEmpty
 import com.coinbase.wallet.crypto.extensions.encryptUsingAES256GCM
 import com.coinbase.wallet.crypto.extensions.sha256
+import com.coinbase.wallet.http.appendingPathComponent
 import com.coinbase.wallet.http.connectivity.Internet
 import com.coinbase.walletlink.dtos.Web3ResponseDTO
 import com.coinbase.walletlink.dtos.asJsonString
@@ -43,7 +44,7 @@ internal class WalletLinkConnection(
 ) {
     private val requestsSubject = PublishSubject.create<HostRequest>()
     private val joinSessionEventsSubject = PublishSubject.create<JoinSessionEvent>()
-    private val socket = WalletLinkWebSocket(url) // TODO: append "rpc" path
+    private val socket = WalletLinkWebSocket(url.appendingPathComponent("rpc"))
     private val disposeBag = CompositeDisposable()
     private val isConnectedObservable: Observable<Boolean> = socket.connectionStateObservable.map { it.isConnected }
 

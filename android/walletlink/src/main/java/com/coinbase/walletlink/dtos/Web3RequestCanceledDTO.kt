@@ -10,7 +10,6 @@ internal data class Web3RequestCanceledDTO(
     companion object {
         fun fromJson(json: ByteArray): Web3RequestCanceledDTO? {
             TODO()
-            // TODO: hish
         }
     }
 }

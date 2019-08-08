@@ -8,9 +8,9 @@ import com.coinbase.wallet.core.extensions.zipOrEmpty
 import com.coinbase.wallet.core.util.Optional
 import com.coinbase.wallet.crypto.extensions.decryptUsingAES256GCM
 import com.coinbase.wallet.libraries.databases.db.Database
-import com.coinbase.wallet.libraries.databases.db.RoomDatabaseProvider
 import com.coinbase.wallet.libraries.databases.model.DiskOptions
 import com.coinbase.wallet.store.Store
+import com.coinbase.walletlink.WalletLinkDatabase
 import com.coinbase.walletlink.apis.WalletLinkAPI
 import com.coinbase.walletlink.daos.DappDAO
 import com.coinbase.walletlink.daos.SessionDAO
@@ -36,9 +36,6 @@ import timber.log.Timber
 import java.math.BigInteger
 import java.net.URL
 import javax.security.auth.Destroyable
-
-// TODO: hish
-abstract class WalletLinkDatabase : RoomDatabaseProvider()
 
 internal class LinkRepository(context: Context) : Destroyable {
     private val disposeBag = CompositeDisposable()
@@ -310,6 +307,7 @@ internal class LinkRepository(context: Context) : Destroyable {
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     inline fun <reified T> hostRequestId(
         serverRequest: ServerRequestDTO,
         decrypted: ByteArray,
@@ -321,12 +319,12 @@ internal class LinkRepository(context: Context) : Destroyable {
             .map { dapp ->
                 var dappImageURL = dapp.toNullable()?.logoURL
                 var dappName = dapp.toNullable()?.name
+                val web3EthAccountRequest = web3Request as? Web3RequestDTO<RequestEthereumAccountsParams>
 
-                // TODO: hish
-//        if (web3Request is Web3RequestDTO<RequestEthereumAccountsParams>) {
-//            dappName = web3Request.request.params.appName
-//            dappImageURL = web3Request.request.params.appLogoUrl
-//        }
+                if (web3EthAccountRequest != null) {
+                    dappName = web3EthAccountRequest.request.params.appName
+                    dappImageURL = web3EthAccountRequest.request.params.appLogoUrl
+                }
 
                 val requestId = HostRequestId(
                     id = web3Request.id,

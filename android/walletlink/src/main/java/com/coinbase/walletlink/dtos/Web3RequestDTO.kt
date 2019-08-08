@@ -27,7 +27,7 @@ internal inline fun <reified T> Web3RequestDTO.Companion.fromJson(json: ByteArra
 
 internal data class Web3Request<T>(val method: RequestMethod, val params: T)
 
-internal data class RequestEthereumAccountsParams(val appName: String)
+internal data class RequestEthereumAccountsParams(val appName: String, val appLogoUrl: URL?)
 
 internal data class SignEthereumMessageParams(val message: String, val address: String, val addPrefix: Boolean)
 

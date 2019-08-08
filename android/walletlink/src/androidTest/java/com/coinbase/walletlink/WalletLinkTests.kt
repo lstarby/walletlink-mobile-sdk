@@ -6,7 +6,6 @@ import android.net.ConnectivityManager
 import android.util.Base64
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import com.coinbase.wallet.core.extensions.base64EncodedString
 import com.coinbase.wallet.crypto.ciphers.AES256GCM
 import com.coinbase.wallet.http.connectivity.Internet

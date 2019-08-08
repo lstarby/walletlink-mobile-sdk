@@ -8,11 +8,6 @@ struct GetEventsDTO: Codable {
     let error: String?
 }
 
-struct GetEventDTO: Codable {
-    let event: EventDTO?
-    let error: String?
-}
-
 struct EventDTO: Codable {
     let id: String
     let event: EventType

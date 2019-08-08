@@ -5,7 +5,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.net.URL
 
-class URLExtensionTests  {
+class URLExtensionTests {
     @Test
     fun testURLAppendPathWithoutTrailingSlash() {
         val url = URL("https://www.coinbase.com")
