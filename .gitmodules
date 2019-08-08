@@ -9,7 +9,7 @@
 [submodule "android/libraries/http"]
 	path = android/libraries/http
 	url = git@github.com:CoinbaseWallet/CBHTTP.git
-	branch = hish/android_lib
+	branch = master
 [submodule "android/libraries/database"]
 	path = android/libraries/database
 	url = git@github.com:CoinbaseWallet/CBDatabase.git
