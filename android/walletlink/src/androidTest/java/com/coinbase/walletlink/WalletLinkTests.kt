@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
+import timber.log.Timber
 import java.net.URL
 import java.util.concurrent.CountDownLatch
 
@@ -48,7 +49,7 @@ class WalletLinkTests {
             )
             .subscribe(
                 {
-                    println("wallet link connected!!")
+                    Timber.i("wallet link connected!!")
                     latch.countDown()
                 },
                 {
@@ -59,7 +60,7 @@ class WalletLinkTests {
         }
 
         val requests = walletLink.requestsObservable.blockingFirst()
-        println("walletlink requests $requests")
+        Timber.i("walletlink requests $requests")
 
         latch.await()
     }
@@ -71,25 +72,9 @@ class WalletLinkTests {
         val iv = "123456789012".toByteArray()
         val (encryptedData, authTag) = AES256GCM.encrypt(data, key, iv)
 
-        println(Base64.encodeToString(encryptedData, Base64.NO_WRAP))
+        Timber.i(Base64.encodeToString(encryptedData, Base64.NO_WRAP))
         val decryptedData = AES256GCM.decrypt(encryptedData, key, iv, authTag)
 
         Assert.assertEquals(data.base64EncodedString(), decryptedData.base64EncodedString())
     }
-
-//    @Test
-//    fun testAdapter() {
-//        val moshi = Moshi.Builder()
-//            .add(URL::class.java, URLAdapterAdapter())
-//            .add(BigDecimal::class.java, BigDecimalAdapterAdapter())
-//            .add(BigInteger::class.java, BigIntegerAdapterAdapter())
-//         //   .add(Web3RequestDTOAdapterAdapter())
-//            .build()
-//
-//        val type = Types.newParameterizedType(Web3RequestDTO::class.java, String::class.java, Any::class.java)
-//        val adapter = JSON.moshi.adapter<Map<String, Any>>(type)
-//
-//        val adapter: JsonAdapter<Web3RequestDTO<*>> = moshi.adapter(Web3RequestDTO::class.java)
-//        val movie = adapter.fromJson("poo")
-//    }
 }

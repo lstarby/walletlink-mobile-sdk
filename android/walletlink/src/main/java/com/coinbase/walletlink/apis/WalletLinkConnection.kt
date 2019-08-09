@@ -30,6 +30,7 @@ import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import timber.log.Timber
 import java.net.URL
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
@@ -250,7 +251,7 @@ internal class WalletLinkConnection private constructor(
             }
             .map { success ->
                 if (success) {
-                    println("[walletlink] successfully joined session ${session.id}")
+                    Timber.i("[walletlink] successfully joined session ${session.id}")
 
                     joinSessionEventsSubject.onNext(
                         JoinSessionEvent(
@@ -261,7 +262,7 @@ internal class WalletLinkConnection private constructor(
 
                     return@map true
                 } else {
-                    println("[walletlink] Invalid session ${session.id}. Removing...")
+                    Timber.i("[walletlink] Invalid session ${session.id}. Removing...")
 
                     linkRepository.delete(url = url, sessionId = session.id)
                     joinSessionEventsSubject.onNext(
