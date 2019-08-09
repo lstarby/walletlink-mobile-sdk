@@ -19,6 +19,11 @@ interface WalletLinkInterface {
     val requestsObservable: Observable<HostRequest>
 
     /**
+     * Get list of session
+     */
+    fun sessions(): List<Session>
+
+    /**
      * Starts WalletLink connection with the server if a stored session exists. Otherwise, this is a noop. This method
      * should be called immediately on app launch.
      *
