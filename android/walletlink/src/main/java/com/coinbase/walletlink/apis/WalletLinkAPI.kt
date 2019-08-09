@@ -50,7 +50,8 @@ internal class WalletLinkAPI {
             clazz = GetEventsDTO::class
         )
         .map { response ->
-            response.events.map { event ->
+            val events = response.events ?: emptyList()
+            events.map { event ->
                 ServerRequestDTO(
                     sessionId = sessionId,
                     type = ServerMessageType.Event,

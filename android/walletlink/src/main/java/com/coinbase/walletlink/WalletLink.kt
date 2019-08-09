@@ -94,10 +94,7 @@ class WalletLink(private val notificationUrl: URL, context: Context) : WalletLin
 
         return connection.link(sessionId = sessionId, secret = secret)
             .map { observeConnection(connection) }
-            .onErrorResumeNext { throwable ->
-                connections.remove(url)
-                throw throwable
-            }
+            .doOnError { connections.remove(url) }
     }
 
     override fun unlink(session: Session) = linkRepository.delete(session.url, session.id)

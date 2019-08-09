@@ -108,7 +108,7 @@ internal class WalletLinkConnection private constructor(
             .takeSingle()
             .flatMap { joinSessionEventsSubject.filter { it.sessionId == sessionId }.takeSingle() }
             .map { if (!it.joined) throw WalletLinkException.InvalidSession }
-            .timeout(1500, TimeUnit.SECONDS) // FIXME: hish
+            .timeout(15, TimeUnit.SECONDS)
             .logError()
             .onErrorResumeNext { exception ->
                 linkRepository.delete(url, sessionId)

@@ -160,7 +160,7 @@ internal class WalletLinkWebSocket(val url: URL) {
             .flatMap { callback.subject.takeSingle() }
             .map { it.type.isOK }
             .retryWithDelay(3, 1, TimeUnit.SECONDS)
-            .timeout(1500, TimeUnit.SECONDS) // FIXME: hish
+            .timeout(15, TimeUnit.SECONDS)
             .logError()
             .map { success ->
                 pendingCallbacks.remove(callback.requestId)
