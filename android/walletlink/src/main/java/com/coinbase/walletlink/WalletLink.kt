@@ -13,6 +13,7 @@ import com.coinbase.walletlink.models.HostRequest
 import com.coinbase.walletlink.models.HostRequestId
 import com.coinbase.walletlink.models.Session
 import com.coinbase.walletlink.models.ClientMetadataKey
+import com.coinbase.walletlink.models.RequestMethod
 import com.coinbase.walletlink.repositories.LinkRepository
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -20,8 +21,11 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import java.math.BigInteger
 import java.net.URL
+import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.TimeUnit
 
 /**
  * WalletLink SDK interface
@@ -37,7 +41,71 @@ class WalletLink(private val notificationUrl: URL, context: Context) : WalletLin
     private val disposeBag = CompositeDisposable()
     private var connections = ConcurrentHashMap<URL, WalletLinkConnection>()
 
-    override val requestsObservable: Observable<HostRequest> = requestsSubject.hide()
+    override val requestsObservable: Observable<HostRequest>  by lazy {
+        val observable1 = Observable.just(
+            HostRequest.DappPermission(
+                HostRequestId(
+                    UUID.randomUUID().toString(),
+                    "b",
+                    "c",
+                    URL("http://www.google.com"),
+                    URL("http://www.google.com"),
+                    URL("http://www.google.com"),
+                    "Crypto Kitties",
+                    RequestMethod.SignEthereumTransaction
+                )
+            )
+        )
+            .delay(3, TimeUnit.SECONDS)
+            .map { it as HostRequest }
+
+        val observable2 = Observable.just(
+            HostRequest.SignMessage(
+                HostRequestId(
+                    UUID.randomUUID().toString(),
+                    "b",
+                    "c",
+                    URL("http://www.google.com"),
+                    URL("http://www.google.com"),
+                    URL("http://www.google.com"),
+                    "Crypto Kitties",
+                    RequestMethod.SignEthereumTransaction
+                ),
+                "0xdF0635793e91D4F8e7426Dbd9Ed08471186F428D",
+                "message",
+                false
+            )
+        )
+            .delay(6, TimeUnit.SECONDS)
+            .map { it as HostRequest }
+
+        val observable3 = Observable.just(
+            HostRequest.SignAndSubmitTx(
+                HostRequestId(
+                    UUID.randomUUID().toString(),
+                    "b",
+                    "c",
+                    URL("http://www.google.com"),
+                    URL("http://www.google.com"),
+                    URL("http://www.google.com"),
+                    "Crypto Kitties",
+                    RequestMethod.SignEthereumTransaction
+                ),
+                "0xdF0635793e91D4F8e7426Dbd9Ed08471186F428D",
+                "toAddress",
+                BigInteger.ONE,
+                ByteArray(0),
+                null,
+                null,
+                null,
+                1,
+                false))
+            .delay(8, TimeUnit.SECONDS)
+            .map { it as HostRequest }
+
+        Observable.concat(observable1, observable2, observable3)
+    }
+
 
     override fun sessions(): List<Session> = linkRepository.sessions
 
