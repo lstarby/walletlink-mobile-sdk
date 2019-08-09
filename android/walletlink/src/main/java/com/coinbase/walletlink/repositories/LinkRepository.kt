@@ -220,7 +220,6 @@ internal class LinkRepository(context: Context) : Destroyable {
         decrypted: ByteArray,
         url: URL
     ): Single<Optional<HostRequest>> {
-
         when (method) {
             RequestMethod.RequestEthereumAccounts -> {
                 return hostRequestId<RequestEthereumAccountsParams>(serverRequest, decrypted, url)
