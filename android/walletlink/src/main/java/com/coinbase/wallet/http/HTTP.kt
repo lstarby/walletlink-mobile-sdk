@@ -64,11 +64,11 @@ object HTTP {
                     }
 
                     override fun onResponse(call: Call, response: Response) {
-                        val json =
-                            response.body()?.string() ?: return emitter.onError(HTTPException.UnabelToDeserialize)
+                        val json = response.body()?.string()
+                            ?: return emitter.onError(HTTPException.UnabelToDeserialize)
 
-                        val result =
-                            JSON.fromJsonString<T>(json) ?: return emitter.onError(HTTPException.UnabelToDeserialize)
+                        val result = JSON.fromJsonString<T>(json)
+                            ?: return emitter.onError(HTTPException.UnabelToDeserialize)
 
                         emitter.onSuccess(result)
                     }

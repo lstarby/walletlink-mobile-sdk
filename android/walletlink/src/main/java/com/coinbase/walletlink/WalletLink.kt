@@ -76,7 +76,7 @@ class WalletLink(private val notificationUrl: URL, context: Context) : WalletLin
         secret: String,
         url: URL,
         userId: String,
-        metadata: ConcurrentHashMap<ClientMetadataKey, String>
+        metadata: Map<ClientMetadataKey, String>
     ): Single<Unit> {
         connections[url]?.let { connection ->
             return connection.link(sessionId = sessionId, secret = secret)

@@ -4,6 +4,7 @@ import android.content.Context
 import com.coinbase.wallet.core.extensions.asBigInteger
 import com.coinbase.wallet.core.extensions.asHexEncodedData
 import com.coinbase.wallet.core.extensions.asJsonMap
+import com.coinbase.wallet.core.extensions.justNull
 import com.coinbase.wallet.core.extensions.zipOrEmpty
 import com.coinbase.wallet.core.util.Optional
 import com.coinbase.wallet.crypto.extensions.decryptUsingAES256GCM
@@ -31,6 +32,7 @@ import com.coinbase.walletlink.models.Session
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.addTo
 import timber.log.Timber
 import java.math.BigInteger
@@ -174,24 +176,22 @@ internal class LinkRepository(context: Context) : Destroyable {
      */
     @Suppress("UNCHECKED_CAST")
     fun getHostRequest(dto: ServerRequestDTO, url: URL): Single<Optional<HostRequest>> {
-        val session = getSession(dto.sessionId, url) ?: return Single.just(null)
+        val session = getSession(dto.sessionId, url) ?: return Singles.justNull()
 
         try {
             val decrypted = dto.data.decryptUsingAES256GCM(secret = session.secret)
             val jsonString = decrypted.toString(Charsets.UTF_8)
-            val json = jsonString.asJsonMap() ?: return Single.just(null)
+            val json = jsonString.asJsonMap() ?: return Singles.justNull()
 
-            when (dto.event) {
+            return when (dto.event) {
                 EventType.Web3Request -> {
-                    val requestObject = json["request"] as? Map<String, Any> ?: return Single.just(null)
-                    val requestMethodString = requestObject["method"] as? String ?: return Single.just(null)
-                    val method = RequestMethod.fromRawValue(requestMethodString) ?: return Single.just(null)
+                    val requestObject = json["request"] as? Map<String, Any> ?: return Singles.justNull()
+                    val requestMethodString = requestObject["method"] as? String ?: return Singles.justNull()
+                    val method = RequestMethod.fromRawValue(requestMethodString) ?: return Singles.justNull()
 
                     parseWeb3Request(dto, method, decrypted, url)
                 }
-                EventType.Web3Response -> {
-                    Single.just(null)
-                }
+                EventType.Web3Response -> { Singles.justNull() }
                 EventType.Web3RequestCanceled -> {
                     parseWeb3Request(dto, RequestMethod.RequestCanceled, decrypted, url)
                 }
@@ -200,7 +200,7 @@ internal class LinkRepository(context: Context) : Destroyable {
             Timber.e(exception)
         }
 
-        return Single.just(null)
+        return Singles.justNull()
     }
 
     // MARK: - Private

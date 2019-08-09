@@ -53,7 +53,7 @@ interface WalletLinkInterface {
         secret: String,
         url: URL,
         userId: String,
-        metadata: ConcurrentHashMap<ClientMetadataKey, String>
+        metadata: Map<ClientMetadataKey, String>
     ): Single<Unit>
 
     /**

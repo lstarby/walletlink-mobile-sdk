@@ -16,7 +16,6 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.net.URL
-import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
 
 @RunWith(AndroidJUnit4::class)
@@ -37,15 +36,14 @@ class WalletLinkTests {
         val latch = CountDownLatch(1)
 
         GlobalScope.launch {
-            // FIXME: hish - pass regular map and internally have kotlin convert it to ConcurrentHashMap
-            val metadata = ConcurrentHashMap<ClientMetadataKey, String>()
+            val metadata = mutableMapOf<ClientMetadataKey, String>()
             metadata[ClientMetadataKey.EthereumAddress] = "0x03F6f282373900C2F6CE53B5A9f595b92aC5f5E5"
 
             walletLink.link(
-                sessionId = "54075a65ae1ee3f29b1c562bd4688c94",
+                sessionId = "bcb17224553554b53053d70cc6d05cbb",
                 userId = "1",
-                secret = "051b4d61a7cf0258e736f47624d118e3807282a7730aa02be480aa4a4ab444b0",
-                url = URL("https://walletlink.herokuapp.com/rpc"),
+                secret = "d2a4092708e194c850715682ee862b0a767f5a268637649aae0a4ea0eadb216f",
+                url = URL("https://www.walletlink.org"),
                 metadata = metadata
             )
             .subscribe(
@@ -58,13 +56,10 @@ class WalletLinkTests {
                     latch.countDown()
                 }
             )
-//
-//            walletLink.requestsObservable
-//                .subscribe {
-//                    println(it)
-//                  //  latch.countDown()
-//                }
         }
+
+        val requests = walletLink.requestsObservable.blockingFirst()
+        println("walletlink requests $requests")
 
         latch.await()
     }

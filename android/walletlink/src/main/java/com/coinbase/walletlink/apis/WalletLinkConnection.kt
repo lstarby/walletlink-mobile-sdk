@@ -7,12 +7,13 @@ import com.coinbase.wallet.core.extensions.toPrefixedHexString
 import com.coinbase.wallet.core.extensions.unwrap
 import com.coinbase.wallet.core.extensions.zipOrEmpty
 import com.coinbase.wallet.crypto.extensions.encryptUsingAES256GCM
-import com.coinbase.wallet.crypto.extensions.sha256
+import com.coinbase.wallet.http.Credentials
 import com.coinbase.wallet.http.appendingPathComponent
 import com.coinbase.wallet.http.connectivity.Internet
 import com.coinbase.walletlink.dtos.Web3ResponseDTO
 import com.coinbase.walletlink.dtos.asJsonString
 import com.coinbase.walletlink.exceptions.WalletLinkException
+import com.coinbase.walletlink.extensions.create
 import com.coinbase.walletlink.models.ClientMetadataKey
 import com.coinbase.walletlink.models.Dapp
 import com.coinbase.walletlink.models.EventType
@@ -35,12 +36,12 @@ import java.util.concurrent.TimeUnit
 
 private data class JoinSessionEvent(val sessionId: String, val joined: Boolean)
 
-internal class WalletLinkConnection(
-    val url: URL,
-    val userId: String,
-    val notificationUrl: URL,
-    val linkRepository: LinkRepository,
-    val metadata: ConcurrentHashMap<ClientMetadataKey, String>
+internal class WalletLinkConnection private constructor(
+    private val url: URL,
+    private val userId: String,
+    private val notificationUrl: URL,
+    private val linkRepository: LinkRepository,
+    private val metadata: ConcurrentHashMap<ClientMetadataKey, String>
 ) {
     private val requestsSubject = PublishSubject.create<HostRequest>()
     private val joinSessionEventsSubject = PublishSubject.create<JoinSessionEvent>()
@@ -62,6 +63,20 @@ internal class WalletLinkConnection(
 
         observeConnection()
     }
+
+    constructor(
+        url: URL,
+        userId: String,
+        notificationUrl: URL,
+        linkRepository: LinkRepository,
+        metadata: Map<ClientMetadataKey, String>
+    ) : this(
+        url = url,
+        userId = userId,
+        notificationUrl = notificationUrl,
+        linkRepository = linkRepository,
+        metadata = ConcurrentHashMap(metadata)
+    )
 
     /**
      * Stop connection when WalletLink instance is deallocated
@@ -92,7 +107,7 @@ internal class WalletLinkConnection(
             .takeSingle()
             .flatMap { joinSessionEventsSubject.filter { it.sessionId == sessionId }.takeSingle() }
             .map { if (!it.joined) throw WalletLinkException.InvalidSession }
-            .timeout(15, TimeUnit.SECONDS)
+            .timeout(1500, TimeUnit.SECONDS) // FIXME: hish
             .logError()
             .onErrorResumeNext { exception ->
                 linkRepository.delete(url, sessionId)
@@ -214,9 +229,10 @@ internal class WalletLinkConnection(
         .map { joinSession(it).asUnit().onErrorReturn { Unit } }
         .zipOrEmpty()
         .map { fetchPendingRequests() }
+        .logError()
 
     private fun joinSession(session: Session): Single<Boolean> {
-        val sessionKey = "${session.id}, ${session.secret} WalletLink".sha256()
+        val sessionKey = Credentials.create(session.id, session.secret).password
 
         return socket.joinSession(sessionKey, session.id)
             .flatMap { success ->
@@ -290,40 +306,6 @@ internal class WalletLinkConnection(
     }
 
     // Request Handlers
-
-//    private fun handleIncomingRequest(request: ServerRequestDTO) {
-//        val signatureRequest = parseRequest(request) ?: return
-//
-//        // FIXME: hish - delete this once UI is available
-//        when (signatureRequest) {
-//            is HostRequest.DappPermission -> Schedulers.io().scheduleDirect {
-//                val eth = metadata[ClientMetadataKey.EthereumAddress] ?: return@scheduleDirect
-//                val response = Web3ResponseDTO(
-//                    id = signatureRequest.requestId.id,
-//                    result = listOf(eth.toLowerCase())
-//                )
-//
-//                val json = response.asJsonString()
-//                val session = sessionDAO.getSession(
-//                    id = request.sessionId,
-//                    url = signatureRequest.requestId.rpcUrl
-//                ) ?: return@scheduleDirect
-//
-//                val encryptedData = json.encryptUsingAES256GCM(session.secret)
-//                socket.publishEvent(
-//                    ResponseEventType.WEB3_RESPONSE,
-//                    encryptedData,
-//                    signatureRequest.requestId.sessionId
-//                )
-//                    .logError()
-//                    .subscribe()
-//            }
-//            else -> {
-//            }
-//        }
-//
-//        requestsSubject.onNext(signatureRequest)
-//    }
 
     private inline fun <reified T> submitWeb3Response(response: Web3ResponseDTO<T>, session: Session): Single<Unit> {
         val json = response.asJsonString()

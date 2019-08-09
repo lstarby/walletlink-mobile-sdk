@@ -7,12 +7,12 @@ internal enum class RequestMethod(val rawValue: String) {
     /**
      * Request ethereum address from the user
      */
-    @Json(name = "RequestEthereumAccounts") RequestEthereumAccounts("RequestEthereumAccounts"),
+    @Json(name = "requestEthereumAccounts") RequestEthereumAccounts("requestEthereumAccounts"),
 
     /**
      * Ask user to sign a message using ethereum private key
      */
-    @Json(name = "SignEthereumMessage") SignEthereumMessage("SignEthereumMessage"),
+    @Json(name = "signEthereumMessage") SignEthereumMessage("signEthereumMessage"),
 
     /**
      * Ask user to sign (and optionally submit) an ethereum transaction

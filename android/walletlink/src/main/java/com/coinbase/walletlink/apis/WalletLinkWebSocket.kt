@@ -2,6 +2,7 @@ package com.coinbase.walletlink.apis
 
 import com.coinbase.wallet.core.extensions.asJsonMap
 import com.coinbase.wallet.core.extensions.logError
+import com.coinbase.wallet.core.extensions.retryWithDelay
 import com.coinbase.wallet.core.extensions.takeSingle
 import com.coinbase.wallet.core.util.ConcurrentLruCache
 import com.coinbase.wallet.http.connectivity.Internet
@@ -158,8 +159,8 @@ internal class WalletLinkWebSocket(val url: URL) {
             .flatMap { connection.sendString(jsonString) }
             .flatMap { callback.subject.takeSingle() }
             .map { it.type.isOK }
-            // FIXME: hish - add back .retry(3, delay: 1)
-            .timeout(15, TimeUnit.SECONDS)
+            .retryWithDelay(3, 1, TimeUnit.SECONDS)
+            .timeout(1500, TimeUnit.SECONDS) // FIXME: hish
             .logError()
             .map { success ->
                 pendingCallbacks.remove(callback.requestId)

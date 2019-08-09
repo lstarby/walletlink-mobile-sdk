@@ -1,6 +1,6 @@
 package com.coinbase.walletlink
 
-import com.coinbase.walletlink.apis.appendingPathComponent
+import com.coinbase.wallet.http.appendingPathComponent
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.net.URL
