@@ -41,7 +41,7 @@ object HTTP {
         parameters: Map<String, String>? = null,
         headers: Map<String, String>? = null,
         clazz: KClass<T>
-    ): Single<T> {
+    ): Single<HTTPResponse<T>> {
         var builder = Request.Builder()
         var url = service.url.appendingPathComponent(path)
 
@@ -57,20 +57,12 @@ object HTTP {
         val request = builder.url(url).build()
 
         return Single
-            .create<T> { emitter ->
+            .create<HTTPResponse<T>> { emitter ->
                 client.newCall(request).enqueue(object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        emitter.onError(e)
-                    }
+                    override fun onFailure(call: Call, e: IOException) { emitter.onError(e) }
 
                     override fun onResponse(call: Call, response: Response) {
-                        val json = response.body()?.string()
-                            ?: return emitter.onError(HTTPException.UnabelToDeserialize)
-
-                        val result = JSON.fromJsonString<T>(json)
-                            ?: return emitter.onError(HTTPException.UnabelToDeserialize)
-
-                        emitter.onSuccess(result)
+                        emitter.onSuccess(response.asHTTPResponse<T>())
                     }
                 })
             }
@@ -96,7 +88,7 @@ object HTTP {
         parameters: Map<String, String>? = null,
         headers: Map<String, String>? = null,
         clazz: KClass<T>
-    ): Single<T> {
+    ): Single<HTTPResponse<T>> {
         val request = buildPostRequest(
             service = service,
             path = path,
@@ -106,20 +98,12 @@ object HTTP {
         )
 
         return Single
-            .create<T> { emitter ->
+            .create<HTTPResponse<T>> { emitter ->
                 client.newCall(request).enqueue(object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        emitter.onError(e)
-                    }
+                    override fun onFailure(call: Call, e: IOException) { emitter.onError(e) }
 
                     override fun onResponse(call: Call, response: Response) {
-                        val json =
-                            response.body()?.string() ?: return emitter.onError(HTTPException.UnabelToDeserialize)
-
-                        val result =
-                            JSON.fromJsonString<T>(json) ?: return emitter.onError(HTTPException.UnabelToDeserialize)
-
-                        emitter.onSuccess(result)
+                        emitter.onSuccess(response.asHTTPResponse<T>())
                     }
                 })
             }
