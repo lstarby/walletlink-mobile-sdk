@@ -7,9 +7,9 @@ import com.coinbase.wallet.core.extensions.toPrefixedHexString
 import com.coinbase.wallet.core.extensions.unwrap
 import com.coinbase.wallet.core.extensions.zipOrEmpty
 import com.coinbase.wallet.crypto.extensions.encryptUsingAES256GCM
-import com.coinbase.wallet.http.Credentials
-import com.coinbase.wallet.http.appendingPathComponent
+import com.coinbase.wallet.http.models.Credentials
 import com.coinbase.wallet.http.connectivity.Internet
+import com.coinbase.wallet.http.extensions.appendingPathComponent
 import com.coinbase.walletlink.dtos.Web3ResponseDTO
 import com.coinbase.walletlink.dtos.asJsonString
 import com.coinbase.walletlink.exceptions.WalletLinkException

@@ -7,7 +7,6 @@ import com.coinbase.wallet.core.extensions.takeSingle
 import com.coinbase.wallet.core.util.ConcurrentLruCache
 import com.coinbase.wallet.http.connectivity.Internet
 import com.coinbase.wallet.http.models.WebIncomingDataType
-import com.coinbase.wallet.http.models.WebIncomingText
 import com.coinbase.wallet.http.websocket.WebSocket
 import com.coinbase.walletlink.dtos.ClientResponseDTO
 import com.coinbase.walletlink.dtos.JoinSessionMessageDTO
@@ -204,7 +203,7 @@ internal class WalletLinkWebSocket(val url: URL) {
     }
 
     private fun processIncomingData(incoming: WebIncomingDataType) {
-        val incomingText = incoming as? WebIncomingText ?: return
+        val incomingText = incoming as? WebIncomingDataType.WebIncomingText ?: return
         val jsonString = incomingText.string
         val json: Map<String, Any> = jsonString.asJsonMap() ?: return
         val typeString: String = json["type"] as? String ?: return
