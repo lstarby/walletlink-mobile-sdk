@@ -5,6 +5,7 @@ import com.coinbase.walletlink.models.RequestMethod
 import com.squareup.moshi.Types
 
 internal class Web3ResponseDTO<T> private constructor(
+    val type: String = "WEB3_RESPONSE",
     val id: String,
     val response: Web3Response<T>
 ) {
