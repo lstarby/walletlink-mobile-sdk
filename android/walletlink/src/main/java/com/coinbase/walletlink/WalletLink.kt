@@ -99,12 +99,10 @@ class WalletLink(private val notificationUrl: URL, context: Context) : WalletLin
 
     override fun unlink(session: Session) = linkRepository.delete(session.url, session.id)
 
-    override fun setMetadata(key: ClientMetadataKey, value: String): Single<Unit> {
-        val setMetadataSingles = connections.values
+    override fun setMetadata(key: ClientMetadataKey, value: String): Single<Unit> = connections.values
             .map { it.setMetadata(key = key, value = value).asUnit().onErrorReturn { Single.just(Unit) } }
-
-        return Single.zip(setMetadataSingles) { it.filterIsInstance<Unit>() }.asUnit()
-    }
+            .zipOrEmpty()
+            .asUnit()
 
     override fun approve(requestId: HostRequestId, signedData: ByteArray): Single<Unit> {
         val connection = connections[requestId.url] ?: return Single.error(

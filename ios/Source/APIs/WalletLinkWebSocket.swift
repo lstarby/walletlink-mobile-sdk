@@ -9,8 +9,8 @@ private typealias WalletLinkCallback = (requestId: Int32, subject: ReplaySubject
 /// Represents a WalletLink WebSocket
 final class WalletLinkWebSocket {
     private let serialScheduler = SerialDispatchQueueScheduler(internalSerialQueueName: "WalletLinkWebSocket.serial")
-    private let disposeBag = DisposeBag()
     private let connection: WebSocket
+    private var disposeBag = DisposeBag()
     private var callbackSequence = AtomicInt32()
     private var incomingRequestsSubject = PublishSubject<ServerRequestDTO>()
     private var pendingCallbacks = BoundedCache<Int32, ReplaySubject<ClientResponseDTO>>(maxSize: 300)
@@ -31,20 +31,23 @@ final class WalletLinkWebSocket {
         self.connection = connection
         incomingRequestsObservable = incomingRequestsSubject.asObservable()
         connectionStateObservable = connection.connectionStateObservable
+    }
+
+    /// Connect to WalletLink server
+    func connect() -> Single<Void> {
+        disposeBag = DisposeBag()
 
         connection.incomingObservable
             .observeOn(serialScheduler)
             .subscribe(onNext: { [weak self] in self?.processIncomingData($0) })
             .disposed(by: disposeBag)
-    }
 
-    /// Connect to WalletLink server
-    func connect() -> Single<Void> {
         return connection.connect()
     }
 
     /// Disconnect from WalletLink server
     func disconnect() -> Single<Void> {
+        disposeBag = DisposeBag()
         return connection.disconnect()
     }
 
@@ -81,8 +84,8 @@ final class WalletLinkWebSocket {
     /// Set session config once a link is established
     ///
     /// - Parameters:
-    ///     - webhookId: Webhook ID used to push notifications to mobile client
-    ///     - webhookUrl: Webhook URL used to push notifications to mobile client
+    ///   - webhookId: Webhook ID used to push notifications to mobile client
+    ///   - webhookUrl: Webhook URL used to push notifications to mobile client
     ///   - metadata: Metadata forwarded to host
     ///   - sessionId: Session ID scanned offline (QR code, NFC, etc)
     ///

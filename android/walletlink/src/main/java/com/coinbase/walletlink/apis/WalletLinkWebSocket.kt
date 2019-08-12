@@ -21,6 +21,7 @@ import com.coinbase.walletlink.models.EventType
 import com.coinbase.walletlink.models.ServerMessageType
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
@@ -38,7 +39,6 @@ internal class WalletLinkWebSocket(val url: URL) {
     private val disposeBag = CompositeDisposable()
     private val connection = WebSocket(url)
     private var callbackSequence = AtomicInteger()
-    private val requestIdSequence = AtomicInteger()
     private var incomingRequestsSubject = PublishSubject.create<ServerRequestDTO>()
     private var pendingCallbacks = ConcurrentLruCache<Int, ReplaySubject<ClientResponseDTO>>(maxSize = 300)
 
@@ -52,17 +52,17 @@ internal class WalletLinkWebSocket(val url: URL) {
      */
     val connectionStateObservable = connection.connectionStateObservable
 
-    init {
-        connection.incomingObservable
-            .observeOn(serialScheduler)
-            .subscribe { processIncomingData(it) }
-        .let { disposeBag.add(it) }
-    }
-
     /**
      * Connect to WalletLink server
      */
     fun connect(): Single<Unit> {
+        disposeBag.clear()
+
+        connection.incomingObservable
+            .observeOn(serialScheduler)
+            .subscribe { processIncomingData(it) }
+            .addTo(disposeBag)
+
         return connection.connect()
     }
 
@@ -70,6 +70,7 @@ internal class WalletLinkWebSocket(val url: URL) {
      * Disconnect from WalletLink server
      */
     fun disconnect(): Single<Unit> {
+        disposeBag.clear()
         return connection.disconnect()
     }
 
@@ -148,7 +149,7 @@ internal class WalletLinkWebSocket(val url: URL) {
         return send(message, callback = callback)
     }
 
-        // Send message helper(s)
+    // Send message helper(s)
 
     private fun send(message: JsonSerializable, callback: WalletLinkCallback): Single<Boolean> {
         val jsonString = message.asJsonString()
@@ -175,7 +176,7 @@ internal class WalletLinkWebSocket(val url: URL) {
     // Pending requests callback management
 
     private fun createCallback(): WalletLinkCallback {
-        val requestId = requestIdSequence.incrementAndGet()
+        val requestId = callbackSequence.incrementAndGet()
         val subject = ReplaySubject.create<ClientResponseDTO>(1)
 
         pendingCallbacks[requestId] = subject

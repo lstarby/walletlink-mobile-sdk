@@ -80,7 +80,7 @@ internal class WalletLinkConnection private constructor(
     )
 
     /**
-     * Stop connection when WalletLink instance is deallocated
+     * Stop connection
      */
     fun disconnect() {
         disposeBag.clear()
@@ -110,10 +110,7 @@ internal class WalletLinkConnection private constructor(
             .map { if (!it.joined) throw WalletLinkException.InvalidSession }
             .timeout(15, TimeUnit.SECONDS)
             .logError()
-            .onErrorResumeNext { exception ->
-                linkRepository.delete(url, sessionId)
-                throw exception
-            }
+            .doOnError { linkRepository.delete(url, sessionId) }
     }
 
     /**
@@ -190,7 +187,7 @@ internal class WalletLinkConnection private constructor(
     /**
      * Send signature request rejection to the requesting host
      *
-     * @param sessionId WalletLink host generated request ID
+     * @param requestId WalletLink host generated request ID
      *
      * @return A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
      */
@@ -230,20 +227,14 @@ internal class WalletLinkConnection private constructor(
         .map { joinSession(it).asUnit().onErrorReturn { Unit } }
         .zipOrEmpty()
         .map { fetchPendingRequests() }
-        .logError()
 
     private fun joinSession(session: Session): Single<Boolean> {
-        val sessionKey = Credentials.create(session.id, session.secret).password
+        val credentials = Credentials.create(session.id, session.secret)
 
-        return socket.joinSession(sessionKey, session.id)
+        return socket.joinSession(credentials.password, session.id)
             .flatMap { success ->
                 if (!success) {
-                    joinSessionEventsSubject.onNext(
-                        JoinSessionEvent(
-                            sessionId = session.id,
-                            joined = false
-                        )
-                    )
+                    joinSessionEventsSubject.onNext(JoinSessionEvent(sessionId = session.id, joined = false))
                     return@flatMap Single.just(false)
                 }
 
@@ -253,24 +244,14 @@ internal class WalletLinkConnection private constructor(
                 if (success) {
                     Timber.i("[walletlink] successfully joined session ${session.id}")
 
-                    joinSessionEventsSubject.onNext(
-                        JoinSessionEvent(
-                            sessionId = session.id,
-                            joined = true
-                        )
-                    )
+                    joinSessionEventsSubject.onNext(JoinSessionEvent(sessionId = session.id, joined = true))
 
                     return@map true
                 } else {
                     Timber.i("[walletlink] Invalid session ${session.id}. Removing...")
 
                     linkRepository.delete(url = url, sessionId = session.id)
-                    joinSessionEventsSubject.onNext(
-                        JoinSessionEvent(
-                            sessionId = session.id,
-                            joined = false
-                        )
-                    )
+                    joinSessionEventsSubject.onNext(JoinSessionEvent(sessionId = session.id, joined = false))
 
                     return@map false
                 }
@@ -300,7 +281,7 @@ internal class WalletLinkConnection private constructor(
         linkRepository.getSessions(url)
             .map { linkRepository.getPendingRequests(it, url) }
             .zipOrEmpty()
-            .map { requests -> requests.flatMap { it } }
+            .map { requests -> requests.flatten() }
             .logError()
             .subscribeBy(onSuccess = { requests -> requests.forEach { requestsSubject.onNext(it) } })
             .addTo(disposeBag)
@@ -335,26 +316,26 @@ internal class WalletLinkConnection private constructor(
         val sessionChangesObservable = linkRepository.observeSessions(url)
             .distinctUntilChanged()
             .observeOn(connSerialScheduler)
-            .flatMap { sessions ->
+            .concatMap { sessions ->
                 // If credentials list is not empty, try connecting to WalletLink server
                 if (sessions.isNotEmpty()) {
-                    return@flatMap startConnection().map { sessions }.onErrorReturn { sessions }.toObservable()
+                    return@concatMap startConnection().map { sessions }.onErrorReturn { sessions }.toObservable()
                 }
 
                 // Otherwise, disconnect
-                return@flatMap stopConnection().map { sessions }.onErrorReturn { sessions }.toObservable()
+                return@concatMap stopConnection().map { sessions }.onErrorReturn { sessions }.toObservable()
             }
 
         Observables.combineLatest(isConnectedObservable, sessionChangesObservable)
             .observeOn(sessionSerialScheduler)
             .debounce(300, TimeUnit.MILLISECONDS)
-            .flatMap { (isConnected, sessions) ->
+            .concatMap { (isConnected, sessions) ->
                 if (!isConnected) {
                     joinedSessionIds.clear()
-                    return@flatMap Observable.just(Unit)
+                    return@concatMap Observable.just(Unit)
                 }
 
-                val currentSessionIds = HashSet<String>(sessions.map { it.id })
+                val currentSessionIds = HashSet(sessions.map { it.id })
 
                 // remove unlinked sessions
                 joinedSessionIds = joinedSessionIds.filterTo(HashSet()) { currentSessionIds.contains(it) }

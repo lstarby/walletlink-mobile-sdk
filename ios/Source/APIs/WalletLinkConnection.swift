@@ -91,10 +91,7 @@ class WalletLinkConnection {
             .map { guard $0.joined else { throw WalletLinkError.invalidSession } }
             .timeout(15, scheduler: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
             .logError()
-            .catchError { err in
-                self.linkRepository.delete(url: self.url, sessionId: sessionId)
-                throw err
-            }
+            .do(onError: { _ in self.linkRepository.delete(url: self.url, sessionId: sessionId) })
     }
 
     /// Set metadata in all active sessions. This metadata will be forwarded to all the hosts
@@ -107,16 +104,17 @@ class WalletLinkConnection {
     func setMetadata(key: ClientMetadataKey, value: String) -> Single<Void> {
         metadata[key] = value
 
-        let singles = linkRepository.getSessions(for: url).compactMap { session -> Single<Bool>? in
-            if let encryptedValue = try? value.encryptUsingAES256GCM(secret: session.secret) {
-                return self.socket.setMetadata(key: key, value: encryptedValue, for: session.id).logError()
+        return linkRepository.getSessions(for: url)
+            .compactMap { session -> Single<Bool>? in
+                if let encryptedValue = try? value.encryptUsingAES256GCM(secret: session.secret) {
+                    return self.socket.setMetadata(key: key, value: encryptedValue, for: session.id).logError()
+                }
+
+                assertionFailure("Unable to encrypt \(key):\(value)")
+                return nil
             }
-
-            assertionFailure("Unable to encrypt \(key):\(value)")
-            return nil
-        }
-
-        return Single.zip(singles).asVoid()
+            .zip()
+            .asVoid()
     }
 
     /// Send signature request approval to the requesting host

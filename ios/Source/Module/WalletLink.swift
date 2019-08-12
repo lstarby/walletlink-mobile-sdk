@@ -85,10 +85,10 @@ public class WalletLink: WalletLinkProtocol {
     }
 
     public func setMetadata(key: ClientMetadataKey, value: String) -> Single<Void> {
-        let setMetadataSingles = connections.values
+        return connections.values
             .map { $0.setMetadata(key: key, value: value).catchErrorJustReturn(()) }
-
-        return Single.zip(setMetadataSingles).asVoid()
+            .zip()
+            .asVoid()
     }
 
     public func approve(requestId: HostRequestId, responseData: Data) -> Single<Void> {

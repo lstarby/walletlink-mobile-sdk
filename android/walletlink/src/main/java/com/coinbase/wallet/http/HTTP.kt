@@ -62,7 +62,7 @@ object HTTP {
                     override fun onFailure(call: Call, e: IOException) { emitter.onError(e) }
 
                     override fun onResponse(call: Call, response: Response) {
-                        emitter.onSuccess(response.asHTTPResponse<T>())
+                        emitter.onSuccess(response.asHTTPResponse())
                     }
                 })
             }
@@ -103,7 +103,7 @@ object HTTP {
                     override fun onFailure(call: Call, e: IOException) { emitter.onError(e) }
 
                     override fun onResponse(call: Call, response: Response) {
-                        emitter.onSuccess(response.asHTTPResponse<T>())
+                        emitter.onSuccess(response.asHTTPResponse())
                     }
                 })
             }
