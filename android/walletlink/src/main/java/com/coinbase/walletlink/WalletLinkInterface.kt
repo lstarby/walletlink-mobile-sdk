@@ -43,7 +43,7 @@ interface WalletLinkInterface {
      * @param sessionId WalletLink host generated session ID
      * @param secret WalletLink host/guest shared secret
      * @param userId User ID to deliver push notifications to
-     * @param rpcUrl WalletLink server websocket URL
+     * @param url WalletLink server websocket URL
      * @param metadata client metadata forwarded to host once link is established
      *
      * @return A single wrapping `Unit` if connection was successful. Otherwise, an exception is thrown

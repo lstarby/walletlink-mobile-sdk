@@ -115,7 +115,7 @@ public class WalletLink: WalletLinkProtocol {
             return .error(WalletLinkError.sessionNotFound)
         }
 
-        return linkRepository.getPendingRequests(session: session, url: url)
+        return linkRepository.getPendingRequests(session: session)
             .map { requests -> HostRequest in
                 guard let request = requests.first(where: { eventId == $0.hostRequestId.eventId }) else {
                     throw WalletLinkError.eventNotFound

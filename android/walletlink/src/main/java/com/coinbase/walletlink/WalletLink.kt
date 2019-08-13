@@ -26,8 +26,8 @@ import java.util.concurrent.ConcurrentHashMap
 /**
  * WalletLink SDK interface
  *
- * @property userId User ID to deliver push notifications to
  * @property notificationUrl Webhook URL used to push notifications to mobile client
+ * @param context Android context
  */
 class WalletLink(private val notificationUrl: URL, context: Context) : WalletLinkInterface {
     private val requestsSubject = PublishSubject.create<HostRequest>()
@@ -129,7 +129,7 @@ class WalletLink(private val notificationUrl: URL, context: Context) : WalletLin
         val session = linkRepository.getSession(sessionId, url)
             ?: return Single.error(WalletLinkException.SessionNotFound)
 
-        return linkRepository.getPendingRequests(session, url)
+        return linkRepository.getPendingRequests(session)
             .map { requests -> requests.first { eventId == it.hostRequestId.eventId } }
     }
 

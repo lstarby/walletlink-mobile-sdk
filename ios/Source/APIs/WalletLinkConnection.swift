@@ -260,7 +260,7 @@ class WalletLinkConnection {
 
     private func fetchPendingRequests() {
         _ = linkRepository.getSessions(for: url)
-            .map { session in self.linkRepository.getPendingRequests(session: session, url: self.url) }
+            .map { session in self.linkRepository.getPendingRequests(session: session) }
             .zip()
             .map { requests in requests.flatMap { $0 } }
             .logError()

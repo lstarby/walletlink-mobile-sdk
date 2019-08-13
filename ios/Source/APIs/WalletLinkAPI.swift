@@ -29,16 +29,14 @@ class WalletLinkAPI {
     /// Fetch all unseen events
     ///
     /// - Parameters:
-    ///   - sessionId: The session ID
-    ///   - unseen: If true, returns only unseen requests
-    ///   - sessionKey: Generated session key
+    ///   - session: WalletLink connection session
     ///
     /// - Returns: A Single wrapping a list of encrypted host requests
-    func getUnseenEvents(sessionId: String, secret: String, url: URL) -> Single<[ServerRequestDTO]> {
-        let credentials = Credentials(sessionId: sessionId, secret: secret)
+    func getUnseenEvents(session: Session) -> Single<[ServerRequestDTO]> {
+        let credentials = Credentials(sessionId: session.id, secret: session.secret)
 
         return HTTP.get(
-            service: HTTPService(url: url),
+            service: HTTPService(url: session.url),
             path: "/events",
             credentials: credentials,
             parameters: ["unseen": "true"],
@@ -47,7 +45,7 @@ class WalletLinkAPI {
         .map { response in
             response.body.events.map { event in
                 ServerRequestDTO(
-                    sessionId: sessionId,
+                    sessionId: session.id,
                     type: .event,
                     event: event.event,
                     eventId: event.id,

@@ -96,15 +96,14 @@ final class LinkRepository {
     /// Get pending requests for given sessionID. Canceled requests will be filtered out
     ///
     /// - Parameters:
-    ///     - sessionId: Session ID
-    ///     - url: The URL of the session
+    ///     - session: WalletLink connection session=
     ///
     /// - Returns: List of pending requests
-    func getPendingRequests(session: Session, url: URL) -> Single<[HostRequest]> {
-        return api.getUnseenEvents(sessionId: session.id, secret: session.secret, url: url)
+    func getPendingRequests(session: Session) -> Single<[HostRequest]> {
+        return api.getUnseenEvents(session: session)
             .flatMap { requests -> Single<[HostRequest]> in
                 requests
-                    .map { self.getHostRequest(using: $0, url: url) }
+                    .map { self.getHostRequest(using: $0, url: session.url) }
                     .zip()
                     .map { requests in requests.compactMap { $0 } }
             }
@@ -123,7 +122,7 @@ final class LinkRepository {
                     self.markCancelledEventAsSeen(
                         requestId: request.hostRequestId,
                         cancelationRequestId: cancelationRequest.hostRequestId,
-                        url: url
+                        url: session.url
                     )
 
                     return false

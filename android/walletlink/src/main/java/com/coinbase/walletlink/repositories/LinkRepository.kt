@@ -132,18 +132,14 @@ internal class LinkRepository(context: Context) : Destroyable {
     /**
      * Get pending requests for given sessionID. Canceled requests will be filtered out
      *
-     * @param sessionId Session ID
-     * @param url The URL of the session
+     * @param session WalletLink connection session
      *
      * @return List of pending requests
      */
-    fun getPendingRequests(
-        session: Session,
-        url: URL
-    ): Single<List<HostRequest>> = api.getUnseenEvents(session.id, session.secret, url)
+    fun getPendingRequests(session: Session): Single<List<HostRequest>> = api.getUnseenEvents(session)
         .flatMap { requests ->
             requests
-                .map { getHostRequest(it, url) }
+                .map { getHostRequest(it, session.url) }
                 .zipOrEmpty()
                 .map { hostRequests -> hostRequests.mapNotNull { it.toNullable() } }
         }
@@ -157,7 +153,7 @@ internal class LinkRepository(context: Context) : Destroyable {
                     it.hostRequestId.canCancel(request.hostRequestId)
                 } ?: return@filter true
 
-                markCancelledEventAsSeen(request.hostRequestId, cancelationRequest.hostRequestId, url)
+                markCancelledEventAsSeen(request.hostRequestId, cancelationRequest.hostRequestId, session.url)
 
                 return@filter false
             }
@@ -318,11 +314,11 @@ internal class LinkRepository(context: Context) : Destroyable {
             .map { dapp ->
                 var dappImageURL = dapp.toNullable()?.logoURL
                 var dappName = dapp.toNullable()?.name
-                val web3EthAccountRequest = web3Request as? Web3RequestDTO<RequestEthereumAccountsParams>
+                val params = web3Request.request.params as? RequestEthereumAccountsParams
 
-                if (web3EthAccountRequest != null) {
-                    dappName = web3EthAccountRequest.request.params.appName
-                    dappImageURL = web3EthAccountRequest.request.params.appLogoUrl
+                if (params != null) {
+                    dappName = params.appName
+                    dappImageURL = params.appLogoUrl
                 }
 
                 val requestId = HostRequestId(

@@ -279,7 +279,7 @@ internal class WalletLinkConnection private constructor(
 
     private fun fetchPendingRequests() {
         linkRepository.getSessions(url)
-            .map { linkRepository.getPendingRequests(it, url) }
+            .map { linkRepository.getPendingRequests(it) }
             .zipOrEmpty()
             .map { requests -> requests.flatten() }
             .logError()

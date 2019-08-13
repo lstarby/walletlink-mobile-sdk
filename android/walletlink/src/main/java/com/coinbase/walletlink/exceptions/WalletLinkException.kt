@@ -9,11 +9,6 @@ sealed class WalletLinkException(msg: String) : Exception(msg) {
     object UnableToEncryptData : WalletLinkException("Unable to encrypt data")
 
     /**
-     * Unable to decrypt message from host
-     */
-    object UnableToDecryptData : WalletLinkException("Unable to decrypt data")
-
-    /**
      * Thrown when trying to conenct with an invalid session
      */
     object InvalidSession : WalletLinkException("Unable to encrypt data")

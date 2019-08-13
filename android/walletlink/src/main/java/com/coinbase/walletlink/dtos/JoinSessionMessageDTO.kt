@@ -9,7 +9,7 @@ import com.coinbase.walletlink.models.ClientMessageType
  *
  * @property type Type of message
  * @property id Client generated request ID
- * @property sesionId Server generated session ID
+ * @property sessionId Server generated session ID
  * @property sessionKey Client computed session key
  */
 internal data class JoinSessionMessageDTO(

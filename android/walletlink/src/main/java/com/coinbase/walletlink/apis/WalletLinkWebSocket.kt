@@ -18,6 +18,7 @@ import com.coinbase.wallet.core.interfaces.JsonSerializable
 import com.coinbase.walletlink.models.ClientMetadataKey
 import com.coinbase.walletlink.models.EventType
 import com.coinbase.walletlink.models.ServerMessageType
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -44,7 +45,7 @@ internal class WalletLinkWebSocket(val url: URL) {
     /**
      * Incoming WalletLink requests
      */
-    val incomingRequestsObservable = incomingRequestsSubject.hide()
+    val incomingRequestsObservable: Observable<ServerRequestDTO> = incomingRequestsSubject.hide()
 
     /**
      * WalletLink Connection state
@@ -207,9 +208,8 @@ internal class WalletLinkWebSocket(val url: URL) {
         val jsonString = incomingText.string
         val json: Map<String, Any> = jsonString.asJsonMap() ?: return
         val typeString: String = json["type"] as? String ?: return
-        val messageType: ServerMessageType = ServerMessageType.fromRawValue(typeString) ?: return
 
-        when (messageType) {
+        when (ServerMessageType.fromRawValue(typeString) ?: return) {
             ServerMessageType.OK, ServerMessageType.Fail, ServerMessageType.PublishEventOK -> {
                 val response = ClientResponseDTO.fromJsonString(jsonString) ?: return
                 receivedClientResponse(response)

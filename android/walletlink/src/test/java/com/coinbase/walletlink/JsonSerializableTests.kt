@@ -1,13 +1,9 @@
 package com.coinbase.walletlink
 
-import com.coinbase.wallet.core.jsonadapters.UrlAdapter
-import com.coinbase.walletlink.dtos.JoinSessionMessageDTO
 import com.coinbase.wallet.core.interfaces.JsonSerializable
-import com.coinbase.wallet.core.util.JSON
-import com.squareup.moshi.Moshi
+import com.coinbase.walletlink.dtos.JoinSessionMessageDTO
 import org.junit.Assert
 import org.junit.Test
-import java.net.URL
 
 class JsonSerializableTests {
     @Test
@@ -27,16 +23,7 @@ class JsonSerializableTests {
         Assert.assertEquals(expected, json)
     }
 
-    fun convertToJson(serializable: JsonSerializable): String {
+    private fun convertToJson(serializable: JsonSerializable): String {
         return serializable.asJsonString()
     }
-}
-
-inline fun <reified T> toJsonString(instance: T): String {
-    val moshi = Moshi.Builder()
-        .add(URL::class.java, UrlAdapter())
-        .build()
-
-    val adapter = JSON.moshi.adapter<T>(T::class.java)
-    return adapter.toJson(instance)
 }
