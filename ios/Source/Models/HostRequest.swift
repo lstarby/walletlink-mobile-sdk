@@ -4,7 +4,13 @@ import BigInt
 
 public enum HostRequest {
     /// A message signature request
-    case signMessage(requestId: HostRequestId, address: String, message: String, isPrefixed: Bool)
+    case signMessage(
+        requestId: HostRequestId,
+        address: String,
+        message: String,
+        isPrefixed: Bool,
+        typedDataJson: String?
+    )
 
     /// A transaction signature request
     case signAndSubmitTx(
@@ -32,7 +38,7 @@ public enum HostRequest {
     /// The name of the dapp making the request
     public var dappName: String? {
         switch self {
-        case let .signMessage(hostRequestId, _, _, _),
+        case let .signMessage(hostRequestId, _, _, _, _),
              let .signAndSubmitTx(hostRequestId, _, _, _, _, _, _, _, _, _),
              let .dappPermission(hostRequestId),
              let .submitSignedTx(hostRequestId, _, _),
@@ -44,7 +50,7 @@ public enum HostRequest {
     /// The url of the dapp making the request
     public var dappUrl: URL {
         switch self {
-        case let .signMessage(hostRequestId, _, _, _),
+        case let .signMessage(hostRequestId, _, _, _, _),
              let .signAndSubmitTx(hostRequestId, _, _, _, _, _, _, _, _, _),
              let .dappPermission(hostRequestId),
              let .submitSignedTx(hostRequestId, _, _),
@@ -56,7 +62,7 @@ public enum HostRequest {
     /// WalletLink event ID
     var eventId: String {
         switch self {
-        case let .signMessage(hostRequestId, _, _, _),
+        case let .signMessage(hostRequestId, _, _, _, _),
              let .signAndSubmitTx(hostRequestId, _, _, _, _, _, _, _, _, _),
              let .dappPermission(hostRequestId),
              let .submitSignedTx(hostRequestId, _, _),
@@ -68,7 +74,7 @@ public enum HostRequest {
     /// WalletLink request ID
     var requestId: String {
         switch self {
-        case let .signMessage(hostRequestId, _, _, _),
+        case let .signMessage(hostRequestId, _, _, _, _),
              let .signAndSubmitTx(hostRequestId, _, _, _, _, _, _, _, _, _),
              let .dappPermission(hostRequestId),
              let .submitSignedTx(hostRequestId, _, _),
@@ -80,7 +86,7 @@ public enum HostRequest {
     /// WalletLink session ID
     var sessionId: String {
         switch self {
-        case let .signMessage(hostRequestId, _, _, _),
+        case let .signMessage(hostRequestId, _, _, _, _),
              let .signAndSubmitTx(hostRequestId, _, _, _, _, _, _, _, _, _),
              let .dappPermission(hostRequestId),
              let .submitSignedTx(hostRequestId, _, _),
@@ -92,7 +98,7 @@ public enum HostRequest {
     /// WalletLink Host request ID
     public var hostRequestId: HostRequestId {
         switch self {
-        case let .signMessage(hostRequestId, _, _, _),
+        case let .signMessage(hostRequestId, _, _, _, _),
              let .signAndSubmitTx(hostRequestId, _, _, _, _, _, _, _, _, _),
              let .dappPermission(hostRequestId),
              let .submitSignedTx(hostRequestId, _, _),
