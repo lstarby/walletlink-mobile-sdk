@@ -14,7 +14,8 @@ sealed class HostRequest(open val hostRequestId: HostRequestId) {
         override val hostRequestId: HostRequestId,
         val address: String,
         val message: String,
-        val isPrefixed: Boolean
+        val isPrefixed: Boolean,
+        val typedDataJson: String?
     ) : HostRequest(hostRequestId)
 
     /**

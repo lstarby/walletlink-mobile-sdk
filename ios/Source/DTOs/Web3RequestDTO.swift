@@ -23,6 +23,7 @@ struct SignEthereumMessageParams: Codable {
     let message: String
     let address: String
     let addPrefix: Bool
+    let typedDataJson: String?
 }
 
 struct SignEthereumTransactionParams: Codable {

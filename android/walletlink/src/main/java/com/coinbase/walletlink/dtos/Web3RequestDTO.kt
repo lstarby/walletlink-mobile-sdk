@@ -40,7 +40,8 @@ internal data class SignEthereumTransactionParams(
     val gasPriceInWei: String?,
     val gasLimit: String?,
     val chainId: Int,
-    val shouldSubmit: Boolean
+    val shouldSubmit: Boolean,
+    val typedDataJson: String?
 )
 
 internal data class SubmitEthereumTransactionParams(val signedTransaction: String, val chainId: Int)

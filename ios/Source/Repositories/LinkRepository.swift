@@ -218,7 +218,8 @@ final class LinkRepository {
                         requestId: requestId,
                         address: web3Request.request.params.address,
                         message: web3Request.request.params.message,
-                        isPrefixed: web3Request.request.params.addPrefix
+                        isPrefixed: web3Request.request.params.addPrefix,
+                        typedDataJson: web3Request.request.params.typedDataJson
                     )
                 }
 
