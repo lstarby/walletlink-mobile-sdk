@@ -29,7 +29,12 @@ internal data class Web3Request<T>(val method: RequestMethod, val params: T)
 
 internal data class RequestEthereumAccountsParams(val appName: String, val appLogoUrl: URL?)
 
-internal data class SignEthereumMessageParams(val message: String, val address: String, val addPrefix: Boolean)
+internal data class SignEthereumMessageParams(
+    val message: String,
+    val address: String,
+    val addPrefix: Boolean,
+    val typedDataJson: String?
+)
 
 internal data class SignEthereumTransactionParams(
     val fromAddress: String,
@@ -40,8 +45,7 @@ internal data class SignEthereumTransactionParams(
     val gasPriceInWei: String?,
     val gasLimit: String?,
     val chainId: Int,
-    val shouldSubmit: Boolean,
-    val typedDataJson: String?
+    val shouldSubmit: Boolean
 )
 
 internal data class SubmitEthereumTransactionParams(val signedTransaction: String, val chainId: Int)
