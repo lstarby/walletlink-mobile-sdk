@@ -30,6 +30,8 @@ DerivedData
 
 # AppCode
 /.idea
+**/.project
+android/walletlink/bin/**
 
 # Ruby/Node
 vendor/bundle
