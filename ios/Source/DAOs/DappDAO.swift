@@ -1,4 +1,5 @@
-// Copyright (c) 2017-2019 Coinbase Inc. See LICENSE
+// Copyright (c) 2018-2019 Coinbase, Inc. <https://coinbase.com/>
+// Licensed under the Apache License, version 2.0
 
 import CBDatabase
 import RxSwift
