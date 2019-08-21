@@ -25,6 +25,8 @@ dependencies {
     kapt(
         // Room
         "androidx.room:room-compiler:${versions.room}",
+        // Moshi
+        "com.squareup.moshi:moshi-kotlin-codegen:${versions.moshi}",
     )
 
     implementation(
