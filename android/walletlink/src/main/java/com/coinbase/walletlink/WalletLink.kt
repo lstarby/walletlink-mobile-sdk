@@ -133,7 +133,9 @@ class WalletLink(private val notificationUrl: URL, context: Context) : WalletLin
             ?: return Single.error(WalletLinkException.SessionNotFound)
 
         return linkRepository.getPendingRequests(session)
-            .map { requests -> requests.first { eventId == it.hostRequestId.eventId } }
+            .map { requests ->
+                requests.firstOrNull { eventId == it.hostRequestId.eventId } ?: throw WalletLinkException.EventNotFound
+            }
     }
 
     // MARK: - Helpers
