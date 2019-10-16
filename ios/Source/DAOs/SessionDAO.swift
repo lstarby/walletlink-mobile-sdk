@@ -71,6 +71,15 @@ final class SessionDAO {
         }
     }
 
+    /// Observe for all session updates
+    ///
+    /// - Returns: An observable of all sessions
+    func observeSessions() -> Observable<[Session]> {
+        return store.observe(.sessions)
+            .map { $0?.items ?? [] }
+            .distinctUntilChanged()
+    }
+
     /// Observe for distinct stored sessionIds update
     ///
     /// - Parameters:

@@ -26,6 +26,10 @@ public class WalletLink: WalletLinkProtocol {
         requests = requestsSubject.asObservable()
     }
 
+    public func observeSessions() -> Observable<[Session]> {
+        return linkRepository.observeSessions()
+    }
+
     public func connect(userId: String, metadata: [ClientMetadataKey: String]) {
         let connections = ConcurrentCache<URL, WalletLinkConnection>()
         let sessionsByUrl: [URL: [Session]] = linkRepository.sessions
