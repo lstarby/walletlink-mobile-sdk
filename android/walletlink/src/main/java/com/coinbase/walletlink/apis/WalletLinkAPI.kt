@@ -4,13 +4,13 @@
 package com.coinbase.walletlink.apis
 
 import com.coinbase.wallet.core.extensions.asUnit
-import com.coinbase.wallet.core.extensions.logError
 import com.coinbase.wallet.http.HTTP
 import com.coinbase.wallet.http.models.Credentials
 import com.coinbase.wallet.http.models.HTTPService
 import com.coinbase.walletlink.dtos.GetEventsDTO
 import com.coinbase.walletlink.dtos.ServerRequestDTO
 import com.coinbase.walletlink.extensions.create
+import com.coinbase.walletlink.extensions.logError
 import com.coinbase.walletlink.models.ServerMessageType
 import com.coinbase.walletlink.models.Session
 import io.reactivex.Single

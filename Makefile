@@ -9,3 +9,10 @@ lint:
 
 deps:
 	rm -rf libraries; git submodule update --init --force --recursive
+ifdef update
+	# Pull latest submodule version for each submodule
+	git submodule foreach 'git checkout master && git reset --hard origin/master && git pull || :'
+else
+  	# Pull pinned submodule version for each submodule
+	git submodule foreach 'git checkout $$sha1 || :'
+endif
