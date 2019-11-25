@@ -4,7 +4,6 @@
 package com.coinbase.walletlink.apis
 
 import com.coinbase.wallet.core.extensions.asUnit
-import com.coinbase.wallet.core.extensions.logError
 import com.coinbase.wallet.core.extensions.takeSingle
 import com.coinbase.wallet.core.extensions.toPrefixedHexString
 import com.coinbase.wallet.core.extensions.unwrap
@@ -17,6 +16,7 @@ import com.coinbase.walletlink.dtos.Web3ResponseDTO
 import com.coinbase.walletlink.dtos.asJsonString
 import com.coinbase.walletlink.exceptions.WalletLinkException
 import com.coinbase.walletlink.extensions.create
+import com.coinbase.walletlink.extensions.logError
 import com.coinbase.walletlink.models.ClientMetadataKey
 import com.coinbase.walletlink.models.Dapp
 import com.coinbase.walletlink.models.EventType

@@ -4,7 +4,6 @@
 package com.coinbase.walletlink.apis
 
 import com.coinbase.wallet.core.extensions.asJsonMap
-import com.coinbase.wallet.core.extensions.logError
 import com.coinbase.wallet.core.extensions.retryWithDelay
 import com.coinbase.wallet.core.extensions.takeSingle
 import com.coinbase.wallet.core.util.ConcurrentLruCache
@@ -18,6 +17,7 @@ import com.coinbase.walletlink.dtos.ServerRequestDTO
 import com.coinbase.walletlink.dtos.SetMetadataMessageDTO
 import com.coinbase.walletlink.dtos.SetSessionConfigMessageDTO
 import com.coinbase.wallet.core.interfaces.JsonSerializable
+import com.coinbase.walletlink.extensions.logError
 import com.coinbase.walletlink.models.ClientMetadataKey
 import com.coinbase.walletlink.models.EventType
 import com.coinbase.walletlink.models.ServerMessageType
