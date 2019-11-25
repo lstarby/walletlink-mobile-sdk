@@ -8,6 +8,6 @@ import timber.log.Timber
  *
  * @return The original single
  */
-fun <T> Single<T>.logError(msg: String? = null): Single<T> = doOnError {
+internal fun <T> Single<T>.logError(msg: String? = null): Single<T> = doOnError {
     Timber.e(it, "WalletLink exception $msg ${it.localizedMessage}".trim())
 }

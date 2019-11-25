@@ -9,6 +9,6 @@ import timber.log.Timber
  *
  * @return The original observable
  */
-fun <T> Observable<T>.logError(msg: String? = null): Observable<T> = doOnError {
+internal fun <T> Observable<T>.logError(msg: String? = null): Observable<T> = doOnError {
     Timber.e(it, "WalletLink exception $msg ${it.localizedMessage}".trim())
 }
