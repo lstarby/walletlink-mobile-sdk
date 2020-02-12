@@ -154,7 +154,7 @@ final class LinkRepository {
             let decrypted = try? dto.data.decryptUsingAES256GCM(secret: session.secret),
             let json = try? JSONSerialization.jsonObject(with: decrypted, options: []) as? [String: Any]
         else {
-            assertionFailure("Invalid request \(self)")
+            print("Invalid request \(self)")
             return Single.just(nil)
         }
 
@@ -165,7 +165,7 @@ final class LinkRepository {
                 let requestMethodString = requestObject["method"] as? String,
                 let method = RequestMethod(rawValue: requestMethodString)
             else {
-                assertionFailure("Invalid web3Request \(self)")
+                print("Invalid web3Request \(self)")
                 return Single.just(nil)
             }
 
@@ -279,7 +279,7 @@ final class LinkRepository {
         // Cancel existing request
         case .requestCanceled:
             guard let dto = Web3RequestCanceledDTO.fromJSON(decrypted) else {
-                assertionFailure("Invalid Web3RequestCanceled \(self)")
+                print("Invalid Web3RequestCanceled \(self)")
                 return Single.just(nil)
             }
 
@@ -309,7 +309,7 @@ final class LinkRepository {
         url: URL
     ) -> Single<(Web3RequestDTO<T>, HostRequestId)?> {
         guard let web3Request = Web3RequestDTO<T>.fromJSON(decrypted) else {
-            assertionFailure("Invalid web3Request \(paramType)")
+            print("Invalid web3Request \(paramType)")
             return Single.just(nil)
         }
 

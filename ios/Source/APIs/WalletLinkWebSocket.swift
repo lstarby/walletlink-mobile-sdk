@@ -161,7 +161,7 @@ final class WalletLinkWebSocket {
 
     /// This is called when the host sends a response to a request initiated by the signer
     private func receivedClientResponse(_ response: ClientResponseDTO) {
-        guard let requestId = response.id else { return assertionFailure("Invalid message response \(response)") }
+        guard let requestId = response.id else { return print("Invalid message response \(response)") }
 
         let subject = pendingCallbacks[requestId]
 
@@ -182,19 +182,19 @@ final class WalletLinkWebSocket {
             let typeString = json["type"] as? String,
             let type = ServerMessageType(rawValue: typeString)
         else {
-            return assertionFailure("Unknown WalletLink type \(incoming)")
+            return print("Unknown WalletLink type \(incoming)")
         }
 
         switch type {
         case .ok, .fail, .publishEventOK:
             guard let response = ClientResponseDTO.fromJSONString(jsonString) else {
-                return assertionFailure("[walletlink] Invalid client response \(jsonString)")
+                return print("[walletlink] Invalid client response \(jsonString)")
             }
 
             receivedClientResponse(response)
         case .event:
             guard let request = ServerRequestDTO.fromJSONString(jsonString) else {
-                return assertionFailure("[walletlink] Invalid server request \(jsonString)")
+                return print("[walletlink] Invalid server request \(jsonString)")
             }
 
             receivedServerRequest(request)
