@@ -111,7 +111,7 @@ class WalletLinkConnection {
                     return self.socket.setMetadata(key: key, value: encryptedValue, for: session.id).logError()
                 }
 
-                assertionFailure("Unable to encrypt \(key):\(value)")
+                print("Unable to encrypt \(key):\(value)")
                 return nil
             }
             .zip()

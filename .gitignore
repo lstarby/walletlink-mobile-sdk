@@ -45,3 +45,4 @@ UserInterfaceState.xcuserstate
 android/.idea/*
 android/.idea/**
 android/.idea
+/ios/.DS_Store
