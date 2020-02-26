@@ -31,6 +31,7 @@ public protocol WalletLinkProtocol: class {
     /// - Parameters:
     ///     - sessionId: WalletLink host generated session ID
     ///     - secret: WalletLink host/guest shared secret
+    ///     - version: WalletLink server version
     ///     - url: WalletLink base URL
     ///     - userId: User ID to deliver push notifications to
     ///     - metadata: client metadata forwarded to host once link is established
@@ -39,6 +40,7 @@ public protocol WalletLinkProtocol: class {
     func link(
         sessionId: String,
         secret: String,
+        version: String?,
         url: URL,
         userId: String,
         metadata: [ClientMetadataKey: String]
@@ -48,7 +50,9 @@ public protocol WalletLinkProtocol: class {
     ///
     /// - Parameters:
     ///     - session: Session to unlink
-    func unlink(session: Session)
+    ///
+    /// - Returns: A single wrapping `Void` if operation was successful. Otherwise, an exception is thrown
+    func unlink(session: Session) -> Single<Void>
 
     /// Set metadata in all active sessions. This metadata will be forwarded to all the hosts
     ///

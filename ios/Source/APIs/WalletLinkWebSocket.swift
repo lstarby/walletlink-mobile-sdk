@@ -14,10 +14,14 @@ final class WalletLinkWebSocket {
     private var disposeBag = DisposeBag()
     private var callbackSequence = AtomicInt32()
     private var incomingRequestsSubject = PublishSubject<ServerRequestDTO>()
+    private let disconnectSessionSubject = PublishSubject<String>()
     private var pendingCallbacks = BoundedCache<Int32, ReplaySubject<ClientResponseDTO>>(maxSize: 300)
 
     /// Incoming WalletLink requests
     let incomingRequestsObservable: Observable<ServerRequestDTO>
+
+    /// Disconnect session requests
+    let disconnectSessionObservable: Observable<String>
 
     /// WalletLink Connection state
     let connectionStateObservable: Observable<WebConnectionState>
@@ -32,6 +36,7 @@ final class WalletLinkWebSocket {
         self.connection = connection
         incomingRequestsObservable = incomingRequestsSubject.asObservable()
         connectionStateObservable = connection.connectionStateObservable
+        disconnectSessionObservable = disconnectSessionSubject.asObservable()
     }
 
     /// Connect to WalletLink server
@@ -92,8 +97,8 @@ final class WalletLinkWebSocket {
     ///
     /// - Returns: A single wrapping `Boolean` to indicate operation was successful
     func setSessionConfig(
-        webhookId: String,
-        webhookUrl: URL,
+        webhookId: String?,
+        webhookUrl: URL?,
         metadata: [String: String],
         for sessionId: String
     ) -> Single<Bool> {
@@ -102,7 +107,7 @@ final class WalletLinkWebSocket {
             id: callback.requestId,
             sessionId: sessionId,
             webhookId: webhookId,
-            webhookUrl: webhookUrl.absoluteString,
+            webhookUrl: webhookUrl?.absoluteString,
             metadata: metadata
         )
 
@@ -182,7 +187,7 @@ final class WalletLinkWebSocket {
             let typeString = json["type"] as? String,
             let type = ServerMessageType(rawValue: typeString)
         else {
-            return print("Unknown WalletLink type \(incoming)")
+            return print("[walletlink] Unknown WalletLink type \(incoming)")
         }
 
         switch type {
@@ -198,6 +203,16 @@ final class WalletLinkWebSocket {
             }
 
             receivedServerRequest(request)
+        case .getSessionConfigOK, .sessionConfigUpdated:
+            guard
+                let sessionId = json["sessionId"] as? String,
+                let metadata = json["metadata"] as? [String: Any],
+                let destroyedValue = metadata[ClientMetadataKey.destroyed.rawValue] as? String,
+                destroyedValue == "1"
+            else { return }
+
+            print("[walletlink] destroy session \(sessionId)")
+            disconnectSessionSubject.onNext(sessionId)
         }
     }
 }

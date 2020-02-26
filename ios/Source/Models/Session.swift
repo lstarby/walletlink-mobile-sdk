@@ -13,6 +13,18 @@ public struct Session: Hashable, Equatable, Codable {
 
     /// WalletLink server websocket URL
     public let url: URL
+
+    /// WalletLink version
+    public let version: String?
+
+    /// DApp name that initiated the new wallet link connection
+    public let dappName: String?
+
+    /// DApp image that initiated the new wallet link connection
+    public let dappImageURL: URL?
+
+    /// DApp URL that initiated the new wallet link connection
+    public let dappURL: URL?
 }
 
 // Used to encode/decode array of `Session`s

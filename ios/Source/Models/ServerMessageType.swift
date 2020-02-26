@@ -14,12 +14,18 @@ enum ServerMessageType: String, Codable {
     /// A successful response to a client `PublishEvent`
     case publishEventOK = "PublishEventOK"
 
+    /// Session configuration were updated
+    case sessionConfigUpdated = "SessionConfigUpdated"
+
+    /// A successful response for session configuration request
+    case getSessionConfigOK = "GetSessionConfigOK"
+
     /// An error response to a client initiated request
     case fail = "Fail"
 
     var isOK: Bool {
         switch self {
-        case .ok, .publishEventOK:
+        case .ok, .publishEventOK, .sessionConfigUpdated, .getSessionConfigOK:
             return true
         case .fail, .event:
             return false

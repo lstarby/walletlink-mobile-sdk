@@ -6,4 +6,7 @@ import Foundation
 public enum ClientMetadataKey: String {
     /// Client ethereum address metadata key
     case ethereumAddress = "EthereumAddress"
+
+    /// Flag to destroy secure session on both client and host side
+    case destroyed = "__destroyed"
 }

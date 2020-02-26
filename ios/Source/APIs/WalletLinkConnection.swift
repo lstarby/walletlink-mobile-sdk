@@ -14,7 +14,6 @@ private typealias JoinSessionEvent = (sessionId: String, joined: Bool)
 class WalletLinkConnection {
     private let userId: String
     private let notificationUrl: URL
-    private let url: URL
     private let socket: WalletLinkWebSocket
     private let isConnectedObservable: Observable<Bool>
     private let joinSessionEventsSubject = PublishSubject<JoinSessionEvent>()
@@ -23,8 +22,14 @@ class WalletLinkConnection {
     private var metadata: [ClientMetadataKey: String]
     private let linkRepository: LinkRepository
 
+    /// Websocket connection URL
+    let url: URL
+
     /// Incoming host requests for action
     let requestsObservable: Observable<HostRequest>
+
+    /// Incoming request to destroy session
+    let disconnectSessionObservable: Observable<String>
 
     /// Constructor
     ///
@@ -51,11 +56,40 @@ class WalletLinkConnection {
         socket = WalletLinkWebSocket(url: url.appendingPathComponent("rpc"))
         requestsObservable = requestsSubject.asObservable()
         isConnectedObservable = socket.connectionStateObservable.map { $0.isConnected }
+        disconnectSessionObservable = socket.disconnectSessionObservable
 
         socket.incomingRequestsObservable
             .flatMap { [weak self] dto -> Single<HostRequest?> in
                 guard let self = self else { return Single.just(nil) }
                 return self.linkRepository.getHostRequest(using: dto, url: self.url)
+            }
+            .map { [weak self] request -> HostRequest? in
+                guard let self = self, let request = request else { return nil }
+
+                let hostRequestId = request.hostRequestId
+                let foundSession = self.linkRepository.sessions
+                    .first { $0.url == hostRequestId.url && $0.id == hostRequestId.sessionId }
+
+                guard
+                    let session = foundSession,
+                    session.version != nil,
+                    case .dappPermission = request
+                else {
+                    return request
+                }
+
+                // for WalletLink v > 1, grab dapp details from EIP1102 request
+                self.linkRepository.saveSession(
+                    url: session.url,
+                    sessionId: session.id,
+                    secret: session.secret,
+                    version: session.version,
+                    dappName: hostRequestId.dappName,
+                    dappImageURL: hostRequestId.dappImageURL,
+                    dappURL: hostRequestId.dappURL
+                )
+
+                return request
             }
             .unwrap()
             .subscribe(onNext: { [weak self] in self?.requestsSubject.onNext($0) })
@@ -75,16 +109,25 @@ class WalletLinkConnection {
     /// - Parameters:
     ///     - sessionId: WalletLink host generated session ID
     ///     - secret: WalletLink host/guest shared secret
+    ///     - version: WalletLink server version
     ///
     /// - Returns: A single wrapping `Void` if connection was successful. Otherwise, an exception is thrown
-    func link(sessionId: String, secret: String) -> Single<Void> {
+    func link(sessionId: String, secret: String, version: String?) -> Single<Void> {
         if let session = linkRepository.getSession(id: sessionId, url: url), session.secret == secret {
             return .justVoid()
         }
 
         return isConnectedObservable
             .do(onSubscribe: {
-                self.linkRepository.saveSession(url: self.url, sessionId: sessionId, secret: secret)
+                self.linkRepository.saveSession(
+                    url: self.url,
+                    sessionId: sessionId,
+                    secret: secret,
+                    version: version,
+                    dappName: nil,
+                    dappImageURL: nil,
+                    dappURL: nil
+                )
             })
             .filter { $0 }
             .takeSingle()
@@ -116,6 +159,22 @@ class WalletLinkConnection {
             }
             .zip()
             .asVoid()
+    }
+
+    /// Destroy session
+    ///
+    /// - Parameters:
+
+    ///   - sessionId: Session ID scanned offline (QR code, NFC, etc)
+    ///
+    /// - Returns: A single wrapping `Boolean` to indicate operation was successful
+    func destroySession(for sessionId: String) -> Single<Bool> {
+        return socket.setSessionConfig(
+            webhookId: nil,
+            webhookUrl: nil,
+            metadata: [ClientMetadataKey.destroyed.rawValue: "1"],
+            for: sessionId
+        )
     }
 
     /// Send signature request approval to the requesting host
