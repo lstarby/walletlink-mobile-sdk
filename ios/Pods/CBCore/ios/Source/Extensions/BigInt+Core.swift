@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2019 Coinbase Inc. See LICENSE
+// Copyright (c) 2017-2020 Coinbase Inc. See LICENSE
 
 import BigInt
 
@@ -10,6 +10,13 @@ extension BigInt {
         guard let hex = hex else { return nil }
 
         self.init(hex.hasPrefix("0x") ? String(hex.dropFirst(2)) : hex, radix: 16)
+    }
+
+    /// Optionally returns a BigInt from a given base64 string
+    ///
+    /// - Parameter base64: The base64 string
+    public init?(base64: String) {
+        self.init(base64, radix: 16)
     }
 
     /// Constructor to convert string to BigInt with added scientific notation parsing support i.e. 3.3e18

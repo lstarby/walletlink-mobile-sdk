@@ -20,7 +20,7 @@
     "ios": "11.0"
   },
   "swift_versions": "4.2",
-  "source_files": "ios/Source/**/*",
+  "source_files": "ios/Source/**/*.swift",
   "dependencies": {
     "RxSwift": [
       "~> 4.4.0"

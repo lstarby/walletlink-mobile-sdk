@@ -30,8 +30,8 @@ PODS:
 
 DEPENDENCIES:
   - BigInt (~> 3.1.0)
-  - "CBCore (from `git@github.com:CoinbaseWallet/CBCore.git`, commit `5de07d5d6db3fa16856b5311a962e67894e84215`)"
-  - "CBCrypto (from `git@github.com:CoinbaseWallet/CBCrypto.git`, commit `3c3b3c0b1ea6ba502342f624df758df47ab0a56c`)"
+  - "CBCore (from `git@github.com:CoinbaseWallet/CBCore.git`, commit `c0794273603bcd5e53b770f3d3595e333b4bc356`)"
+  - "CBCrypto (from `git@github.com:CoinbaseWallet/CBCrypto.git`, commit `9b0990148600a7eb9b996b7f060b76761f6792ce`)"
   - "CBDatabase (from `git@github.com:CoinbaseWallet/CBDatabase.git`, commit `7ee0ac6c73f4a270c0f0fee023953e63ab87ea5a`)"
   - "CBHTTP (from `git@github.com:CoinbaseWallet/CBHTTP.git`, commit `a616dfe10ee470fe1c0fb19fa605a142f634612a`)"
   - "CBStore (from `git@github.com:CoinbaseWallet/Stores.git`, commit `444c4d462a91068729f245852fd111be5261f78c`)"
@@ -42,9 +42,8 @@ DEPENDENCIES:
   - SwiftLint
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - BigInt
-    - CryptoSwift
     - RxAtomic
     - RxCocoa
     - RxSwift
@@ -52,13 +51,15 @@ SPEC REPOS:
     - Starscream
     - SwiftFormat
     - SwiftLint
+  trunk:
+    - CryptoSwift
 
 EXTERNAL SOURCES:
   CBCore:
-    :commit: 5de07d5d6db3fa16856b5311a962e67894e84215
+    :commit: c0794273603bcd5e53b770f3d3595e333b4bc356
     :git: "git@github.com:CoinbaseWallet/CBCore.git"
   CBCrypto:
-    :commit: 3c3b3c0b1ea6ba502342f624df758df47ab0a56c
+    :commit: 9b0990148600a7eb9b996b7f060b76761f6792ce
     :git: "git@github.com:CoinbaseWallet/CBCrypto.git"
   CBDatabase:
     :commit: 7ee0ac6c73f4a270c0f0fee023953e63ab87ea5a
@@ -72,10 +73,10 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   CBCore:
-    :commit: 5de07d5d6db3fa16856b5311a962e67894e84215
+    :commit: c0794273603bcd5e53b770f3d3595e333b4bc356
     :git: "git@github.com:CoinbaseWallet/CBCore.git"
   CBCrypto:
-    :commit: 3c3b3c0b1ea6ba502342f624df758df47ab0a56c
+    :commit: 9b0990148600a7eb9b996b7f060b76761f6792ce
     :git: "git@github.com:CoinbaseWallet/CBCrypto.git"
   CBDatabase:
     :commit: 7ee0ac6c73f4a270c0f0fee023953e63ab87ea5a
@@ -89,8 +90,8 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   BigInt: 76b5dfdfa3e2e478d4ffdf161aeede5502e2742f
-  CBCore: d3d978fafa99a5e2903cc306b17ac339a0f23b22
-  CBCrypto: a9db98e1dccfe69d4d6a348decf896e71b3b9759
+  CBCore: 71c078ace7cb1b06ca72d7a774e159f2dd453004
+  CBCrypto: b7533edfdad7f3ca7f350ba376038f711a8b8cd6
   CBDatabase: 1e392c3bdb81427ccf8f4c20013792358c50016e
   CBHTTP: a079a9c9b3bfe9cfbdd50329a91d436ec8451687
   CBStore: b1f28915a56e6c8563c4771693dd93ae9288e47d
@@ -103,6 +104,6 @@ SPEC CHECKSUMS:
   SwiftFormat: abbfb26dde4c6d683923cde153c88e10da9d7881
   SwiftLint: 009a898ef2a1c851f45e1b59349bf6ff2ddc990d
 
-PODFILE CHECKSUM: 134c7fb658e569f3966baabf34b6488c36bf4d7c
+PODFILE CHECKSUM: 5e5543cfcd96049f865192faad7d118f186795a5
 
-COCOAPODS: 1.7.0
+COCOAPODS: 1.8.1
