@@ -74,9 +74,7 @@ class WalletLinkConnection {
                     let session = foundSession,
                     session.version != nil,
                     case .dappPermission = request
-                else {
-                    return request
-                }
+                else { return request }
 
                 // for WalletLink v > 1, grab dapp details from EIP1102 request
                 self.linkRepository.saveSession(
@@ -164,7 +162,6 @@ class WalletLinkConnection {
     /// Destroy session
     ///
     /// - Parameters:
-
     ///   - sessionId: Session ID scanned offline (QR code, NFC, etc)
     ///
     /// - Returns: A single wrapping `Boolean` to indicate operation was successful
@@ -172,7 +169,7 @@ class WalletLinkConnection {
         return socket.setSessionConfig(
             webhookId: nil,
             webhookUrl: nil,
-            metadata: [ClientMetadataKey.destroyed.rawValue: "1"],
+            metadata: [ClientMetadataKey.destroyed.rawValue: .destroySession],
             for: sessionId
         )
     }

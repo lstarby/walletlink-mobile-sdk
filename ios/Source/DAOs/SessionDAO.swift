@@ -86,7 +86,7 @@ final class SessionDAO {
     func delete(url: URL, sessionId: String) {
         accessQueue.sync {
             let sessions = self.store.get(.sessions)?.items
-                .filter { $0.id != sessionId && $0.url == url } ?? []
+                .filter { $0.id != sessionId || $0.url != url } ?? []
 
             self.store.set(.sessions, value: SessionList(items: sessions))
         }

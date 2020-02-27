@@ -208,7 +208,7 @@ final class WalletLinkWebSocket {
                 let sessionId = json["sessionId"] as? String,
                 let metadata = json["metadata"] as? [String: Any],
                 let destroyedValue = metadata[ClientMetadataKey.destroyed.rawValue] as? String,
-                destroyedValue == "1"
+                destroyedValue == .destroySession
             else { return }
 
             print("[walletlink] destroy session \(sessionId)")
