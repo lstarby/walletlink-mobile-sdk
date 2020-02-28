@@ -40,6 +40,7 @@
 		E70647DF22F0ADFD00AC12FF /* DappDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70647DE22F0ADFD00AC12FF /* DappDAO.swift */; };
 		E70647E222F0B03800AC12FF /* Dapp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70647E122F0B03800AC12FF /* Dapp.swift */; };
 		E70647E522F0B15D00AC12FF /* WalletLink.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E70647E322F0B15D00AC12FF /* WalletLink.xcdatamodeld */; };
+		E795784F240742820038984A /* String+WalletLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = E795784E240742820038984A /* String+WalletLink.swift */; };
 		E7FF908922E8D72000C4201D /* Web3RequestCanceledDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7FF908822E8D72000C4201D /* Web3RequestCanceledDTO.swift */; };
 /* End PBXBuildFile section */
 
@@ -83,6 +84,7 @@
 		E70647DE22F0ADFD00AC12FF /* DappDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DappDAO.swift; sourceTree = "<group>"; };
 		E70647E122F0B03800AC12FF /* Dapp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dapp.swift; sourceTree = "<group>"; };
 		E70647E422F0B15D00AC12FF /* WalletLinkDB.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WalletLinkDB.xcdatamodel; sourceTree = "<group>"; };
+		E795784E240742820038984A /* String+WalletLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+WalletLink.swift"; sourceTree = "<group>"; };
 		E7FF908822E8D72000C4201D /* Web3RequestCanceledDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3RequestCanceledDTO.swift; sourceTree = "<group>"; };
 		EE45CAE36C51E9570D753F6A /* Pods_WalletLinkTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WalletLinkTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -183,6 +185,7 @@
 				D3EAC5FD22B9663E0036DD4F /* Credentials+WalletLink.swift */,
 				51D42E16228FFE9A00048066 /* PrimitiveSequence+WalletLink.swift */,
 				5159CCA7228FF21400A257C0 /* StoreKeys+WalletLink.swift */,
+				E795784E240742820038984A /* String+WalletLink.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -389,6 +392,7 @@
 				5108610C229009B60060C12F /* SetMetadataMessageDTO.swift in Sources */,
 				5159CC96228FE2A200A257C0 /* WalletLinkConnection.swift in Sources */,
 				D34578AB22A071B90063286E /* GetEventDTO.swift in Sources */,
+				E795784F240742820038984A /* String+WalletLink.swift in Sources */,
 				51695C8A22901555003B974E /* WalletLinkError.swift in Sources */,
 				518388022297D28100CCB8D1 /* SessionDAO.swift in Sources */,
 				E7FF908922E8D72000C4201D /* Web3RequestCanceledDTO.swift in Sources */,

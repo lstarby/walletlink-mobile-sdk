@@ -59,12 +59,13 @@ public class WalletLink: WalletLinkProtocol {
     public func link(
         sessionId: String,
         secret: String,
+        version: String?,
         url: URL,
         userId: String,
         metadata: [ClientMetadataKey: String]
     ) -> Single<Void> {
         if let connection = connections[url] {
-            return connection.link(sessionId: sessionId, secret: secret)
+            return connection.link(sessionId: sessionId, secret: secret, version: version)
         }
 
         let connection = WalletLinkConnection(
@@ -77,7 +78,7 @@ public class WalletLink: WalletLinkProtocol {
 
         connections[url] = connection
 
-        return connection.link(sessionId: sessionId, secret: secret)
+        return connection.link(sessionId: sessionId, secret: secret, version: version)
             .map { _ in self.observeConnection(connection) }
             .catchError { err in
                 self.connections[url] = nil
@@ -85,8 +86,11 @@ public class WalletLink: WalletLinkProtocol {
             }
     }
 
-    public func unlink(session: Session) {
-        linkRepository.delete(url: session.url, sessionId: session.id)
+    public func unlink(session: Session) -> Single<Void> {
+        guard let connection = connections[session.url] else { return .error(WalletLinkError.noConnectionFound) }
+
+        return connection.destroySession(for: session.id)
+            .map { _ in self.linkRepository.delete(url: session.url, sessionId: session.id) }
     }
 
     public func setMetadata(key: ClientMetadataKey, value: String) -> Single<Void> {
@@ -145,6 +149,16 @@ public class WalletLink: WalletLinkProtocol {
 
                 self.processedRequestIds.add(hostRequestId)
                 self.requestsSubject.onNext(request)
+            })
+            .disposed(by: disposeBag)
+
+        conn.disconnectSessionObservable
+            .observeOn(requestsScheduler)
+            .map { request -> String? in request }
+            .catchErrorJustReturn(nil)
+            .unwrap()
+            .subscribe(onNext: { [weak self] sessionId in
+                self?.linkRepository.delete(url: conn.url, sessionId: sessionId)
             })
             .disposed(by: disposeBag)
     }

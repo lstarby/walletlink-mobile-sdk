@@ -14,10 +14,10 @@ struct SetSessionConfigMessageDTO: Codable, JSONDeserializable, JSONSerializable
     let sessionId: String
 
     /// Push notification webhook ID
-    let webhookId: String
+    let webhookId: String?
 
     /// Push notification webhook URL
-    let webhookUrl: String
+    let webhookUrl: String?
 
     let metadata: [String: String]
 }

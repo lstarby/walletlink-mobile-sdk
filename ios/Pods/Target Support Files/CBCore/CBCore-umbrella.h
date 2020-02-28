@@ -10,7 +10,6 @@
 #endif
 #endif
 
-#import "CBCore.h"
 
 FOUNDATION_EXPORT double CBCoreVersionNumber;
 FOUNDATION_EXPORT const unsigned char CBCoreVersionString[];
