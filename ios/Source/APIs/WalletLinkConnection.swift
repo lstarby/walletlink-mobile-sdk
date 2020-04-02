@@ -211,7 +211,7 @@ class WalletLinkConnection {
             let response = Web3ResponseDTO<String>(
                 id: requestId.id,
                 method: requestId.method,
-                result: responseData.toPrefixedHexString()
+                result: responseData.hexEncodedString(addPrefix: true)
             )
 
             return markEventAsSeen.flatMap { _ in self.submitWeb3Response(response, session: session) }

@@ -4,12 +4,12 @@ target 'WalletLink' do
   pod 'CBHTTP', git: 'git@github.com:CoinbaseWallet/CBHTTP.git', commit: "a616dfe10ee470fe1c0fb19fa605a142f634612a"
   pod 'CBStore', git: 'git@github.com:CoinbaseWallet/Stores.git', commit: "444c4d462a91068729f245852fd111be5261f78c"
   pod 'CBCrypto', git: 'git@github.com:CoinbaseWallet/CBCrypto.git', commit: "9b0990148600a7eb9b996b7f060b76761f6792ce"
-  pod 'CBCore', git: 'git@github.com:CoinbaseWallet/CBCore.git', commit: "c0794273603bcd5e53b770f3d3595e333b4bc356"
+  pod 'CBCore', git: 'git@github.com:CoinbaseWallet/CBCore.git', commit: "34b9b51a41d2a442bf86c330720e817fa9e90cc1"
   pod 'CBDatabase', git: 'git@github.com:CoinbaseWallet/CBDatabase.git', commit: "7ee0ac6c73f4a270c0f0fee023953e63ab87ea5a"
   pod 'RxSwift', '~> 4.4.0'
   pod 'RxCocoa', '~> 4.4.0'
   pod 'Starscream', '~> 3.1'
   pod 'SwiftLint'
   pod 'SwiftFormat/CLI', '0.37.2'
-  pod 'BigInt',  '~> 3.1.0'
+  pod 'BigInt', '~> 3.1.0'
 end

@@ -2627,6 +2627,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
 			productRefGroup = A5945022359D21AE4A23AFA80F091BE6 /* Products */;
@@ -3891,6 +3892,33 @@
 			};
 			name = Release;
 		};
+		49E01BE16F7C5BA06C68FAB55309BF41 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C6DF02DD213A5A280F8B087B2F64CB10 /* CBCore.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/CBCore/CBCore-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MODULEMAP_FILE = Headers/Public/CBCore/CBCore.modulemap;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = CBCore;
+				PRODUCT_NAME = CBCore;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		4C89FE86A1379411F0D9B015A87378B1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6A50F12CD717BA1B9413A4F9F16C5B1F /* CryptoSwift.xcconfig */;
@@ -4149,33 +4177,6 @@
 			};
 			name = Release;
 		};
-		9604F2E68E799BB9EDBADE91409BF8F4 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = C6DF02DD213A5A280F8B087B2F64CB10 /* CBCore.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				GCC_PREFIX_HEADER = "Target Support Files/CBCore/CBCore-prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				MODULEMAP_FILE = Headers/Public/CBCore/CBCore.modulemap;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = CBCore;
-				PRODUCT_NAME = CBCore;
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
 		A904AB41D61242BE7D53802572E12005 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A39EB9C6DE33D9ED8AD8B0CA35A1D69E /* SwiftFormat.xcconfig */;
@@ -4245,7 +4246,7 @@
 			};
 			name = Release;
 		};
-		BBE9416D26F190885CDC20995DE0C957 /* Debug */ = {
+		BCE5DCE7BEA0CA0DD8839D3BDFAC75C5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C6DF02DD213A5A280F8B087B2F64CB10 /* CBCore.xcconfig */;
 			buildSettings = {
@@ -4266,7 +4267,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -4637,8 +4638,8 @@
 		ADC33E087A6058D02F285E99DB4B1D97 /* Build configuration list for PBXNativeTarget "CBCore" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				BBE9416D26F190885CDC20995DE0C957 /* Debug */,
-				9604F2E68E799BB9EDBADE91409BF8F4 /* Release */,
+				BCE5DCE7BEA0CA0DD8839D3BDFAC75C5 /* Debug */,
+				49E01BE16F7C5BA06C68FAB55309BF41 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
